@@ -48,8 +48,8 @@ var lookupSchema = {
             "sortable": false //custom attributes
         },
         "enabled": {
-            "type": "boolean",
-            "default": true,
+            "type": "string",
+            "default": "1",
             "filterable": true, //custom attributes
             "sortable": true //custom attributes
         },

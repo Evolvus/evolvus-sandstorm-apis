@@ -232,13 +232,14 @@ describe("db lookup testing", () => {
 
         it("should return 6 enabled lookups", (done) => {
             let res = lookup.find(tenantOne, {
-                "enabled": true
+                "enabled": "1"
             }, {
                 "lookupCode": -1
             }, 0, 10);
 
             expect(res)
                 .to.have.be.fulfilled.then((app) => {
+                    console.log('RES ::::', app);
                     debug("result: " + JSON.stringify(app));
                     expect(app)
                         .to.have.lengthOf(6);
@@ -247,10 +248,10 @@ describe("db lookup testing", () => {
                         .to.equal(tenantOne);
                     expect(app[0])
                         .to.have.property("lookupCode")
-                        .to.equal("PLF");
+                        .to.equal("PRODUCT_CODE");
                     expect(app[5])
                         .to.have.property("lookupCode")
-                        .to.equal("CDA");
+                        .to.equal("PRODUCT_CODE");
                     done();
                 });
         });
@@ -282,7 +283,7 @@ describe("db lookup testing", () => {
 
         it("should disable Platform lookup", (done) => {
             let res = lookup.update(tenantOne, "PLF", {
-                "enabled": true,
+                "enabled": "1",
                 "updatedDate": new Date()
                     .toISOString(),
                 "description": "Updated the lookup at: " + Date.now()
