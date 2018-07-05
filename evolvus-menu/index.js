@@ -1,5 +1,6 @@
 const debug = require("debug")("evolvus-menu:index");
 const model = require("./model/menuSchema");
+const db=require("./db/menuSchema");
 const _ = require("lodash");
 
 const collection = require("./db/menu");
@@ -24,7 +25,9 @@ var docketObject = {
   //non required fields
   level: ""
 };
-
+module.exports.menu = {
+  model,db
+};
 
 module.exports.validate = (tenantId, menuObject) => {
   return new Promise((resolve, reject) => {

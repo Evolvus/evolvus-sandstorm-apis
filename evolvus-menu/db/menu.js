@@ -34,7 +34,6 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
-  console.log(query,"querrryyyyy");
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
