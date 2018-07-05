@@ -1,6 +1,6 @@
 const debug = require("debug")("evolvus-menu:index");
 const model = require("./model/menuSchema");
-const db=require("./db/menuSchema");
+const db = require("./db/menuSchema");
 const _ = require("lodash");
 
 const collection = require("./db/menu");
@@ -26,7 +26,10 @@ var docketObject = {
   level: ""
 };
 module.exports.menu = {
-  model,db
+  model,
+  db,
+  filterAttributes,
+  sortAttributes
 };
 
 module.exports.validate = (tenantId, menuObject) => {
