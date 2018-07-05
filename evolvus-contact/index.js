@@ -6,6 +6,7 @@ const collection = require("./db/contact");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
 
+
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortAttributes;
