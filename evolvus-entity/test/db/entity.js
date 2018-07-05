@@ -219,24 +219,24 @@ describe("db entity testing", () => {
             .to.equal(tenantOne);
           expect(app[0])
             .to.have.property("entityCode")
-            .to.equal("entity1");
+            .to.equal("entity4");
           done();
         });
     });
-    it("should return headOffice, the last entity when sorted by createdDate", (done) => {
+    it("should return headOffice, the last entity when sorted by lastUpdatedDate", (done) => {
       let res = entity.find(tenantOne, "abc12", "1", {}, {
-        "createdDate": -1
-      }, 0, 1);
+        "lastUpdatedDate": -1
+      }, 0, 10);
 
       expect(res)
         .to.have.be.fulfilled.then((app) => {
           debug("result: " + JSON.stringify(app));
-          expect(app[0])
+          expect(app[4])
             .to.have.property("tenantId")
             .to.equal(tenantOne);
-          expect(app[0])
+          expect(app[4])
             .to.have.property("entityCode")
-            .to.equal("entity1");
+            .to.equal("entity8");
           done();
         });
     });
@@ -257,10 +257,10 @@ describe("db entity testing", () => {
             .to.equal(tenantOne);
           expect(app[0])
             .to.have.property("entityCode")
-            .to.equal("entity1");
+            .to.equal("entity4");
           expect(app[5])
             .to.have.property("entityCode")
-            .to.equal("entity6");
+            .to.equal("entity2");
           done();
         });
     });

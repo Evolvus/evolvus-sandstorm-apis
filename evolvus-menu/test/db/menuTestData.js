@@ -72,7 +72,7 @@ module.exports.validObject3 = {
             "menuItemOrder": 2
           }
         ],
-        "menuGroupOrder": 2,
+        "menuGroupOrder": 3,
         "createdDate": new Date().toISOString(),
         "createdBy": "system"
 };
@@ -98,7 +98,7 @@ module.exports.validObject4 = {
               "menuItemOrder": 2
             }
           ],
-          "menuGroupOrder": 2,
+          "menuGroupOrder": 4,
           "createdDate": new Date().toISOString(),
           "createdBy": "system"
 };
@@ -124,7 +124,7 @@ module.exports.validObject5 = {
               "menuItemOrder": 2
             }
           ],
-          "menuGroupOrder": 2,
+          "menuGroupOrder": 4,
           "createdDate": new Date().toISOString(),
           "createdBy": "system"
 };
@@ -150,7 +150,7 @@ module.exports.validObject6 = {
               "menuItemOrder": 2
             }
           ],
-          "menuGroupOrder": 2,
+          "menuGroupOrder": 5,
           "createdDate": new Date().toISOString(),
           "createdBy": "system"
 };
@@ -176,7 +176,7 @@ module.exports.validObject7 = {
             "menuItemOrder": 2
           }
         ],
-        "menuGroupOrder": 2,
+        "menuGroupOrder": 7,
         "createdDate": new Date().toISOString(),
         "createdBy": "system"
 };
@@ -192,17 +192,17 @@ module.exports.validObject8 = {
             "applicationCode": "CDA-OPERATION",
             "menuItemCode": "ROLE",
             "title": "Role Management",
-            "menuItemOrder": 1
+            "menuItemOrder": 8
           },
           {
             "menuItemType": "menu",
             "applicationCode": "CDA-OPERATION",
             "menuItemCode": "USER",
             "title": "User Management",
-            "menuItemOrder": 2
+            "menuItemOrder": 8
           }
         ],
-        "menuGroupOrder": 2,
+        "menuGroupOrder": 8,
         "createdDate": new Date().toISOString(),
         "createdBy": "system"
 };

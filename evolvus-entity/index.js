@@ -1,6 +1,6 @@
 const debug = require("debug")("evolvus-contact:index");
 const model = require("./model/entitySchema");
-const db=require("./db/entitySchema")
+const db=require("./db/entitySchema");
 const _ = require('lodash');
 const collection = require("./db/entity");
 const validate = require("jsonschema").validate;
