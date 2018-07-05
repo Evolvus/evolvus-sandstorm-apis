@@ -1,6 +1,5 @@
 const debug = require("debug")("evolvus-contact:index");
 const model = require("./model/contactSchema");
-const db = require("./db/contactSchema");
 const _ = require("lodash");
 const collection = require("./db/contact");
 const validate = require("jsonschema").validate;
@@ -24,12 +23,6 @@ var auditObject = {
   //non required fields
   level: ""
 };
-
-module.exports.menu = {
-  model,
-  db
-};
-
 
 // tenantId cannot be null or undefined, InvalidArgumentError
 // check if tenantId is valid from tenant table (todo)
