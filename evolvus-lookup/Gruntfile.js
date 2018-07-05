@@ -9,38 +9,38 @@
 
 module.exports = (grunt) => {
 
-  grunt.initConfig({
-    env: {
-      test: {
-        DEBUG: "evolvus-application*"
-      }
-    },
-    mochaTest: {
-      test: {
-        options: {
-          reporter: "spec",
+    grunt.initConfig({
+        env: {
+            test: {
+                DEBUG: "evolvus-application*"
+            }
         },
-        src: ["test/index.js", "test/db/*.js"]
-      }
-    },
-    jshint: {
-      options: {
-        "esversion": 6
-      },
-      files: {
-        src: ["Gruntfile.js", "index.js", "db/*.js", "test/index.js", "test/**/*.js", "model/*.js"]
-      }
-    },
-    watch: {
-      files: ["<%= jshint.files.src %>"],
-      tasks: ["jshint", "mochaTest"]
-    }
-  });
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: "spec",
+                },
+                src: ["test/index.js", "test/db/*.js"]
+            }
+        },
+        jshint: {
+            options: {
+                "esversion": 6
+            },
+            files: {
+                src: ["Gruntfile.js", "index.js", "db/*.js", "test/index.js", "test/**/*.js", "model/*.js"]
+            }
+        },
+        watch: {
+            files: ["<%= jshint.files.src %>"],
+            tasks: ["jshint", "mochaTest"]
+        }
+    });
 
-  grunt.loadNpmTasks("grunt-env");
-  grunt.loadNpmTasks("grunt-mocha-test");
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-contrib-watch");
+    grunt.loadNpmTasks("grunt-env");
+    grunt.loadNpmTasks("grunt-mocha-test");
+    grunt.loadNpmTasks("grunt-contrib-jshint");
+    grunt.loadNpmTasks("grunt-contrib-watch");
 
-  grunt.registerTask("default", ["jshint", "env:test", "mochaTest"]);
+    grunt.registerTask("default", ["jshint", "env:test", "mochaTest"]);
 };
