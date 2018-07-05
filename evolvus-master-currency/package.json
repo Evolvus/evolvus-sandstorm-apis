@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Evolvus/evolvus-master-currency.git"
+    "url": "git+https://github.com/Evolvus/evolvus-sandstorm-apis.git"
   },
   "keywords": [
     "evolvus",
@@ -17,9 +17,9 @@
   "author": "Kavya",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Evolvus/evolvus-master-currency/issues"
+    "url": "https://github.com/Evolvus/evolvus-sandstorm-apis/issues"
   },
-  "homepage": "https://github.com/Evolvus/evolvus-master-currency#readme",
+  "homepage": "https://github.com/Evolvus/evolvus-sandstorm-apis#readme",
   "dependencies": {
     "debug": "^3.1.0",
     "evolvus-docket-client": "^0.0.5",
