@@ -64,12 +64,5 @@ masterTimeZoneSchema.index({
 }, {
   unique: true
 });
-// masterTimeZoneSchema.index({
-//   //tenantId: 1,
-//   zoneCode: 1,
-//   zoneName: 2
-// }, {
-//   unique: true
-// });
 
 module.exports = masterTimeZoneSchema;
