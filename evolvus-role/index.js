@@ -1,0 +1,138 @@
+const debug = require("debug")("evolvus-role:index");
+const model = require("./model/roleSchema");
+const _ = require('lodash');
+const db = require("./db/roleSchema");
+const collection = require("./db/role");
+const validate = require("jsonschema").validate;
+const docketClient = require("evolvus-docket-client");
+
+var schema = model.schema;
+var filterAttributes = model.filterAttributes;
+var sortAttributes = model.sortAttributes;
+
+var auditObject = {
+  // required fields
+  role: "PLATFORM",
+  source: "role",
+  name: "",
+  createdBy: "",
+  ipAddress: "",
+  status: "SUCCESS", //by default
+  eventDateTime: Date.now(),
+  keyDataAsJSON: "",
+  details: "",
+  //non required fields
+  level: ""
+};
+module.exports.role = {
+  model,
+  db,
+  filterAttributes,
+  sortAttributes
+}
+module.exports.validate = (tenantId, roleObject) => {
+  return new Promise((resolve, reject) => {
+    if (typeof roleObject === "undefined") {
+      throw new Error("IllegalArgumentException:roleObject is undefined");
+    }
+    var res = validate(roleObject, schema);
+    debug("validation status: ", JSON.stringify(res));
+    if (res.valid) {
+      resolve(res.valid);
+    } else {
+      reject(res.errors);
+    }
+  });
+};
+
+// tenantId cannot be null or undefined, InvalidArgumentError
+// check if tenantId is valid from tenant table (todo)
+//
+// createdBy can be "System" - it cannot be validated against users
+// ipAddress is needed for docket, must be passed
+//
+// object has all the attributes except tenantId, who columns
+module.exports.save = (tenantId, roleObject) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof roleObject === 'undefined' || roleObject == null) {
+        throw new Error("IllegalArgumentException: roleObject is null or undefined");
+      }
+      var res = validate(roleObject, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        reject(res.errors);
+      } else {
+        // if the object is valid, save the object to the database
+        docketObject.name = "role_save";
+        docketObject.keyDataAsJSON = JSON.stringify(roleObject);
+        docketObject.details = `role creation initiated`;
+        docketClient.postToDocket(docketObject);
+        collection.save(tenantId, roleObject).then((result) => {
+          debug(`saved successfully ${result}`);
+          resolve(result);
+        }).catch((e) => {
+          debug(`failed to save with an error: ${e}`);
+          reject(e);
+        });
+      }
+      // Other validations here
+    } catch (e) {
+      docketObject.name = "role_ExceptionOnSave";
+      docketObject.keyDataAsJSON = JSON.stringify(roleObject);
+      docketObject.details = `caught Exception on role_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+
+// tenantId should be valid
+// createdBy should be requested user, not database object user, used for auditObject
+// ipAddress should ipAddress
+// filter should only have fields which are marked as filterable in the model Schema
+// orderby should only have fields which are marked as sortable in the model Schema
+module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  return new Promise((resolve, reject) => {
+    try {
+      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
+      if (orderby == null || typeof orderby === 'undefined') {
+        orderby = {
+          createdDate: -1
+        };
+      }
+      console.log(filter, "filter");
+      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+        debug(`role(s) stored in the database are ${docs}`);
+        resolve(docs);
+      }).catch((e) => {
+        debug(`failed to find all the role(s) ${e}`);
+        reject(e);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+module.exports.update = (tenantId, code, update) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || code == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+      collection.update(tenantId, code, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        debug(`failed to update ${error}`);
+        reject(error);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
