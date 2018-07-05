@@ -27,7 +27,9 @@ var auditObject = {
 
 module.exports.menu = {
   model,
-  db
+  db,
+  filterAttributes,
+  sortAttributes
 };
 
 
