@@ -26,7 +26,9 @@ var auditObject = {
 
 module.exports.menu = {
   model,
-  db
+  db,
+  filterAttributes,
+  sortAttributes
 };
 
 // tenantId cannot be null or undefined, InvalidArgumentError
