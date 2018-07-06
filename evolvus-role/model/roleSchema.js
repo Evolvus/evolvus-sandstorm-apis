@@ -10,7 +10,7 @@ var roleSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": true, //custom attributes
+      "filterable": false, //custom attributes
       "sortable": false //custom attribute
     },
     "applicationCode": {
@@ -86,7 +86,7 @@ var roleSchema = {
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
-    "entityCode": {
+    "entityId": {
       "type": "string",
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
@@ -219,7 +219,7 @@ var roleSchema = {
       "displayable": true
     }
   },
-  "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate", "accessLevel", "entityCode"]
+  "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate", "accessLevel", "entityId"]
 };
 
 module.exports.schema = roleSchema;

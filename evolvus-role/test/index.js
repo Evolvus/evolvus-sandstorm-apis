@@ -22,7 +22,7 @@ const tenantTwo = "KOT";
 describe('role model validation', () => {
   // let roleObject = {
   //   "tenantId": "IVL",
-  //   "entityCode": "Entity",
+  //   "entityId": "Entity",
   //   "accessLevel": "1",
   //   "applicationCode": "CDA",
   //   "enableFlag": "1",

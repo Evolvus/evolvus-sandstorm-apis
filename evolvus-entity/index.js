@@ -1,6 +1,6 @@
 const debug = require("debug")("evolvus-contact:index");
 const model = require("./model/entitySchema");
-const db=require("./db/entitySchema");
+const db = require("./db/entitySchema");
 const _ = require('lodash');
 const collection = require("./db/entity");
 const validate = require("jsonschema").validate;
@@ -24,8 +24,11 @@ var docketObject = {
   //non required fields
   level: ""
 };
-module.exports={
-  model,db,filterAttributes,sortAttributes
+module.exports = {
+  model,
+  db,
+  filterAttributes,
+  sortAttributes
 };
 module.exports.validate = (tenantId, entityObject) => {
   return new Promise((resolve, reject) => {
@@ -57,13 +60,13 @@ module.exports.validate = (tenantId, entityObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId,entityObject) => {
+module.exports.save = (tenantId, entityObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof entityObject === 'undefined' || entityObject == null) {
         throw new Error("IllegalArgumentException: entityObject is null or undefined");
       }
-      var res = validate(tenantId,entityObject, schema);
+      var res = validate(tenantId, entityObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
         reject(res.errors);
@@ -73,18 +76,18 @@ module.exports.save = (tenantId,entityObject) => {
         docketObject.keyDataAsJSON = JSON.stringify(entityObject);
         docketObject.details = `entity creation initiated`;
         docketClient.postToDocket(docketObject);
-        collection.save(tenantId,entityObject).then((result) => {
+        collection.save(tenantId, entityObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
-          console.log(e,"save");
+          console.log(e, "save");
           debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
       // Other validations here
     } catch (e) {
-        console.log(e,"save");
+      console.log(e, "save");
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -96,11 +99,11 @@ module.exports.save = (tenantId,entityObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId,entityId,accessLevel, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(tenantId,entityId,accessLevel, filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
         debug(`menu(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -115,13 +118,13 @@ module.exports.find = (tenantId,entityId,accessLevel, filter, orderby, skipCount
 };
 
 // tenantId should be valid
-module.exports.update = (tenantId,code, update) => {
+module.exports.update = (tenantId, code, update) => {
   return new Promise((resolve, reject) => {
     try {
       if (code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      collection.update(tenantId,code,update).then((resp) => {
+      collection.update(tenantId, code, update).then((resp) => {
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {

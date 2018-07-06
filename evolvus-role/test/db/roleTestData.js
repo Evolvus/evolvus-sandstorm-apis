@@ -1,7 +1,7 @@
 module.exports.validObject1 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "CDA",
   "enableFlag": "1",
@@ -39,7 +39,7 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity2",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "CDA",
   "enableFlag": "1",
@@ -77,7 +77,7 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "enableFlag": 1,
   "accessLevel": "1",
   "applicationCode": "FLUX",
@@ -110,7 +110,7 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "enableFlag": 1,
   "applicationCode": "ASBA",
@@ -143,7 +143,7 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "CDA-CONSOLE",
   "roleName": "admin_Five",
@@ -176,7 +176,7 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "RTP-CONSOLE",
   "roleName": "admin_SIX",
@@ -209,7 +209,7 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Seven",
@@ -242,7 +242,7 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Eight",
@@ -275,7 +275,7 @@ module.exports.validObject8 = {
 module.exports.invalidObject1 = {
   // invalid role object
   "tenantId": "IVL",
-  "entityCode": "Entity",
+  "entityId": "Entity",
   "accessLevel": "1",
   "menuGroup": [{
     "tenantId": "tid",

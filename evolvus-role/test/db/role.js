@@ -188,7 +188,7 @@ describe("db role testing", () => {
         .notify(done);
     });
 
-    it("should return a Platform object", (done) => {
+    it("should return 2 roles", (done) => {
       let res = role.find(tenantOne, {
         "applicationCode": "CDA"
       }, {}, 0, 2);
@@ -223,7 +223,7 @@ describe("db role testing", () => {
         });
     });
 
-    it("should return Platform, the last role when sorted by applicationCode", (done) => {
+    it("should return admin_SIX, the last role when sorted by applicationCode", (done) => {
       let res = role.find(tenantOne, {}, {
         "applicationCode": -1
       }, 0, 1);
@@ -309,4 +309,42 @@ describe("db role testing", () => {
     });
   });
 
+  describe("testing role.counts", () => {
+    //  Delete all records, insert two record
+    //  1. Query by one attribute and it should return all roles having attribute value
+    //2. Query by an arbitrary attribute value and it should return {}
+
+    //delete all records and insert two roles
+    beforeEach((done) => {
+      role.deleteAll(tenantOne)
+        .then((value) => {
+          return role.deleteAll(tenantTwo);
+        })
+        .then((value) => {
+          return role.save(tenantOne, roleTestData.validObject1);
+        })
+        .then((value) => {
+          return role.save(tenantOne, roleTestData.validObject2);
+        })
+        .then((value) => {
+          return role.save(tenantOne, roleTestData.validObject3);
+        })
+        .then((value) => {
+          return role.save(tenantOne, roleTestData.validObject4);
+        })
+        .then((value) => {
+          done();
+        });
+    });
+
+    it("should return Count for valid attribute value", (done) => {
+      // take one valid attribute and its value
+      let res = role.counts(tenantOne, "Entity", "1", {
+        processingStatus: "PENDING_AUTHORIZATION"
+      });
+      expect(res)
+        .to.eventually.deep.equal(3)
+        .notify(done);
+    });
+  });
 }); // db role testing

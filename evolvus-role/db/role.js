@@ -31,9 +31,11 @@ module.exports.save = (tenantId, object) => {
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  console.log("Db find method");
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
+  console.log("QUERY", query);
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
@@ -63,6 +65,16 @@ module.exports.findById = (tenantId, id) => {
     "_id": new ObjectId(id)
   };
   return collection.findOne(query);
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
+  let query = _.merge(filter, {
+    "tenantId": tenantId,
+    "entityId": entityId,
+    "accessLevel": accessLevel
+  });
+
+  return collection.count(query);
 };
 
 //Finds one role by its code and updates it with new values

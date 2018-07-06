@@ -24,12 +24,12 @@ var auditObject = {
   //non required fields
   level: ""
 };
-module.exports.role = {
+module.exports = {
   model,
   db,
   filterAttributes,
-  sortAttributes
-}
+  sortableAttributes
+};
 module.exports.validate = (tenantId, roleObject) => {
   return new Promise((resolve, reject) => {
     if (typeof roleObject === "undefined") {
@@ -64,10 +64,6 @@ module.exports.save = (tenantId, roleObject) => {
         reject(res.errors);
       } else {
         // if the object is valid, save the object to the database
-        docketObject.name = "role_save";
-        docketObject.keyDataAsJSON = JSON.stringify(roleObject);
-        docketObject.details = `role creation initiated`;
-        docketClient.postToDocket(docketObject);
         collection.save(tenantId, roleObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
@@ -78,10 +74,6 @@ module.exports.save = (tenantId, roleObject) => {
       }
       // Other validations here
     } catch (e) {
-      docketObject.name = "role_ExceptionOnSave";
-      docketObject.keyDataAsJSON = JSON.stringify(roleObject);
-      docketObject.details = `caught Exception on role_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -98,13 +90,9 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      if (orderby == null || typeof orderby === 'undefined') {
-        orderby = {
-          createdDate: -1
-        };
-      }
-      console.log(filter, "filter");
+      console.log("INVALID ATTRIBUTES", invalidFilters);
       collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+        console.log(docs, "DOCS");
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -129,6 +117,28 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, entityId, accessLevel, countQuery).then((roleCount) => {
+        console.log("roleCount", roleCount);
+        if (roleCount > 0) {
+          debug(`roleCount Data is ${entityCount}`);
+          resolve(roleCount);
+        } else {
+          debug(`No entity count data available for filter query ${roleCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);
