@@ -5,13 +5,11 @@ var contactSchema = new mongoose.Schema({
   // Add all attributes below tenantId
   tenantId: {
     type: String,
-    required: true,
     minLength: 1,
     maxLength: 64
   },
   firstName: {
     type: String,
-    required: true,
     minLength: 1,
     maxLength: 50
   },
@@ -22,7 +20,6 @@ var contactSchema = new mongoose.Schema({
   },
   lastName: {
     type: String,
-    required: true,
     minLength: 1,
     maxLength: 50
   },
@@ -53,7 +50,6 @@ var contactSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    required: true,
     minLength: 5,
     maxLength: 15,
     validate: {
@@ -70,7 +66,6 @@ var contactSchema = new mongoose.Schema({
     type: String,
     minLength: 9,
     maxLength: 15,
-    required: true,
     validate: {
       validator: function(v) {
         return /^[0-9\-\+]+$/.test(v);
@@ -106,11 +101,11 @@ var contactSchema = new mongoose.Schema({
   },
   createdDate: {
     type: Date,
-    required: true
+    
   },
   lastUpdatedDate: {
     type: Date,
-    required: true
+   
   }
 });
 

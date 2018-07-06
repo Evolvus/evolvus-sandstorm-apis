@@ -117,7 +117,7 @@ var contactSchema = {
       "sortable": false //custom attributes
     }
   },
-  "required": ["tenantId", "firstName", "lastName", "emailId", "mobileNumber", "phoneNumber", "faxNumber", "city", "state", "country", "createdDate", "lastUpdatedDate"]
+  "required": ["emailId", "city", "state", "country"]
 };
 
 module.exports.schema = contactSchema;
