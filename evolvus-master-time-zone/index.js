@@ -25,7 +25,7 @@ var auditObject = {
 };
 
 
-module.exports.menu = {
+module.exports.masterTimeZone = {
   model,
   db,
   filterAttributes,

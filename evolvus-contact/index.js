@@ -26,7 +26,7 @@ var auditObject = {
   level: ""
 };
 
-module.exports.menu = {
+module.exports.contact = {
   model,
   db,
   filterAttributes,

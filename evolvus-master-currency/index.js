@@ -24,7 +24,7 @@ var auditObject = {
   level: ""
 };
 
-module.exports.menu = {
+module.exports.masterCurrency = {
   model,
   db,
   filterAttributes,
