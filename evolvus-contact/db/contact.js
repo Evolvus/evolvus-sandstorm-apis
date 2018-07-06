@@ -71,7 +71,7 @@ module.exports.findById = (tenantId, id) => {
 module.exports.update = (tenantId, code, update) => {
   let query = {
     "tenantId": tenantId,
-    "mobileNumber": code
+    "emailId": code
   };
   return collection.update(query, update);
 };

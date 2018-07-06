@@ -296,7 +296,7 @@ describe("db contact testing", () => {
     });
 
     it("should disable Platform contact", (done) => {
-      let res = contact.update(tenantOne, "2222222222222", {
+      let res = contact.update(tenantOne, "xyz@gmail.com", {
         "emailVerified": false,
         "updatedDate": new Date()
           .toISOString(),

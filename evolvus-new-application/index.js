@@ -1,7 +1,7 @@
 const debug = require("debug")("evolvus-application:index");
 const model = require("./model/applicationSchema");
 const db = require("./db/applicationSchema");
-
+const _ = require('lodash');
 const collection = require("./db/application");
 const validate = require("jsonschema")
   .validate;

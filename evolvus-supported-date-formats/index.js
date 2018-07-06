@@ -31,24 +31,77 @@ module.exports.supportedDateFormats = {
   sortAttributes
 };
 
-// tenantId cannot be null or undefined, InvalidArgumentError
-// check if tenantId is valid from tenant table (todo)
-//
-// createdBy can be "System" - it cannot be validated against supportedDateFormatss
-// ipAddress is needed for docket, must be passed
-//
-// object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, createdBy, ipAddress, object) => {
-  return collection.save(tenantId, object);
+module.exports.validate = (tenantId, supportedDateFormatsObject) => {
+  return new Promise((resolve, reject) => {
+    if (typeof supportedDateFormatsObject === "undefined") {
+      throw new Error("IllegalArgumentException:supportedDateFormatsObject is undefined");
+    }
+    var res = validate(supportedDateFormatsObject, schema);
+    debug("validation status: ", JSON.stringify(res));
+    if (res.valid) {
+      resolve(res.valid);
+    } else {
+      reject(res.errors);
+    }
+  });
 };
 
+module.exports.save = (tenantId, supportedDateFormatsObject) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (typeof supportedDateFormatsObject === 'undefined' || supportedDateFormatsObject == null) {
+        throw new Error("IllegalArgumentException: supportedDateFormatsObject is null or undefined");
+      }
+      var res = validate(supportedDateFormatsObject, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        reject(res.errors);
+      } else {
+        // if the object is valid, save the object to the database
+
+        docketObject.name = "supportedDateFormats_save";
+        docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+        docketObject.details = `supportedDateFormats creation initiated`;
+        docketClient.postToDocket(docketObject);
+        collection.save(tenantId, supportedDateFormatsObject).then((result) => {
+          debug(`saved successfully ${result}`);
+          resolve(result);
+        }).catch((e) => {
+          debug(`failed to save with an error: ${e}`);
+          reject(e);
+        });
+      }
+      // Other validations here
+    } catch (e) {
+      docketObject.name = "supportedDateFormats_ExceptionOnSave";
+      docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+      docketObject.details = `caught Exception on supportedDateFormats_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+
 // tenantId should be valid
-// createdBy should be requested supportedDateFormats, not database object supportedDateFormats, used for auditObject
+// createdBy should be requested user, not database object user, used for auditObject
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
-  var invalidFilters = _.difference(_.keys(filter), filterables);
-
-  return collection.find(tenantId, filter, orderby, skipCount, limit);
+module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  return new Promise((resolve, reject) => {
+    try {
+      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
+      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+        debug(`supportedDateFormats(s) stored in the database are ${docs}`);
+        resolve(docs);
+      }).catch((e) => {
+        debug(`failed to find all the supportedDateFormats(s) ${e}`);
+        reject(e);
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
 };
