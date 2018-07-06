@@ -30,16 +30,17 @@ module.exports.save = (tenantId, object) => {
 // for descending e.g. { "createdDate": 1} or { "contactCode" : -1 }
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
-module.exports.find = (tenantId, entityId, accessLevel,filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
   query.accessLevel = {
     $gte: accessLevel
   };
-query.entityId={
-  $regex: entityId + ".*"
-};
+  query.entityId = {
+    $regex: entityId + ".*"
+  };
+  console.log(query);
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
@@ -79,6 +80,19 @@ module.exports.update = (tenantId, code, update) => {
     "entityCode": code
   };
   return collection.update(query, update);
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
+  let query = _.merge(filter, {
+    "tenantId": tenantId
+  });
+  query.accessLevel = {
+    $gte: accessLevel
+  };
+  query.entityId = {
+    $regex: entityId + ".*"
+  };
+  return collection.count(query);
 };
 
 // Deletes all the entries of the collection.

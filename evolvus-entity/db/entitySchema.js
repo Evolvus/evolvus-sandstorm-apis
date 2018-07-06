@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
+const {
+  contact
+} = require("evolvus-contact");
+
+var Contact = mongoose.model("contact", contact.db);
 
 var entitySchema = new mongoose.Schema({
   // Add all attributes below tenantId
@@ -96,9 +101,9 @@ var entitySchema = new mongoose.Schema({
 });
 entitySchema.index({
   tenantId: 1,
-  entityCode: 2,
-  entityId: 3,
-  name: 4
+  entityCode: 1,
+  entityId: 1,
+  name: 1
 }, {
   unique: true
 });

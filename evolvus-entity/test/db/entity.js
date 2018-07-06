@@ -206,7 +206,7 @@ describe("db entity testing", () => {
         });
     });
 
-    it("should return headOffice, the first entity when sorted by lastUpdatedDate", (done) => {
+    it("should return tamilNadu, the first entity when sorted by lastUpdatedDate", (done) => {
       let res = entity.find(tenantOne, "abc12", "1", {}, {
         "lastUpdatedDate": -1
       }, 0, 1);
@@ -241,7 +241,7 @@ describe("db entity testing", () => {
         });
     });
     it("should return 7  entities", (done) => {
-      let res = entity.find(tenantOne,"abc12", "1", {
+      let res = entity.find(tenantOne, "abc12", "1", {
         "enableFlag": 1
       }, {
         "lastUpdatedDate": -1
@@ -291,7 +291,7 @@ describe("db entity testing", () => {
     });
 
     it("should disable  entity", (done) => {
-      let res = entity.update(tenantOne,"entity1", {
+      let res = entity.update(tenantOne, "entity1", {
         "enableFlag": 0,
         "lastUpdatedDate": new Date()
           .toISOString(),
@@ -306,6 +306,47 @@ describe("db entity testing", () => {
           done();
         });
     });
+  });
+
+  describe("testing entity.counts", () => {
+    //  Delete all records, insert two record
+    //  1. Query by one attribute and it should return all roles having attribute value
+    //2. Query by an arbitrary attribute value and it should return {}
+
+    //delete all records and insert two roles
+    beforeEach((done) => {
+      entity.deleteAll(tenantOne)
+        .then((value) => {
+          return entity.deleteAll(tenantTwo);
+        })
+        .then((value) => {
+          return entity.save(tenantOne, entityTestData.validObject1);
+        })
+        .then((value) => {
+          return entity.save(tenantOne, entityTestData.validObject2);
+        })
+        .then((value) => {
+          return entity.save(tenantOne, entityTestData.validObject3);
+        })
+        .then((value) => {
+          return entity.save(tenantOne, entityTestData.validObject4);
+        })
+        .then((value) => {
+          done();
+        });
+    });
+
+    it("should return Count for valid attribute value", (done) => {
+      // take one valid attribute and its value
+      let res = entity.counts(tenantOne, "abc12", "1", {
+        processingStatus: "PENDING_AUTHORIZATION"
+      });
+      expect(res)
+        .to.eventually.deep.equal(4)
+        .notify(done);
+
+    });
+
   });
 
 }); // db entity testing

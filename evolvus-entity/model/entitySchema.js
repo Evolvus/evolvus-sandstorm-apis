@@ -219,6 +219,8 @@ filterAttributes = _.keys(_.pickBy(entitySchema.properties, (a) => {
   return (a.filterable);
 }));
 
+
+
 module.exports.filterAttributes = filterAttributes;
 
 sortableAttributes = _.keys(_.pickBy(entitySchema.properties, (a) => {

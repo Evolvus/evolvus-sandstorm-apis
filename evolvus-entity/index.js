@@ -8,7 +8,7 @@ const docketClient = require("evolvus-docket-client");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var docketObject = {
   // required fields
@@ -24,7 +24,7 @@ var docketObject = {
   //non required fields
   level: ""
 };
-module.exports.entity={
+module.exports={
   model,db,filterAttributes,sortAttributes
 };
 module.exports.validate = (tenantId, entityObject) => {
@@ -63,7 +63,7 @@ module.exports.save = (tenantId,entityObject) => {
       if (typeof entityObject === 'undefined' || entityObject == null) {
         throw new Error("IllegalArgumentException: entityObject is null or undefined");
       }
-      var res = validate(entityObject, entitySchema);
+      var res = validate(tenantId,entityObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
         reject(res.errors);
@@ -73,16 +73,18 @@ module.exports.save = (tenantId,entityObject) => {
         docketObject.keyDataAsJSON = JSON.stringify(entityObject);
         docketObject.details = `entity creation initiated`;
         docketClient.postToDocket(docketObject);
-        entityCollection.save(entityObject).then((result) => {
+        collection.save(tenantId,entityObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
+          console.log(e,"save");
           debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
       // Other validations here
     } catch (e) {
+        console.log(e,"save");
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -94,7 +96,7 @@ module.exports.save = (tenantId,entityObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId,entityId,accessLevel, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId,entityId,accessLevel, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
@@ -102,6 +104,7 @@ module.exports.find = (tenantId,entityId,accessLevel, createdBy, ipAddress, filt
         debug(`menu(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
+        console.log(e);
         debug(`failed to find all the menu(s) ${e}`);
         reject(e);
       });
@@ -115,15 +118,36 @@ module.exports.find = (tenantId,entityId,accessLevel, createdBy, ipAddress, filt
 module.exports.update = (tenantId,code, update) => {
   return new Promise((resolve, reject) => {
     try {
-      if (id == null || update == null) {
-        throw new Error("IllegalArgumentException:id/update is null or undefined");
+      if (code == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      collection.update(tenantId,code, update).then((resp) => {
+      collection.update(tenantId,code,update).then((resp) => {
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, entityId, accessLevel, countQuery).then((entityCount) => {
+        if (entityCount > 0) {
+          debug(`entityCount Data is ${entityCount}`);
+          resolve(entityCount);
+        } else {
+          debug(`No entity count data available for filter query ${entityCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);
