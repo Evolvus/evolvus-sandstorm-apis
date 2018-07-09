@@ -30,9 +30,11 @@ module.exports.save = (tenantId, object) => {
 // for descending e.g. { "createdDate": 1} or { "applicationCode" : -1 }
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
-    "tenantId": tenantId
+    "tenantId": tenantId,
+    "entityId": entityId,
+    "accessLevel": accessLevel
   });
   return collection.find(query)
     .sort(orderby)
@@ -65,7 +67,7 @@ module.exports.findById = (tenantId, id) => {
   return collection.findOne(query);
 };
 
-module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
+module.exports.counts = (tenantId, filter) => {
   let query = _.merge(filter, {
     "tenantId": tenantId,
     "entityId": entityId,
