@@ -9,7 +9,7 @@ const docketClient = require("evolvus-docket-client");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var auditObject = {
   // required fields
@@ -25,7 +25,7 @@ var auditObject = {
   //non required fields
   level: ""
 };
-module.exports.application = {
+module.exports= {
   model,
   db,
   filterAttributes,
