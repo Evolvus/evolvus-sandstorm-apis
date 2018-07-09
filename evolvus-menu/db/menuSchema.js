@@ -101,13 +101,3 @@ var menuSchema = new mongoose.Schema({
 });
 
 module.exports = menuSchema;
-menuSchema.index({
-  tenantId: 1,
-  menuGroupCode: 1
-}, {
-  unique: true
-});
-
-
-
-module.exports = menuSchema;
