@@ -34,7 +34,6 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
-
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
@@ -74,6 +73,15 @@ module.exports.update = (tenantId, code, update) => {
     "applicationCode": code
   };
   return collection.update(query, update);
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
+  let query = _.merge(filter, {
+    "tenantId": tenantId,
+    "entityId": entityId,
+    "accessLevel": accessLevel
+  });
+  return collection.count(query);
 };
 
 // Deletes all the entries of the collection.
