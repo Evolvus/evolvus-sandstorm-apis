@@ -67,13 +67,12 @@ module.exports.findById = (tenantId, id) => {
   return collection.findOne(query);
 };
 
-module.exports.counts = (tenantId, filter) => {
+module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
   let query = _.merge(filter, {
     "tenantId": tenantId,
     "entityId": entityId,
     "accessLevel": accessLevel
   });
-  console.log("QUERY OF COUNTS", query);
   return collection.count(query);
 };
 
