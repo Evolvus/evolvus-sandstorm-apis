@@ -31,13 +31,6 @@ var roleSchema = new mongoose.Schema({
   },
   menuGroup: [menu.db],
 
-  // menuGroup: [{
-  //   type: Array,
-  //   minItems: 1,
-  //   required: true,
-  //   ref: 'Menu'
-  // }],
-
   description: {
     type: String,
     minLength: 6,
@@ -97,13 +90,13 @@ var roleSchema = new mongoose.Schema({
   }
 });
 
-roleSchema.index({
-  tenantId: 1,
-  applicationCode: 1,
-  roleName: 1
-}, {
-  unique: true
-});
+// roleSchema.index({
+//   tenantId: 1,
+//   applicationCode: 1,
+//   roleName: 1
+// }, {
+//   unique: true
+// });
 
 
 module.exports = roleSchema;

@@ -90,7 +90,7 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
         console.log("DOCS", docs);
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
