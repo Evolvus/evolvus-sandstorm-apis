@@ -9,54 +9,78 @@ var masterCurrencySchema = {
     "tenantId": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 64
+      "maxLength": 64,
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "currencyCode": {
       "type": "string",
       "minLength": 1,
       "maxLength": 5,
-      "unique": true
+      "unique": true,
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "currencyName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     },
     "decimalDigit": {
-      "type": "string"
+      "type": "string",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "delimiter": {
-      "type": "string"
+      "type": "string",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "createdDate": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "lastUpdatedDate": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "createdBy": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 100
+      "maxLength": 100,
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "updatedBy": {
       "type": "string",
       "minLength": 1,
-      "maxLength": 100
+      "maxLength": 100,
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "objVersion": {
-      "type": "number"
+      "type": "number",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "enableFlag": {
       "type": "string",
       "default": "1",
-      "enum": ["0", "1"]
+      "enum": ["0", "1"],
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "currencyLocale": {
-      "type": "string"
+      "type": "string",
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     }
   },

@@ -4,10 +4,11 @@ const db = require("./db/masterCurrencySchema");
 const collection = require("./db/masterCurrency");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
+const _ = require("lodash");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var auditObject = {
   // required fields
@@ -24,7 +25,7 @@ var auditObject = {
   level: ""
 };
 
-module.exports.masterCurrency = {
+module.exports = {
   model,
   db,
   filterAttributes,
@@ -83,6 +84,27 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
   });
 };
 
+module.exports.counts = (tenantId, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, countQuery).then((masterCurrencyCount) => {
+        console.log("masterCurrencyCount", masterCurrencyCount);
+        if (masterCurrencyCount > 0) {
+          debug(`masterCurrencyCount Data is ${masterCurrencyCount}`);
+          resolve(masterCurrencyCount);
+        } else {
+          debug(`No masterCurrency count data available for filter query ${masterCurrencyCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
 
 // tenantId should be valid
 // createdBy should be requested user, not database object user, used for auditObject
@@ -90,6 +112,7 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  console.log("inside find");
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
