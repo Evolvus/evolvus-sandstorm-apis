@@ -86,7 +86,7 @@ module.exports.save = (tenantId, roleObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
@@ -130,7 +130,6 @@ module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
   return new Promise((resolve, reject) => {
     try {
       collection.counts(tenantId, entityId, accessLevel, countQuery).then((roleCount) => {
-        console.log("roleCount", roleCount);
         if (roleCount > 0) {
           debug(`roleCount Data is ${roleCount}`);
           resolve(roleCount);

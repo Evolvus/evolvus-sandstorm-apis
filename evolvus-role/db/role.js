@@ -32,7 +32,9 @@ module.exports.save = (tenantId, object) => {
 // skip can be 0 or more, it cannot be negative
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
-    "tenantId": tenantId
+    "tenantId": tenantId,
+    "entityId": entityId,
+    "accessLevel": accessLevel
   });
   return collection.find(query)
     .sort(orderby)
