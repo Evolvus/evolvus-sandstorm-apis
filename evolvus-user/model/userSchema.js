@@ -285,7 +285,7 @@ var userSchema = {
           "sortable": false,
           "displayable": false
         },
-        "entityCode": {
+        "entityId": {
           "type": "string",
           "filterable": false,
           "sortable": false
