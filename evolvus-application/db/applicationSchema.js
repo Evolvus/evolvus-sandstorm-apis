@@ -29,13 +29,21 @@ var applicationSchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    default: true,
+    default: "1",
     enum: ["0", "1"]
   },
   description: {
     type: String,
     minlength: 0,
     maxlength: 255
+  },
+  accessLevel: {
+    type: String
+  },
+  entityId: {
+    type: String,
+    minLength: 5,
+    maxLength: 100
   },
   logo: {
     type: String
@@ -63,7 +71,8 @@ module.exports = applicationSchema;
 
 applicationSchema.index({
   tenantId: 1,
-  applicationCode: 2
+  applicationName: 1,
+  applicationCode: 1
 }, {
   unique: true
 });

@@ -10,8 +10,8 @@ var applicationSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "applicationCode": {
       "type": "string",
@@ -27,6 +27,11 @@ var applicationSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
+    "accessLevel": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attributes
+    },
     "enableFlag": {
       "type": String,
       "enum": ["0", "1"],
@@ -37,6 +42,13 @@ var applicationSchema = {
     "logo": {
       "type": "string",
       "filterable": false, //custom attributes
+      "sortable": false //custom attributes
+    },
+    "entityId": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 100,
+      "filterable": true, //custom attributes
       "sortable": false //custom attributes
     },
     "favicon": {

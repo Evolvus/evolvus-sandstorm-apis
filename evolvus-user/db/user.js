@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 
 // Creates a userCollection collection in the database
 var collection = mongoose.model("User", userSchema);
+var EXCLUDE = `'${process.env.EXCLUDE}','userName','saltString'`;
 
 // Saves the user object to the database and returns a Promise
 // The assumption here is that the Object is valid
@@ -25,14 +26,12 @@ module.exports.save = (tenantId, object) => {
         object.saltString = salt;
 
         let saveObject = new collection(result);
-        saveObject.save().then((object) => {
-          object = object.toObject();
-          delete object.saltString;
-          delete object.userPassword;
+        saveObject.save().then((savedObject) => {
+          var object = _.omit(savedObject.toJSON(), 'userPassword', 'token', 'saltString');
           resolve(object);
         }).catch((e) => {
           reject(e);
-        })
+        });
       });
     });
   });
@@ -53,7 +52,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
     "tenantId": tenantId
   });
 
-  return collection.find(query)
+  return collection.find(query, ['-userPassword', '-saltString', '-token'])
     .sort(orderby)
     .skip(skipCount)
     .limit(limit);
@@ -68,7 +67,7 @@ module.exports.findOne = (tenantId, filter) => {
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
-  return collection.findOne(query);
+  return collection.findOne(query, ['-userPassword', '-saltString', '-token']);
 };
 
 // Finds the user for the id parameter from the user collection
@@ -81,7 +80,7 @@ module.exports.findById = (tenantId, id) => {
     "tenantId": tenantId,
     "_id": new ObjectId(id)
   };
-  return collection.findOne(query);
+  return collection.findOne(query, ['-userPassword', '-saltString', '-token']);
 };
 
 

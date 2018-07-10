@@ -8,7 +8,7 @@ const docketClient = require("evolvus-docket-client");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var auditObject = {
   // required fields
@@ -90,9 +90,8 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      console.log("INVALID ATTRIBUTES", invalidFilters);
       collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
-        console.log(docs, "DOCS");
+        console.log("DOCS", docs);
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -100,6 +99,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         reject(e);
       });
     } catch (e) {
+      console.log(e, "error");
       reject(e);
     }
   });
@@ -112,6 +112,7 @@ module.exports.update = (tenantId, code, update) => {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
       collection.update(tenantId, code, update).then((resp) => {
+        console.log("response for update", resp);
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {
@@ -131,10 +132,10 @@ module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
       collection.counts(tenantId, entityId, accessLevel, countQuery).then((roleCount) => {
         console.log("roleCount", roleCount);
         if (roleCount > 0) {
-          debug(`roleCount Data is ${entityCount}`);
+          debug(`roleCount Data is ${roleCount}`);
           resolve(roleCount);
         } else {
-          debug(`No entity count data available for filter query ${roleCount}`);
+          debug(`No role count data available for filter query ${roleCount}`);
           resolve(0);
         }
       }).catch((e) => {

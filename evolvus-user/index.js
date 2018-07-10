@@ -1,5 +1,5 @@
 const debug = require("debug")("evolvus-user:index");
-const model = require("./model/userSchema");
+const model = require("./model/userSchema").schema;
 const db = require("./db/userSchema");
 const _ = require('lodash');
 const collection = require("./db/user");
@@ -88,10 +88,10 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
       var res = validate(object, model);
+      console.log("res", res);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        console.log("errors", res.errors);
-
+        //  console.log("errors", res.errors);
         reject(res.errors[0].stack);
       } else {
         // Other validations here
@@ -104,7 +104,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
         }).catch((e) => {
           debug(`failed to save with an error: ${e}`);
           reject(e);
-          application
         });
       }
     } catch (e) {

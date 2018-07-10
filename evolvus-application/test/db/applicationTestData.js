@@ -2,6 +2,8 @@ module.exports.validObject1 = {
   // valid application object
   "applicationName": "Docket Audit Server",
   "applicationCode": "DOCKET",
+  "entityId": "abc12",
+  "accessLevel": "1",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),

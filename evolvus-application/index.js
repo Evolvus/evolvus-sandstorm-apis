@@ -9,9 +9,9 @@ const docketClient = require("evolvus-docket-client");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
-var auditObject = {
+var docketObject = {
   // required fields
   application: "PLATFORM",
   source: "application",
@@ -25,7 +25,7 @@ var auditObject = {
   //non required fields
   level: ""
 };
-module.exports.application = {
+module.exports = {
   model,
   db,
   filterAttributes,
@@ -53,7 +53,7 @@ module.exports.save = (tenantId, applicationObject) => {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
         throw new Error("IllegalArgumentException: menuObject is null or undefined");
       }
-      var res = validate(applicationObject, schema);
+      var res = validate(tenantId, applicationObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
         reject(res.errors);
@@ -121,6 +121,27 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, entityId, accessLevel, countQuery).then((applicationCount) => {
+        if (applicationCount > 0) {
+          debug(`applicationCount Data is ${applicationCount}`);
+          resolve(applicationCount);
+        } else {
+          debug(`No application count data available for filter query ${applicationCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);

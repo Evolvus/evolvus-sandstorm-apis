@@ -10,7 +10,7 @@ var roleSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": false, //custom attributes
+      "filterable": true, //custom attributes
       "sortable": false //custom attribute
     },
     "applicationCode": {
@@ -83,12 +83,12 @@ var roleSchema = {
     },
     "accessLevel": {
       "type": "string",
-      "filterable": false, //custom attributes
+      "filterable": true, //custom attributes
       "sortable": false //custom attributes
     },
     "entityId": {
       "type": "string",
-      "filterable": false, //custom attributes
+      "filterable": true, //custom attributes
       "sortable": false //custom attributes
     },
     "menuGroup": {

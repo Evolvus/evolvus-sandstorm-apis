@@ -1,11 +1,8 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const {
-  menu
-} = require("evolvus-menu");
+const menu = require("evolvus-menu");
 
-var Menu = mongoose.model("menu", menu.db);
-
+// const Menu = mongoose.model("menu", menu.db);
 var roleSchema = new mongoose.Schema({
   // Add all attributes below tenantId
   tenantId: {
@@ -32,14 +29,15 @@ var roleSchema = new mongoose.Schema({
       message: "{PATH} can contain only alphabets and numbers"
     }
   },
-  menuGroup: {
-    type: Array,
-    minItems: 1,
-    items: {
-      ref: 'Menu'
-    },
-    required: true
-  },
+  menuGroup: [menu.db],
+
+  // menuGroup: [{
+  //   type: Array,
+  //   minItems: 1,
+  //   required: true,
+  //   ref: 'Menu'
+  // }],
+
   description: {
     type: String,
     minLength: 6,
@@ -103,13 +101,6 @@ roleSchema.index({
   tenantId: 1,
   applicationCode: 1,
   roleName: 1
-}, {
-  unique: true
-});
-roleSchema.index({
-  tenantId: 1,
-  applicationCode: 1,
-  menuGroup: 1
 }, {
   unique: true
 });
