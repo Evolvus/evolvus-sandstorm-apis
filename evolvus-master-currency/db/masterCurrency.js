@@ -31,6 +31,7 @@ module.exports.save = (tenantId, object) => {
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  console.log("inisde db");
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
@@ -74,6 +75,15 @@ module.exports.update = (tenantId, code, update) => {
     "currencyCode": code
   };
   return collection.update(query, update);
+};
+
+module.exports.counts = (tenantId, filter) => {
+  let query = _.merge(filter, {
+    "tenantId": tenantId,
+
+  });
+  console.log("QUERY OF COUNTS", query);
+  return collection.count(query);
 };
 
 // Deletes all the entries of the collection.

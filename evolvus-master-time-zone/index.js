@@ -4,10 +4,10 @@ const db = require("./db/masterTimeZoneSchema");
 const collection = require("./db/masterTimeZone");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
-
+const _ = require("lodash");
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var auditObject = {
   // required fields
@@ -25,7 +25,7 @@ var auditObject = {
 };
 
 
-module.exports.masterTimeZone = {
+module.exports = {
   model,
   db,
   filterAttributes,
@@ -103,6 +103,28 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         reject(e);
       });
     } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+module.exports.counts = (tenantId, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, countQuery).then((masterTimeZoneCount) => {
+        console.log("masterTimeZoneCount", masterTimeZoneCount);
+        if (masterTimeZoneCount > 0) {
+          debug(`masterTimeZoneCount Data is ${masterTimeZoneCount}`);
+          resolve(masterTimeZoneCount);
+        } else {
+          debug(`No masterTimeZone Count data available for filter query ${masterTimeZoneCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });

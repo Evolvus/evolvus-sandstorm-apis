@@ -76,6 +76,15 @@ module.exports.update = (tenantId, code, update) => {
   return collection.update(query, update);
 };
 
+
+module.exports.counts = (tenantId, filter) => {
+  let query = _.merge(filter, {
+    "tenantId": tenantId,
+
+  });
+  console.log("QUERY OF COUNTS", query);
+  return collection.count(query);
+};
 // Deletes all the entries of the collection.
 // To be used by test only
 module.exports.deleteAll = (tenantId) => {

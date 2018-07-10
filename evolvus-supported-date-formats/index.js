@@ -4,10 +4,10 @@ const db = require("./db/supportedDateFormatsSchema");
 const collection = require("./db/supportedDateFormats");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
-
+const _ = require("lodash");
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
-var sortAttributes = model.sortAttributes;
+var sortAttributes = model.sortableAttributes;
 
 var auditObject = {
   // required fields
@@ -24,7 +24,7 @@ var auditObject = {
   level: ""
 };
 
-module.exports.supportedDateFormats = {
+module.exports = {
   model,
   db,
   filterAttributes,
@@ -101,6 +101,28 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         reject(e);
       });
     } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+module.exports.counts = (tenantId, countQuery) => {
+  return new Promise((resolve, reject) => {
+    try {
+      collection.counts(tenantId, countQuery).then((supportedDateFormatsCount) => {
+        console.log("supportedDateFormatsCount", supportedDateFormatsCount);
+        if (supportedDateFormatsCount > 0) {
+          debug(`supportedDateFormatsCountData is ${supportedDateFormatsCount}`);
+          resolve(supportedDateFormatsCount);
+        } else {
+          debug(`No supportedDateFormats Count data available for filter query ${supportedDateFormatsCount}`);
+          resolve(0);
+        }
+      }).catch((e) => {
+        debug(`failed to find ${e}`);
+      });
+    } catch (e) {
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
