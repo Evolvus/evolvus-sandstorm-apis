@@ -269,6 +269,7 @@ var userSchema = {
             "LOGGED_IN",
             "LOGGED_OUT"
           ],
+          "default": "LOGGED_OUT",
           "filterable": false,
           "sortable": false,
           "displayable": true
@@ -441,7 +442,7 @@ var userSchema = {
         "createdDate",
         "lastUpdatedDate",
         "accessLevel",
-        "entityCode"
+        "entityId"
       ]
     },
     "contact": {

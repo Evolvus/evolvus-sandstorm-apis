@@ -102,12 +102,10 @@ var userSchema = new mongoose.Schema({
     type: String
   },
   masterCurrency: {
-    type: String,
-    required: true
+    type: String
   },
   masterTimeZone: {
-    type: String,
-    required: true
+    type: String
   },
   designation: {
     type: String,
@@ -122,7 +120,6 @@ var userSchema = new mongoose.Schema({
   },
   dailyLimit: {
     type: Number,
-    minLength: 16,
     maxLength: 16,
     validate: {
       validator: function(v) {
@@ -133,7 +130,6 @@ var userSchema = new mongoose.Schema({
   },
   individualTransactionLimit: {
     type: Number,
-    minLength: 16,
     maxLength: 16,
     validate: {
       validator: function(v) {
@@ -144,7 +140,8 @@ var userSchema = new mongoose.Schema({
   },
   loginStatus: {
     type: String,
-    enum: ["LOGGED_IN", "LOGGED_OUT"]
+    enum: ["LOGGED_IN", "LOGGED_OUT"],
+    default: "LOGGED_OUT"
   }
 });
 
