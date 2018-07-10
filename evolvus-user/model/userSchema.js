@@ -12,7 +12,8 @@ var userSchema = {
       "minLength": 1,
       "maxLength": 64,
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "userId": {
       "type": "string",
@@ -20,7 +21,12 @@ var userSchema = {
       "maxLength": 35,
       "pattern": "^[ A-Za-z0-9_-]*$",
       "filterable": true,
-      "sortable": true
+      "sortable": true,
+      "displayable": true,
+      "messages": {
+        "required": "UserId is Required Property",
+        "pattern": "Correct format of Date Of Birth is dd-mmm-yyyy"
+      }
     },
     "userName": {
       "type": "string",
@@ -28,119 +34,146 @@ var userSchema = {
       "maxLength": 64,
       "pattern": "^[a-zA-Z0-9!@#$&()\\-`.+,/\"]*$",
       "filterable": true,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "userPassword": {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "saltString": {
       "type": "string",
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "token": {
       "type": "string",
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "supportedDateFormats": {
       "type": "string",
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "masterCurrency": {
       "type": "string",
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "masterTimeZone": {
       "type": "string",
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "entityId": {
       "type": "string",
       "minLength": 5,
       "maxLength": 100,
       "filterable": true,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "createdBy": {
       "type": "string",
       "filterable": false,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "updatedBy": {
       "type": "string",
       "filterable": false,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
       "filterable": false,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "lastUpdatedDate": {
       "type": "string",
       "format": "date-time",
       "filterable": false,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "enabledFlag": {
       "type": "string",
       "default": "1",
       "filterable": true,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "deletedFlag": {
       "type": "string",
       "default": "0",
       "filterable": true,
-      "sortable": true
+      "sortable": true,
+      "displayable": true
     },
     "accessLevel": {
       "type": "string",
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "activationStatus": {
       "type": "string",
-      "enum": ["ACTIVE", "INACTIVE"],
+      "enum": [
+        "ACTIVE",
+        "INACTIVE"
+      ],
       "filterable": true,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "processingStatus": {
       "type": "string",
-      "enum": ["PENDING_AUTHORIZATION", "AUTHORIZED", "REJECTED"],
+      "enum": [
+        "PENDING_AUTHORIZATION",
+        "AUTHORIZED",
+        "REJECTED"
+      ],
       "default": "PENDING_AUTHORIZATION",
       "filterable": true,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "dailyLimit": {
       "type": "number",
       "minLength": 16,
       "maxLength": 16,
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "individualTransactionLimit": {
       "type": "number",
       "minLength": 16,
       "maxLength": 16,
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": false
     },
     "designation": {
       "type": "string",
       "minLength": 6,
       "maxLength": 35,
       "filterable": false,
-      "sortable": false
+      "sortable": false,
+      "displayable": true
     },
     "role": {
       "type": "object",
@@ -149,7 +182,7 @@ var userSchema = {
           "type": "string",
           "maxLength": 64,
           "filterable": true,
-          "sortable": false //custom attribute
+          "sortable": false
         },
         "applicationCode": {
           "type": "string",
@@ -167,7 +200,10 @@ var userSchema = {
         },
         "enableFlag": {
           "type": "string",
-          "enum": ["0", "1"],
+          "enum": [
+            "0",
+            "1"
+          ],
           "filterable": true,
           "sortable": true
         },
@@ -188,41 +224,66 @@ var userSchema = {
           "sortable": true
         },
         "lastUpdatedDate": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "format": "date-time",
           "filterable": false,
           "sortable": true
         },
         "selectedFlag": {
           "type": "string",
-          "enum": ["0", "1"],
+          "enum": [
+            "0",
+            "1"
+          ],
           "filterable": false,
           "sortable": false
         },
         "activationStatus": {
           "type": "string",
-          "enum": ["ACTIVE", "INACTIVE"],
+          "enum": [
+            "ACTIVE",
+            "INACTIVE"
+          ],
           "displayable": true,
           "filterable": true,
           "sortable": false
         },
         "processingStatus": {
           "type": "string",
-          "enum": ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-          "default": 'PENDING_AUTHORIZATION',
+          "enum": [
+            "PENDING_AUTHORIZATION",
+            "AUTHORIZED",
+            "REJECTED"
+          ],
+          "default": "PENDING_AUTHORIZATION",
           "displayable": true,
           "filterable": true,
           "sortable": false
         },
+        "loginStatus": {
+          "type": "string",
+          "enum": [
+            "LOGGED_IN",
+            "LOGGED_OUT"
+          ],
+          "filterable": false,
+          "sortable": false,
+          "displayable": true
+        },
         "associatedUsers": {
           "type": "number",
           "filterable": false,
-          "sortable": false
+          "sortable": false,
+          "displayable": true
         },
         "accessLevel": {
           "type": "string",
           "filterable": false,
-          "sortable": false
+          "sortable": false,
+          "displayable": false
         },
         "entityCode": {
           "type": "string",
@@ -231,8 +292,8 @@ var userSchema = {
         },
         "menuGroup": {
           "type": "array",
-          "minItems": 1,
           "items": {
+            "type": "object",
             "properties": {
               "tenantId": {
                 "type": "string",
@@ -286,7 +347,10 @@ var userSchema = {
               },
               "enableFlag": {
                 "type": "string",
-                "enum": ["0", "1"],
+                "enum": [
+                  "0",
+                  "1"
+                ],
                 "filterable": false,
                 "sortable": false
               },
@@ -297,8 +361,8 @@ var userSchema = {
               },
               "menuItems": {
                 "type": "array",
-                "minItems": 1,
                 "items": {
+                  "type": "object",
                   "properties": {
                     "menuItemType": {
                       "type": "string",
@@ -330,17 +394,31 @@ var userSchema = {
                     },
                     "menuItemOrder": {
                       "type": "number",
-                      "required": "true",
                       "filterable": false,
                       "sortable": false
                     }
                   }
                 },
-                "required": ["menuItemType", "applicationCode", "menuItemCode", "title", "menuItemOrder"]
-              } //MENUiTEMS
+                "required": [
+                  "menuItemType",
+                  "applicationCode",
+                  "menuItemCode",
+                  "title",
+                  "menuItemOrder"
+                ]
+              }
             }
           },
-          "required": ["tenantId", "applicationCode", "menuGroupCode", "menuGroupOrder", "title", "createdDate", "createdBy", "menuItems"]
+          "required": [
+            "tenantId",
+            "applicationCode",
+            "menuGroupCode",
+            "menuGroupOrder",
+            "title",
+            "createdDate",
+            "createdBy",
+            "menuItems"
+          ]
         },
         "description": {
           "type": "string",
@@ -352,7 +430,19 @@ var userSchema = {
           "displayable": true
         }
       },
-      "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate", "accessLevel", "entityCode"]
+      "required": [
+        "tenantId",
+        "applicationCode",
+        "roleName",
+        "menuGroup",
+        "activationStatus",
+        "associatedUsers",
+        "createdBy",
+        "createdDate",
+        "lastUpdatedDate",
+        "accessLevel",
+        "entityCode"
+      ]
     },
     "contact": {
       "type": "object",
@@ -423,12 +513,28 @@ var userSchema = {
           "type": "string"
         }
       },
-      "required": ["emailId", "state", "city", "country"]
+      "required": [
+        "emailId",
+        "state",
+        "city",
+        "country"
+      ]
     }
   },
-  "required": ["tenantId", "userId", "applicationCode", "userName", "userPassword", "createdBy", "createdDate", "lastUpdatedDate", , "contact", "role", "entityId"]
+  "required": [
+    "tenantId",
+    "userId",
+    "applicationCode",
+    "userName",
+    "userPassword",
+    "createdBy",
+    "createdDate",
+    "lastUpdatedDate",
+    "contact",
+    "role",
+    "entityId"
+  ]
 };
-
 
 module.exports.schema = userSchema;
 

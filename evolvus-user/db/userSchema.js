@@ -141,6 +141,10 @@ var userSchema = new mongoose.Schema({
       },
       message: "{PATH} can contain only numbers and . "
     }
+  },
+  loginStatus: {
+    type: String,
+    enum: ["LOGGED_IN", "LOGGED_OUT"]
   }
 });
 
