@@ -90,7 +90,11 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
       var res = validate(object, model.schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        reject(res.errors[0].stack);
+        if (res.errors[0].name === 'required') {
+          reject(`${res.errors[0].argument} is Required`);
+        } else {
+          reject(res.errors[0].stack);
+        }
       } else {
         // Other validations here
 
