@@ -1,9 +1,10 @@
-const debug = require("debug")("evolvus-application:index");
-const model = require("./model/applicationSchema");
-
-const collection = require("./db/application");
+const debug = require("debug")("evolvus-lookup:index");
+const model = require("./model/lookupSchema");
+const db = require("./db/lookupSchema");
+const collection = require("./db/lookup");
 const validate = require("jsonschema")
   .validate;
+const _ = require("lodash");
 const docketClient = require("evolvus-docket-client");
 
 var schema = model.schema;
@@ -24,7 +25,12 @@ var auditObject = {
   //non required fields
   level: ""
 };
-
+module.exports = {
+  db,
+  model,
+  filterAttributes,
+  sortAttributes
+}
 // tenantId cannot be null or undefined, InvalidArgumentError
 // check if tenantId is valid from tenant table (todo)
 //
@@ -42,7 +48,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, object) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
-  var invalidFilters = _.difference(_.keys(filter), filterables);
-
+  var invalidFilters = _.difference(_.keys(filter), filterAttributes);
+  console.log(tenantId, filter, orderby, skipCount, limit);
   return collection.find(tenantId, filter, orderby, skipCount, limit);
 };
