@@ -11,7 +11,7 @@ var userSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": false,
+      "filterable": true,
       "sortable": false,
       "displayable": false
     },
@@ -270,7 +270,7 @@ var userSchema = {
             "LOGGED_OUT"
           ],
           "default": "LOGGED_OUT",
-          "filterable": false,
+          "filterable": true,
           "sortable": false,
           "displayable": true
         },
@@ -282,13 +282,13 @@ var userSchema = {
         },
         "accessLevel": {
           "type": "string",
-          "filterable": false,
+          "filterable": true,
           "sortable": false,
           "displayable": false
         },
         "entityId": {
           "type": "string",
-          "filterable": false,
+          "filterable": true,
           "sortable": false
         },
         "menuGroup": {

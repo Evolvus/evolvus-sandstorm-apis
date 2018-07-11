@@ -7,9 +7,9 @@ const _ = require("lodash");
 const userSchema = require("./userSchema");
 const bcrypt = require('bcryptjs');
 
-// Creates a userCollection collection in the database
+// Creates a user collection in the database
 var collection = mongoose.model("User", userSchema);
-var EXCLUDE = `'${process.env.EXCLUDE}','userName','saltString'`;
+// var EXCLUDE = `'${process.env.EXCLUDE}','userName','saltString'`;
 
 // Saves the user object to the database and returns a Promise
 // The assumption here is that the Object is valid
@@ -47,10 +47,16 @@ module.exports.save = (tenantId, object) => {
 // for descending e.g. { "createdDate": 1} or { "applicationCode" : -1 }
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
+  query.accessLevel = {
+    $gte: accessLevel
+  };
+  query.entityId = {
+    $regex: entityId + ".*"
+  };
 
   return collection.find(query, ['-userPassword', '-saltString', '-token'])
     .sort(orderby)

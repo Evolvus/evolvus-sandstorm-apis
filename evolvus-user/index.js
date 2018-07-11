@@ -1,5 +1,5 @@
 const debug = require("debug")("evolvus-user:index");
-const model = require("./model/userSchema").schema;
+const model = require("./model/userSchema");
 const db = require("./db/userSchema");
 const _ = require('lodash');
 const collection = require("./db/user");
@@ -87,11 +87,9 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
       docketObject.keyDataAsJSON = JSON.stringify(object);
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
-      var res = validate(object, model);
-      console.log("res", res);
+      var res = validate(object, model.schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        //  console.log("errors", res.errors);
         reject(res.errors[0].stack);
       } else {
         // Other validations here
@@ -130,21 +128,20 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
 // orderby should only have fields which are marked as sortable in the model Schema
 
 
-module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null) {
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
-      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      console.log("invalid", invalidFilters, "filter", filter);
-
       docketObject.name = "user_getAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
       docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
       docketObject.details = `user getAll method`;
       docketClient.postToDocket(docketObject);
 
-      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
         debug(`user(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -153,6 +150,8 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       docketObject.name = "user_ExceptionOngetAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
       docketObject.keyDataAsJSON = "userObject";
       docketObject.details = `caught Exception on user_getAll ${e.message}`;
       docketClient.postToDocket(docketObject);
@@ -170,9 +169,7 @@ module.exports.update = (tenantId, userName, update) => {
       if (tenantId == null || userName == null) {
         throw new Error("IllegalArgumentException:tenantId/userName is null or undefined");
       }
-      console.log("update", update);
       collection.update(tenantId, userName, update).then((resp) => {
-        console.log(resp);
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {
