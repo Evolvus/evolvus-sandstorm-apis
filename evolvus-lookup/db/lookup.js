@@ -1,7 +1,7 @@
 const debug = require("debug")("evolvus-lookup:db:lookup");
 const mongoose = require("mongoose");
 const ObjectId = require('mongodb')
-    .ObjectID;
+  .ObjectID;
 const _ = require("lodash");
 
 const schema = require("./lookupSchema");
@@ -13,11 +13,11 @@ var collection = mongoose.model("lookup", schema);
 // The assumption here is that the Object is valid
 // tenantId must match object.tenantId,if missing it will get added here
 module.exports.save = (tenantId, object) => {
-    let result = _.merge(object, {
-        "tenantId": tenantId
-    });
-    let saveObject = new collection(result);
-    return saveObject.save();
+  let result = _.merge(object, {
+    "tenantId": tenantId
+  });
+  let saveObject = new collection(result);
+  return saveObject.save();
 };
 
 
@@ -31,14 +31,14 @@ module.exports.save = (tenantId, object) => {
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
-    let query = _.merge(filter, {
-        "tenantId": tenantId
-    });
-
-    return collection.find(query)
-        .sort(orderby)
-        .skip(skipCount)
-        .limit(limit);
+  let query = _.merge(filter, {
+    "tenantId": tenantId
+  });
+  console.log(query, "q");
+  return collection.find(query)
+    .sort(orderby)
+    .skip(skipCount)
+    .limit(limit);
 };
 
 // Finds the lookup which matches the value parameter from lookup collection
@@ -46,10 +46,10 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 // null, undefined should be rejected with Invalid Argument Error
 // Should return a Promise
 module.exports.findOne = (tenantId, filter) => {
-    let query = _.merge(filter, {
-        "tenantId": tenantId
-    });
-    return collection.findOne(query);
+  let query = _.merge(filter, {
+    "tenantId": tenantId
+  });
+  return collection.findOne(query);
 };
 
 //
@@ -59,28 +59,28 @@ module.exports.findOne = (tenantId, filter) => {
 // All returns are wrapped in a Promise
 //
 module.exports.findById = (tenantId, id) => {
-    let query = {
-        "tenantId": tenantId,
-        "_id": new ObjectId(id)
-    };
-    return collection.findOne(query);
+  let query = {
+    "tenantId": tenantId,
+    "_id": new ObjectId(id)
+  };
+  return collection.findOne(query);
 };
 
 //Finds one lookup by its code and updates it with new values
 // Using the unique key i.e. tenantId/lookupCode
 module.exports.update = (tenantId, code, update) => {
-    let query = {
-        "tenantId": tenantId,
-        "lookupCode": code
-    };
-    return collection.update(query, update);
+  let query = {
+    "tenantId": tenantId,
+    "lookupCode": code
+  };
+  return collection.update(query, update);
 };
 
 // Deletes all the entries of the collection.
 // To be used by test only
 module.exports.deleteAll = (tenantId) => {
-    let query = {
-        "tenantId": tenantId
-    };
-    return collection.remove(query);
+  let query = {
+    "tenantId": tenantId
+  };
+  return collection.remove(query);
 };
