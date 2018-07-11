@@ -19,7 +19,7 @@ var userSchema = new mongoose.Schema({
     max: 35,
     validate: {
       validator: function(v) {
-        return /^[ A-Za-z0-9_-]*$/.test(v);
+        return /^[A-Za-z0-9_-]*$/.test(v);
       },
       message: "{PATH} can contain only alphanumeric and _ -"
     }
@@ -45,7 +45,7 @@ var userSchema = new mongoose.Schema({
     max: 140,
     validate: {
       validator: function(v) {
-        return /^[a-zA-Z0-9!@#$&()\\-`.+,/\"]*$/.test(v);
+        return /^[a-zA-Z0-9 !@#$&()\\-`.+,/\"]*$/.test(v);
       },
       message: "{PATH} can contain only alphanumeric and specialcharacters"
     },

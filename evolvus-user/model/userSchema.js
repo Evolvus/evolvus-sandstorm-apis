@@ -19,20 +19,16 @@ var userSchema = {
       "type": "string",
       "minLength": 6,
       "maxLength": 35,
-      "pattern": "^[ A-Za-z0-9_-]*$",
+      "pattern": "^[A-Za-z0-9_-]*$",
       "filterable": true,
       "sortable": true,
-      "displayable": true,
-      "messages": {
-        "required": "UserId is Required Property",
-        "pattern": "Correct format of Date Of Birth is dd-mmm-yyyy"
-      }
+      "displayable": true
     },
     "userName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "pattern": "^[a-zA-Z0-9!@#$&()\\-`.+,/\"]*$",
+      "pattern": "^[ a-zA-Z0-9!@#$&()\\-`.+,/\"]*$",
       "filterable": true,
       "sortable": true,
       "displayable": true
@@ -56,6 +52,17 @@ var userSchema = {
       "filterable": false,
       "sortable": false,
       "displayable": false
+    },
+    "loginStatus": {
+      "type": "string",
+      "enum": [
+        "LOGGED_IN",
+        "LOGGED_OUT"
+      ],
+      "default": "LOGGED_OUT",
+      "filterable": true,
+      "sortable": false,
+      "displayable": true
     },
     "supportedDateFormats": {
       "type": "string",
@@ -262,17 +269,6 @@ var userSchema = {
           "displayable": true,
           "filterable": true,
           "sortable": false
-        },
-        "loginStatus": {
-          "type": "string",
-          "enum": [
-            "LOGGED_IN",
-            "LOGGED_OUT"
-          ],
-          "default": "LOGGED_OUT",
-          "filterable": true,
-          "sortable": false,
-          "displayable": true
         },
         "associatedUsers": {
           "type": "number",
