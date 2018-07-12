@@ -56,7 +56,11 @@ module.exports.save = (tenantId, applicationObject) => {
       var res = validate(tenantId, applicationObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        reject(res.errors);
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
+        } else {
+          reject(res.errors[0].schema.message);
+        }
       } else {
         // if the object is valid, save the object to the database
 
@@ -129,23 +133,3 @@ module.exports.update = (tenantId, code, update) => {
   });
 };
 
-module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
-  return new Promise((resolve, reject) => {
-    try {
-      collection.counts(tenantId, entityId, accessLevel, countQuery).then((applicationCount) => {
-        if (applicationCount > 0) {
-          debug(`applicationCount Data is ${applicationCount}`);
-          resolve(applicationCount);
-        } else {
-          debug(`No application count data available for filter query ${applicationCount}`);
-          resolve(0);
-        }
-      }).catch((e) => {
-        debug(`failed to find ${e}`);
-      });
-    } catch (e) {
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};

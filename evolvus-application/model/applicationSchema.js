@@ -25,7 +25,10 @@ var applicationSchema = {
       "minLength": 1,
       "maxLength": 100,
       "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "sortable": true ,//custom attributes
+      "pattern":'^[A-Za-z ]*$',
+      "message": "applicationName can contain only alphabets and spaces"
+
     },
     "accessLevel": {
       "type": "string",
