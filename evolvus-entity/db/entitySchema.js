@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const {
-  contact
-} = require("evolvus-contact");
+const contact = require("evolvus-contact");
 
 var Contact = mongoose.model("contact", contact.db);
 
@@ -55,9 +53,9 @@ var entitySchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        return /^[a-zA-Z\-0-9 ]+$/.test(v);
+        return /^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$/.test(v);
       },
-      message: "{PATH} can contain only alphabets and numbers"
+      message: "{PATH} can contain only alphabets and numbers and specialcharacters"
     }
   },
   enableFlag: {
@@ -89,7 +87,7 @@ var entitySchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        return /^[a-zA-Z\-0-9]+$/.test(v);
+        return /^[a-zA-Z\-0-9 ]+$/.test(v);
       },
       message: "{PATH} can contain only alphabets and numbers"
     }

@@ -24,6 +24,8 @@ var roleSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
+      "pattern": "^[a-zA-Z-0-9-_ ]+$",
+      "message": "RoleName can contain only alphabets and numbers",
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
@@ -94,6 +96,7 @@ var roleSchema = {
     "menuGroup": {
       "type": "array",
       "minItems": 1,
+      "message": "Menus are required",
       "items": {
         "properties": {
           "tenantId": {

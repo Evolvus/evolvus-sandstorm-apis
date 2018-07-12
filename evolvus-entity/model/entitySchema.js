@@ -18,12 +18,16 @@ var entitySchema = {
       "minLength": 3,
       "maxLength": 20,
       "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "sortable": true, //custom attributes
+      "pattern": "^[a-zA-Z\-0-9]+$",
+      "message": "EntityCode can contain only alphabets and numbers"
     },
     "name": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
+      "pattern": "^[a-zA-Z\-0-9]+$",
+      "message": "name can contain only alphabets and numbers",
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
@@ -76,6 +80,8 @@ var entitySchema = {
     },
     "parent": {
       "type": "string",
+      "pattern": "^[a-zA-Z\-0-9 ]+$",
+      "message": "parent can contain only alphabets and numbers",
       "filterable": true, //custom attributes
       "sortable": false //custom attributes
     },

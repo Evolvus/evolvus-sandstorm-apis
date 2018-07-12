@@ -69,7 +69,11 @@ module.exports.save = (tenantId, entityObject) => {
       var res = validate(tenantId, entityObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        reject(res.errors);
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
+        } else {
+          reject(res.errors[0].schema.message);
+        }
       } else {
         // if the object is valid, save the object to the database
         docketObject.name = "entity_save";
@@ -80,14 +84,12 @@ module.exports.save = (tenantId, entityObject) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
-          console.log(e, "save");
           debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
       // Other validations here
     } catch (e) {
-      console.log(e, "save");
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -107,7 +109,6 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
         debug(`menu(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        console.log(e);
         debug(`failed to find all the menu(s) ${e}`);
         reject(e);
       });
@@ -130,27 +131,6 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
-      });
-    } catch (e) {
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};
-
-module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
-  return new Promise((resolve, reject) => {
-    try {
-      collection.counts(tenantId, entityId, accessLevel, countQuery).then((entityCount) => {
-        if (entityCount > 0) {
-          debug(`entityCount Data is ${entityCount}`);
-          resolve(entityCount);
-        } else {
-          debug(`No entity count data available for filter query ${entityCount}`);
-          resolve(0);
-        }
-      }).catch((e) => {
-        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);

@@ -61,7 +61,11 @@ module.exports.save = (tenantId, roleObject) => {
       var res = validate(roleObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        reject(res.errors);
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
+        } else {
+          reject(res.errors[0].schema.message);
+        }
       } else {
         // if the object is valid, save the object to the database
         collection.save(tenantId, roleObject).then((result) => {
@@ -86,12 +90,11 @@ module.exports.save = (tenantId, roleObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
-        console.log("DOCS", docs);
+      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -99,7 +102,6 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
         reject(e);
       });
     } catch (e) {
-      console.log(e, "error");
       reject(e);
     }
   });
@@ -112,33 +114,11 @@ module.exports.update = (tenantId, code, update) => {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
       collection.update(tenantId, code, update).then((resp) => {
-        console.log("response for update", resp);
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
-      });
-    } catch (e) {
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};
-
-module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
-  return new Promise((resolve, reject) => {
-    try {
-      collection.counts(tenantId, entityId, accessLevel, countQuery).then((roleCount) => {
-        if (roleCount > 0) {
-          debug(`roleCount Data is ${roleCount}`);
-          resolve(roleCount);
-        } else {
-          debug(`No role count data available for filter query ${roleCount}`);
-          resolve(0);
-        }
-      }).catch((e) => {
-        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);
