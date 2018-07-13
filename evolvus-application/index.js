@@ -51,7 +51,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
-        throw new Error("IllegalArgumentException: menuObject is null or undefined");
+        throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
       var res = validate(tenantId, applicationObject, schema);
       debug("validation status: ", JSON.stringify(res));
@@ -68,7 +68,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
         docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
         docketObject.details = `application creation initiated`;
         docketClient.postToDocket(docketObject);
-        collection.save(tenantId, applicationObject).then((result) => {
+        collection.save(tenantId, ipAddress, createdBy, applicationObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
@@ -80,7 +80,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
     } catch (e) {
       docketObject.name = "application_ExceptionOnSave";
       docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
-      docketObject.details = `caught Exception on menu_save ${e.message}`;
+      docketObject.details = `caught Exception on application_save ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
