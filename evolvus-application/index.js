@@ -53,7 +53,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
         throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
-      var res = validate(tenantId, applicationObject, schema);
+      var res = validate(applicationObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
         if (res.errors[0].name == "required") {
