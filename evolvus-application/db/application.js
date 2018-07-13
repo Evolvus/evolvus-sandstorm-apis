@@ -75,15 +75,6 @@ module.exports.update = (tenantId, code, update) => {
   return collection.update(query, update);
 };
 
-module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
-  let query = _.merge(filter, {
-    "tenantId": tenantId,
-    "entityId": entityId,
-    "accessLevel": accessLevel
-  });
-  return collection.count(query);
-};
-
 // Deletes all the entries of the collection.
 // To be used by test only
 module.exports.deleteAll = (tenantId) => {

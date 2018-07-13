@@ -40,7 +40,6 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
   query.entityId = {
     $regex: entityId + ".*"
   };
-  console.log(query);
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
@@ -80,19 +79,6 @@ module.exports.update = (tenantId, code, update) => {
     "entityCode": code
   };
   return collection.update(query, update);
-};
-
-module.exports.counts = (tenantId, entityId, accessLevel, filter) => {
-  let query = _.merge(filter, {
-    "tenantId": tenantId
-  });
-  query.accessLevel = {
-    $gte: accessLevel
-  };
-  query.entityId = {
-    $regex: entityId + ".*"
-  };
-  return collection.count(query);
 };
 
 // Deletes all the entries of the collection.

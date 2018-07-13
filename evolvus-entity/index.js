@@ -60,39 +60,80 @@ module.exports.validate = (tenantId, entityObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, entityObject) => {
+module.exports.save = (tenantId, entityId, accessLevel, entityObject) => {
   return new Promise((resolve, reject) => {
     try {
+      const response = {
+        "status": "200",
+        "description": "",
+        "data": {}
+      };
       if (typeof entityObject === 'undefined' || entityObject == null) {
         throw new Error("IllegalArgumentException: entityObject is null or undefined");
       }
-      var res = validate(tenantId, entityObject, schema);
-      debug("validation status: ", JSON.stringify(res));
-      if (!res.valid) {
-        reject(res.errors);
-      } else {
-        // if the object is valid, save the object to the database
-        docketObject.name = "entity_save";
-        docketObject.keyDataAsJSON = JSON.stringify(entityObject);
-        docketObject.details = `entity creation initiated`;
-        docketClient.postToDocket(docketObject);
-        collection.save(tenantId, entityObject).then((result) => {
-          debug(`saved successfully ${result}`);
-          resolve(result);
-        }).catch((e) => {
-          console.log(e, "save");
-          debug(`failed to save with an error: ${e}`);
-          reject(e);
-        });
-      }
-      // Other validations here
+
+      collection.find(tenantId, entityId, accessLevel, {
+        "name": entityObject.parent
+      }, {}, 0, 1).then((result) => {
+        if (_.isEmpty(result)) {
+          throw new Error(`No ParentEntity found with ${entityObject.parent}`);
+        }
+        var randomId = randomString.generate(5);
+
+        if (result[0].enableFlag == `1`) {
+          var aces = parseInt(result[0].accessLevel) + 1;
+          entityObject.accessLevel = JSON.stringify(aces);
+          entityObject.entityId = result[0].entityId + randomId;
+          Promise.all([collection.find(tenantId, entityId, accessLevel, {
+              "name": entityObject.name,
+            }, {}, 0, 1), collection.find(tenantId, entityId, accessLevel, {
+              "entityCode": entityObject.entityCode
+            }, {}, 0, 1)])
+            .then((result) => {
+              if (!_.isEmpty(result[0][0])) {
+                throw new Error(`Entity ${entityObject.name} already exists`);
+              }
+              if (!_.isEmpty(result[1][0])) {
+                throw new Error(`Entity ${entityObject.entityCode} already exists`);
+              }
+              var res = validate(tenantId, entityObject, schema);
+              debug("validation status: ", JSON.stringify(res));
+              if (!res.valid) {
+                if (res.errors[0].name == "required") {
+                  reject(`${res.errors[0].argument} is required`);
+                } else {
+                  reject(res.errors[0].schema.message);
+                }
+              } else {
+                // if the object is valid, save the object to the database
+                docketObject.name = "entity_save";
+                docketObject.keyDataAsJSON = JSON.stringify(entityObject);
+                docketObject.details = `entity creation initiated`;
+                docketClient.postToDocket(docketObject);
+                collection.save(tenantId, entityObject).then((result) => {
+                  debug(`saved successfully ${result}`);
+                  resolve(result);
+                }).catch((e) => {
+                  debug(`failed to save with an error: ${e}`);
+                  reject(e);
+                });
+              }
+            }).catch((e) => {
+              reject(e);
+            });
+        } else {
+          throw new Error(`ParentEntity is disabled`);
+        }
+      }).catch((e) => {
+        reject(e);
+      });
     } catch (e) {
-      console.log(e, "save");
       debug(`caught exception ${e}`);
       reject(e);
     }
   });
 };
+
 
 // tenantId should be valid
 // createdBy should be requested user, not database object user, used for auditObject
@@ -107,7 +148,6 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
         debug(`menu(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        console.log(e);
         debug(`failed to find all the menu(s) ${e}`);
         reject(e);
       });
@@ -130,27 +170,6 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
-      });
-    } catch (e) {
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};
-
-module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
-  return new Promise((resolve, reject) => {
-    try {
-      collection.counts(tenantId, entityId, accessLevel, countQuery).then((entityCount) => {
-        if (entityCount > 0) {
-          debug(`entityCount Data is ${entityCount}`);
-          resolve(entityCount);
-        } else {
-          debug(`No entity count data available for filter query ${entityCount}`);
-          resolve(0);
-        }
-      }).catch((e) => {
-        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);

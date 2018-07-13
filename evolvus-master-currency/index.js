@@ -88,7 +88,6 @@ module.exports.counts = (tenantId, countQuery) => {
   return new Promise((resolve, reject) => {
     try {
       collection.counts(tenantId, countQuery).then((masterCurrencyCount) => {
-        console.log("masterCurrencyCount", masterCurrencyCount);
         if (masterCurrencyCount > 0) {
           debug(`masterCurrencyCount Data is ${masterCurrencyCount}`);
           resolve(masterCurrencyCount);
@@ -112,7 +111,6 @@ module.exports.counts = (tenantId, countQuery) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
-  console.log("inside find");
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);

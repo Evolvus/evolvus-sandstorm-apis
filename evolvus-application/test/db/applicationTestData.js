@@ -12,8 +12,7 @@ module.exports.validObject1 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z"
 };
 
 module.exports.validObject2 = {
@@ -28,7 +27,7 @@ module.exports.validObject2 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": ""
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject3 = {
@@ -43,8 +42,7 @@ module.exports.validObject3 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject4 = {
@@ -59,8 +57,7 @@ module.exports.validObject4 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject5 = {
@@ -75,8 +72,7 @@ module.exports.validObject5 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject6 = {
@@ -91,8 +87,7 @@ module.exports.validObject6 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject7 = {
@@ -107,8 +102,7 @@ module.exports.validObject7 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.validObject8 = {
@@ -123,8 +117,7 @@ module.exports.validObject8 = {
   "favicon": "",
   "description": "This is application object",
   "updatedBy": "Srihari",
-  "lastupdatedDate": new Date()
-    .toISOString(),
+  "lastupdatedDate": "2018-07-05T12:25:22.895Z",
 };
 
 module.exports.invalidObject1 = {

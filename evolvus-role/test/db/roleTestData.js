@@ -86,6 +86,9 @@ module.exports.validObject3 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
@@ -119,6 +122,9 @@ module.exports.validObject4 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
@@ -152,6 +158,9 @@ module.exports.validObject5 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
@@ -185,6 +194,9 @@ module.exports.validObject6 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
@@ -218,6 +230,9 @@ module.exports.validObject7 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc1",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
@@ -251,6 +266,9 @@ module.exports.validObject8 = {
     "tenantId": "tid",
     "applicationCode": "CDA",
     "menuGroupCode": "mgc",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",

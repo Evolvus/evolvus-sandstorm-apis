@@ -110,7 +110,6 @@ module.exports.counts = (tenantId, countQuery) => {
   return new Promise((resolve, reject) => {
     try {
       collection.counts(tenantId, countQuery).then((supportedDateFormatsCount) => {
-        console.log("supportedDateFormatsCount", supportedDateFormatsCount);
         if (supportedDateFormatsCount > 0) {
           debug(`supportedDateFormatsCountData is ${supportedDateFormatsCount}`);
           resolve(supportedDateFormatsCount);

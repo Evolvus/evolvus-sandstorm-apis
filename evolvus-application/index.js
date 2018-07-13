@@ -47,16 +47,20 @@ module.exports.validate = (tenantId, applicationObject) => {
   });
 };
 
-module.exports.save = (tenantId, applicationObject) => {
+module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
-        throw new Error("IllegalArgumentException: menuObject is null or undefined");
+        throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
-      var res = validate(tenantId, applicationObject, schema);
+      var res = validate(applicationObject, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
-        reject(res.errors);
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
+        } else {
+          reject(res.errors[0].schema.message);
+        }
       } else {
         // if the object is valid, save the object to the database
 
@@ -64,7 +68,7 @@ module.exports.save = (tenantId, applicationObject) => {
         docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
         docketObject.details = `application creation initiated`;
         docketClient.postToDocket(docketObject);
-        collection.save(tenantId, applicationObject).then((result) => {
+        collection.save(tenantId, ipAddress, createdBy, applicationObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
@@ -76,7 +80,7 @@ module.exports.save = (tenantId, applicationObject) => {
     } catch (e) {
       docketObject.name = "application_ExceptionOnSave";
       docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
-      docketObject.details = `caught Exception on menu_save ${e.message}`;
+      docketObject.details = `caught Exception on application_save ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
@@ -121,27 +125,6 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         debug(`failed to update ${error}`);
         reject(error);
-      });
-    } catch (e) {
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};
-
-module.exports.counts = (tenantId, entityId, accessLevel, countQuery) => {
-  return new Promise((resolve, reject) => {
-    try {
-      collection.counts(tenantId, entityId, accessLevel, countQuery).then((applicationCount) => {
-        if (applicationCount > 0) {
-          debug(`applicationCount Data is ${applicationCount}`);
-          resolve(applicationCount);
-        } else {
-          debug(`No application count data available for filter query ${applicationCount}`);
-          resolve(0);
-        }
-      }).catch((e) => {
-        debug(`failed to find ${e}`);
       });
     } catch (e) {
       debug(`caught exception ${e}`);

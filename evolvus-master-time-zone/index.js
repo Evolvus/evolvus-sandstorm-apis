@@ -112,7 +112,6 @@ module.exports.counts = (tenantId, countQuery) => {
   return new Promise((resolve, reject) => {
     try {
       collection.counts(tenantId, countQuery).then((masterTimeZoneCount) => {
-        console.log("masterTimeZoneCount", masterTimeZoneCount);
         if (masterTimeZoneCount > 0) {
           debug(`masterTimeZoneCount Data is ${masterTimeZoneCount}`);
           resolve(masterTimeZoneCount);

@@ -49,6 +49,5 @@ module.exports.save = (tenantId, createdBy, ipAddress, object) => {
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-  console.log(tenantId, filter, orderby, skipCount, limit);
   return collection.find(tenantId, filter, orderby, skipCount, limit);
 };
