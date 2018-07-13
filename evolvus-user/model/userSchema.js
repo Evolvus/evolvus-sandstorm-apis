@@ -482,8 +482,8 @@ var userSchema = {
         },
         "faxNumber": {
           "type": "string",
-          "minLength": 1,
-          "maxLength": 15
+          "minLength": 0,
+          "maxLength": 10
         },
         "companyName": {
           "type": "string",

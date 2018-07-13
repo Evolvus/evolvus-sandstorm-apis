@@ -5,6 +5,8 @@ const _ = require('lodash');
 const collection = require("./db/user");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
+const entity = require('evolvus-entity');
+
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -31,26 +33,11 @@ module.exports = {
   sortAttributes
 };
 
-var docketObject = {
-  // required fields
-  application: "PLATFORM",
-  source: "user",
-  name: "",
-  createdBy: "",
-  ipAddress: "",
-  status: "SUCCESS", //by default
-  eventDateTime: Date.now(),
-  keyDataAsJSON: "",
-  details: "",
-  //non required fields
-  level: ""
-};
-
 module.exports.validate = (userObject) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof userObject === "undefined") {
-        throw new Error("IllegalArgumentException:userObject is undefined");
+      if (typeof userObject == null) {
+        throw new Error(`IllegalArgumentException:userObject is ${userObject}`);
       }
       var res = validate(userObject, schema);
       debug("validation status: ", JSON.stringify(res));
@@ -75,7 +62,7 @@ module.exports.validate = (userObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, ipAddress, createdBy, object) => {
+module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || object == null) {
@@ -87,7 +74,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
       docketObject.keyDataAsJSON = JSON.stringify(object);
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
-      var res = validate(object, model.schema);
+      var res = validate(object, schema);
       debug("validation status: ", JSON.stringify(res));
       if (!res.valid) {
         if (res.errors[0].name === 'required') {
@@ -97,16 +84,40 @@ module.exports.save = (tenantId, ipAddress, createdBy, object) => {
         }
       } else {
         // Other validations here
-
-
-        // if the object is valid, saapplicationve the object to the database
-        collection.save(tenantId, object).then((result) => {
-          debug(`saved successfully ${result}`);
-          resolve(result);
+        object.userId = object.userId.toUpperCase();
+        collection.findOne(tenantId, {
+          userId: object.userId
+        }).then((userObject) => {
+          if (userObject) {
+            reject(`userId ${object.userId} already exists`);
+          } else {
+            var filter = {
+              entityId: object.entityId
+            };
+            entity.find(tenantId, object.entityId, accessLevel, filter, {}, 0, 1).then((entityObject) => {
+              if (!entityObject.length == 0) {
+                object.accessLevel = entityObject[0].accessLevel;
+                // if the object is valid, saapplicationve the object to the database
+                collection.save(tenantId, object).then((result) => {
+                  debug(`user saved successfully ${result}`);
+                  resolve(result);
+                }).catch((e) => {
+                  debug(`failed to save with an error: ${e}`);
+                  reject(e);
+                });
+              } else {
+                reject(`There is no entity matching this entityId ${object.entityId}`);
+              }
+            }).catch((e) => {
+              debug(`failed to save with an error: ${e}`);
+              reject(e);
+            });
+          }
         }).catch((e) => {
           debug(`failed to save with an error: ${e}`);
           reject(e);
         });
+
       }
     } catch (e) {
       docketObject.name = "user_ExceptionOnSave";
@@ -167,19 +178,45 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
 
 
 // tenantId should be valid
-module.exports.update = (tenantId, userName, update) => {
+module.exports.update = (tenantId, userId, object, accessLevel) => {
   return new Promise((resolve, reject) => {
     try {
-      if (tenantId == null || userName == null) {
+      if (tenantId == null || userId == null) {
         throw new Error("IllegalArgumentException:tenantId/userName is null or undefined");
       }
-      collection.update(tenantId, userName, update).then((resp) => {
-        debug("updated successfully", resp);
-        resolve(resp);
-      }).catch((error) => {
-        debug(`failed to update ${error}`);
-        reject(error);
-      });
+      userId = userId.toUpperCase();
+      var res = validate(object, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        if (res.errors[0].name === 'required') {
+          reject(`${res.errors[0].argument} is Required`);
+        } else {
+          reject(res.errors[0].stack);
+        }
+      } else {
+        // Other validations here
+        var filter = {
+          entityId: object.entityId
+        };
+        entity.find(tenantId, object.entityId, accessLevel, filter, {}, 0, 1).then((entityObject) => {
+          if (!entityObject.length == 0) {
+            object.accessLevel = entityObject[0].accessLevel;
+            // if the object is valid, saapplicationve the object to the database
+            collection.update(tenantId, userId, object).then((result) => {
+              debug(`user saved successfully ${result}`);
+              resolve(result);
+            }).catch((e) => {
+              debug(`failed to save with an error: ${e}`);
+              reject(e);
+            });
+          } else {
+            reject(`There is no entity matching this entityId ${object.entityId}`);
+          }
+        }).catch((e) => {
+          debug(`failed to save with an error: ${e}`);
+          reject(e);
+        });
+      }
     } catch (e) {
       debug(`caught exception ${e}`);
       reject(e);

@@ -92,12 +92,11 @@ module.exports.findById = (tenantId, id) => {
 
 //Finds one user by its code and updates it with new values
 // Using the unique key i.e. tenantId/userName
-module.exports.update = (tenantId, name, update) => {
+module.exports.update = (tenantId, userId, update) => {
   let query = {
     "tenantId": tenantId,
-    "userName": name
+    "userId": userId
   };
-  console.log("Query", query);
   return collection.update(query, update);
 };
 
@@ -138,12 +137,12 @@ module.exports.authenticate = (credentials) => {
               // });
             });
           } else {
-            debug(`Invalid Credentials.`);
-            reject("Invalid Credentials");
+            debug(`Invalid username/password`);
+            reject("Invalid username/password");
           }
         }, (err) => {
-          debug(`Invalid Credentials. ${err}`);
-          reject(err);
+          debug(`Failed to authenticate due to ${err}`);
+          reject(`Failed to authenticate due to ${err}`);
         })
         .catch((e) => {
           debug(`exception on authenticating user: ${e}`);
