@@ -62,7 +62,7 @@ var applicationSchema = new mongoose.Schema({
     type: Date,
     required: true
   },
-  lastupdatedDate: {
+  lastUpdatedDate: {
     type: Date
   }
 });
