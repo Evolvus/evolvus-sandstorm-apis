@@ -5,6 +5,7 @@ const db = require("./db/roleSchema");
 const collection = require("./db/role");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
+const application = require("evolvus-application");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -28,7 +29,7 @@ module.exports = {
   model,
   db,
   filterAttributes,
-  sortableAttributes
+  sortAttributes
 };
 module.exports.validate = (tenantId, roleObject) => {
   return new Promise((resolve, reject) => {
@@ -58,24 +59,39 @@ module.exports.save = (tenantId, roleObject) => {
       if (typeof roleObject === 'undefined' || roleObject == null) {
         throw new Error("IllegalArgumentException: roleObject is null or undefined");
       }
-      var res = validate(roleObject, schema);
-      debug("validation status: ", JSON.stringify(res));
-      if (!res.valid) {
-        if (res.errors[0].name == "required") {
-          reject(`${res.errors[0].argument} is required`);
-        } else {
-          reject(res.errors[0].schema.message);
+      Promise.all([application.find(tenantId, {
+        "applicationCode": roleObject.applicationCode
+      }, {}, 0, 1), collection.find(tenantId, {
+        "roleName": roleObject.roleName
+      }, {}, 0, 1)]).then((result) => {
+        if (_.isEmpty(result[0])) {
+          throw new Error(`No Application with ${roleObject.applicationCode} found`);
         }
-      } else {
-        // if the object is valid, save the object to the database
-        collection.save(tenantId, roleObject).then((result) => {
-          debug(`saved successfully ${result}`);
-          resolve(result);
-        }).catch((e) => {
-          debug(`failed to save with an error: ${e}`);
-          reject(e);
-        });
-      }
+        if (!_.isEmpty(result[1])) {
+          throw new Error(`RoleName ${roleObject.roleName} already exists`);
+        }
+        var res = validate(roleObject, schema);
+        console.log("RES", res);
+        debug("validation status: ", JSON.stringify(res));
+        if (!res.valid) {
+          if (res.errors[0].name == "required") {
+            reject(`${res.errors[0].argument} is required`);
+          }
+          reject(res.errors[0].schema.message);
+        } else {
+          // if the object is valid, save the object to the database
+          collection.save(tenantId, roleObject).then((result) => {
+            debug(`saved successfully ${result}`);
+            resolve(result);
+          }).catch((e) => {
+            console.log("SAVE ERROR", e);
+            debug(`failed to save with an error: ${e}`);
+            reject(e);
+          });
+        }
+      }).catch((e) => {
+        reject(e);
+      });
       // Other validations here
     } catch (e) {
       debug(`caught exception ${e}`);
@@ -107,19 +123,37 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   });
 };
 
-module.exports.update = (tenantId, code, update) => {
+module.exports.update = (tenantId, code, updateRoleName, update) => {
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      collection.update(tenantId, code, update).then((resp) => {
-        debug("updated successfully", resp);
-        resolve(resp);
-      }).catch((error) => {
-        debug(`failed to update ${error}`);
-        reject(error);
-      });
+      console.log("updateRoleName", updateRoleName);
+      collection.find(tenantId, {
+          "roleName": update.roleName
+        }, {}, 0, 1)
+        .then((result) => {
+          console.log("RESULT", result);
+          if (_.isEmpty(result[0])) {
+            console.log("if1");
+            throw new Error(`Role ${update.roleName},  already exists `);
+          }
+          if ((!_.isEmpty(result[0])) && (result[0].roleName != updateRoleName)) {
+            console.log("if2");
+            throw new Error(`Role ${update.roleName} already exists`);
+          }
+          collection.update(tenantId, code, update).then((resp) => {
+            console.log("response for update", resp);
+            debug("updated successfully", resp);
+            resolve(resp);
+          }).catch((error) => {
+            debug(`failed to update ${error}`);
+            reject(error);
+          });
+        }).catch((e) => {
+          reject(e);
+        });
     } catch (e) {
       debug(`caught exception ${e}`);
       reject(e);
