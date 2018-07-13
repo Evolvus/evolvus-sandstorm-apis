@@ -25,8 +25,8 @@ var applicationSchema = {
       "minLength": 1,
       "maxLength": 100,
       "filterable": true, //custom attributes
-      "sortable": true ,//custom attributes
-      "pattern":'^[A-Za-z ]*$',
+      "sortable": true, //custom attributes
+      "pattern": '^[A-Za-z ]*$',
       "message": "applicationName can contain only alphabets and spaces"
 
     },
@@ -75,7 +75,7 @@ var applicationSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
-    "lastupdatedDate": {
+    "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
       "filterable": false, //custom attributes

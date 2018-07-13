@@ -47,7 +47,7 @@ module.exports.validate = (tenantId, applicationObject) => {
   });
 };
 
-module.exports.save = (tenantId, applicationObject) => {
+module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
@@ -132,4 +132,3 @@ module.exports.update = (tenantId, code, update) => {
     }
   });
 };
-
