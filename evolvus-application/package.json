@@ -1,6 +1,6 @@
 {
   "name": "evolvus-application",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Application encapsulates Application functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {

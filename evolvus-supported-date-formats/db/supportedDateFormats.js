@@ -82,7 +82,6 @@ module.exports.counts = (tenantId, filter) => {
     "tenantId": tenantId,
 
   });
-  console.log("QUERY OF COUNTS", query);
   return collection.count(query);
 };
 // Deletes all the entries of the collection.
