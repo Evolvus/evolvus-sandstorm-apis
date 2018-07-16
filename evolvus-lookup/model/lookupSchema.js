@@ -16,7 +16,7 @@ var lookupSchema = {
     "lookupCode": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20,
+      "maxLength": 50,
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
@@ -69,7 +69,7 @@ var lookupSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
-    "updatedDate": {
+    "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
       "filterable": false, //custom attributes
