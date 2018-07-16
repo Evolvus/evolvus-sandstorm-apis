@@ -12,6 +12,18 @@ var userSchema = new mongoose.Schema({
     min: 1,
     max: 64
   },
+  wfInstanceId: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 20
+  },
+  wfInstanceStatus: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 20
+  },
   userId: {
     type: String,
     required: true,

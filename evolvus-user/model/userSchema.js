@@ -15,6 +15,16 @@ var userSchema = {
       "sortable": false,
       "displayable": false
     },
+    "wfInstanceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
+    "wfInstanceStatus": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
     "userId": {
       "type": "string",
       "minLength": 6,
