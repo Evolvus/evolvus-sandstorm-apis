@@ -6,6 +6,7 @@ const collection = require("./db/user");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
 const entity = require('evolvus-entity');
+const role = require('evolvus-role');
 
 
 var schema = model.schema;
@@ -26,6 +27,7 @@ var docketObject = {
   //non required fields
   level: ""
 };
+
 module.exports = {
   model,
   db,
@@ -40,7 +42,7 @@ module.exports.validate = (userObject) => {
         throw new Error(`IllegalArgumentException:userObject is ${userObject}`);
       }
       var res = validate(userObject, schema);
-      debug("validation status: ", JSON.stringify(res));
+      debug("Validation status: ", JSON.stringify(res));
       if (res.valid) {
         resolve(res.valid);
       } else {
@@ -75,7 +77,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
       var res = validate(object, schema);
-      debug("validation status: ", JSON.stringify(res));
+      debug("Validation status: ", JSON.stringify(res));
       if (!res.valid) {
         if (res.errors[0].name === 'required') {
           reject(`${res.errors[0].argument} is Required`);
@@ -89,35 +91,48 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
           userId: object.userId
         }).then((userObject) => {
           if (userObject) {
-            reject(`userId ${object.userId} already exists`);
+            reject(`UserId ${object.userId} already exists`);
           } else {
-            var filter = {
+            var filterEntity = {
               entityId: object.entityId
             };
-            entity.find(tenantId, object.entityId, accessLevel, filter, {}, 0, 1).then((entityObject) => {
-              if (!entityObject.length == 0) {
-                object.accessLevel = entityObject[0].accessLevel;
-                // if the object is valid, saapplicationve the object to the database
-                collection.save(tenantId, object).then((result) => {
-                  debug(`user saved successfully ${result}`);
-                  resolve(result);
-                }).catch((e) => {
-                  debug(`failed to save with an error: ${e}`);
-                  reject(e);
-                });
-              } else {
-                reject(`There is no entity matching this entityId ${object.entityId}`);
-              }
-            }).catch((e) => {
-              debug(`failed to save with an error: ${e}`);
-              reject(e);
-            });
+            var filterRole = {
+              roleName: object.role.roleName
+            };
+            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
+              .then((result) => {
+                if (!result[0].length == 0) {
+                  object.accessLevel = result[0][0].accessLevel;
+                  if (!result[1].length == 0) {
+                    if (result[1][0].processingStatus === "AUTHORIZED") {
+                      collection.save(tenantId, object).then((result) => {
+                        debug(`User saved successfully ${result}`);
+                        resolve(result);
+                      }).catch((e) => {
+                        debug(`Failed to save with an error: ${e}`);
+                        reject(e);
+                      });
+                    } else {
+                      debug(`Role ${object.role.roleName} must be AUTHORIZED`);
+                      reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                    }
+                  } else {
+                    debug(`Role ${object.role.roleName} not found`);
+                    reject(`Role ${object.role.roleName} not found`);
+                  }
+                } else {
+                  debug("Entity not found");
+                  reject(`Entity not found`);
+                }
+              }).catch((e) => {
+                debug(`Failed to save with an error: ${e}`);
+                reject(e);
+              });
           }
         }).catch((e) => {
-          debug(`failed to save with an error: ${e}`);
+          debug(`Failed to save with an error: ${e}`);
           reject(e);
         });
-
       }
     } catch (e) {
       docketObject.name = "user_ExceptionOnSave";
@@ -157,10 +172,10 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       docketClient.postToDocket(docketObject);
 
       collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
-        debug(`user(s) stored in the database are ${docs}`);
+        debug(`User(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        debug(`failed to find all the user(s) ${e}`);
+        debug(`Failed to find all the user(s) ${e}`);
         reject(e);
       });
     } catch (e) {
@@ -185,40 +200,59 @@ module.exports.update = (tenantId, userId, object, accessLevel) => {
         throw new Error("IllegalArgumentException:tenantId/userName is null or undefined");
       }
       userId = userId.toUpperCase();
-      var res = validate(object, schema);
-      debug("validation status: ", JSON.stringify(res));
-      if (!res.valid) {
-        if (res.errors[0].name === 'required') {
-          reject(`${res.errors[0].argument} is Required`);
-        } else {
-          reject(res.errors[0].stack);
-        }
-      } else {
-        // Other validations here
-        var filter = {
-          entityId: object.entityId
-        };
-        entity.find(tenantId, object.entityId, accessLevel, filter, {}, 0, 1).then((entityObject) => {
-          if (!entityObject.length == 0) {
-            object.accessLevel = entityObject[0].accessLevel;
-            // if the object is valid, saapplicationve the object to the database
-            collection.update(tenantId, userId, object).then((result) => {
-              debug(`user saved successfully ${result}`);
-              resolve(result);
-            }).catch((e) => {
-              debug(`failed to save with an error: ${e}`);
-              reject(e);
-            });
+      // var res = validate(object, schema);
+      // debug("Validation status: ", JSON.stringify(res));
+      // if (!res.valid) {
+      //   if (res.errors[0].name === 'required') {
+      //     reject(`${res.errors[0].argument} is Required`);
+      //   } else {
+      //     reject(res.errors[0].stack);
+      //   }
+      // } else {
+      // Other validations here
+      var filterEntity = {
+        entityId: object.entityId
+      };
+      var filterRole = {
+        roleName: object.role.roleName
+      };
+      Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
+        .then((result) => {
+          if (!result[0].length == 0) {
+            object.accessLevel = result[0][0].accessLevel;
+            if (!result[1].length == 0) {
+              if (result[1][0].processingStatus === "AUTHORIZED") {
+                collection.update(tenantId, userId, object).then((result) => {
+                  if (result.nModified === 1) {
+                    debug(`User updated successfully ${result}`);
+                    resolve(`User updated successfully ${result}`);
+                  } else {
+                    debug(`Failed to update.`);
+                    reject(`Failed to update.`);
+                  }
+                }).catch((e) => {
+                  debug(`Failed to update with an error: ${e}`);
+                  reject(e);
+                });
+              } else {
+                debug(`Role ${object.role.roleName} must be AUTHORIZED`);
+                reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+              }
+            } else {
+              debug(`Role ${object.role.roleName} not found`);
+              reject(`Role ${object.role.roleName} not found`);
+            }
           } else {
-            reject(`There is no entity matching this entityId ${object.entityId}`);
+            debug("Entity not found");
+            reject(`Entity not found`);
           }
         }).catch((e) => {
-          debug(`failed to save with an error: ${e}`);
+          debug(`Failed to save with an error: ${e}`);
           reject(e);
         });
-      }
+      // }
     } catch (e) {
-      debug(`caught exception ${e}`);
+      debug(`Caught exception ${e}`);
       reject(e);
     }
   });
@@ -241,15 +275,15 @@ module.exports.getById = (id) => {
       collection.findById(id)
         .then((res) => {
           if (res) {
-            debug(`user found by id ${id} is ${res}`);
+            debug(`User found by id ${id} is ${res}`);
             resolve(res);
           } else {
             // return empty object in place of null
-            debug(`no user found by this id ${id}`);
+            debug(`No user found by this id ${id}`);
             resolve({});
           }
         }).catch((e) => {
-          debug(`failed to find user ${e}`);
+          debug(`Failed to find user ${e}`);
           reject(e);
         });
 
@@ -277,15 +311,15 @@ module.exports.getOne = (attribute, value) => {
       docketClient.postToDocket(docketObject);
       collection.findOne(attribute, value).then((data) => {
         if (data) {
-          debug(`user found ${data}`);
+          debug(`User found ${data}`);
           resolve(data);
         } else {
           // return empty object in place of null
-          debug(`no user found by this ${attribute} ${value}`);
+          debug(`No user found by this ${attribute} ${value}`);
           resolve({});
         }
       }).catch((e) => {
-        debug(`failed to find ${e}`);
+        debug(`Failed to find ${e}`);
       });
     } catch (e) {
       docketObject.name = "user_ExceptionOngetOne";
@@ -311,15 +345,15 @@ module.exports.getMany = (attribute, value) => {
       docketClient.postToDocket(docketObject);
       collection.findMany(attribute, value).then((data) => {
         if (data) {
-          debug(`user found ${data}`);
+          debug(`User found ${data}`);
           resolve(data);
         } else {
           // return empty object in place of null
-          debug(`no user found by this ${attribute} ${value}`);
+          debug(`No user found by this ${attribute} ${value}`);
           resolve([]);
         }
       }).catch((e) => {
-        debug(`failed to find ${e}`);
+        debug(`Failed to find ${e}`);
         reject(e);
       });
     } catch (e) {
@@ -333,42 +367,73 @@ module.exports.getMany = (attribute, value) => {
   });
 };
 
+//Authenticate User credentials {userName,userPassword,application}
 module.exports.authenticate = (credentials) => {
   return new Promise((resolve, reject) => {
     try {
-
       if (credentials == null || typeof credentials === 'undefined') {
         throw new Error("IllegalArgumentException:credentials is null or undefined");
       }
-      collection.authenticate(credentials).then((data) => {
-        debug(`Authentication successful ${data}`);
-        resolve(data);
-      }).catch((e) => {
-        debug(`Authentication failed due to ${e}`);
-        reject(e);
-      });
+      let query = {
+        "userName": credentials.userName,
+        "enabledFlag": 1,
+        "applicationCode": credentials.applicationCode,
+        "processingStatus": "AUTHORIZED"
+      };
+      collection.findOne(query)
+        .then((userObj) => {
+          if (userObj) {
+            bcrypt.hash(credentials.userPassword, userObj.saltString, (err, hash) => {
+              if (hash === userObj.userPassword) {
+                userObj = userObj.toObject();
+                delete userObj.saltString;
+                delete userObj.userPassword;
+                debug("Authentication successful: ", userObj);
+                resolve(userObj);
+              } else {
+                debug(`Authentication failed.Password Error`);
+                reject("Authentication failed.Password Error");
+              }
+            });
+          } else {
+            debug(`Invalid username/password`);
+            reject("Invalid username/password");
+          }
+        }, (err) => {
+          debug(`Failed to authenticate due to ${err}`);
+          reject(`Failed to authenticate due to ${err}`);
+        })
+        .catch((e) => {
+          debug(`Exception on authenticating user: ${e}`);
+          reject(e);
+        });
     } catch (e) {
-      debug(`caught exception ${e}`);
+      debug(`Caught exception ${e}`);
       reject(e);
     }
   });
 };
 
-module.exports.updateToken = (id, token) => {
+module.exports.updateToken = (tenantId, userId, token) => {
   return new Promise((resolve, reject) => {
     try {
-      if (id == null || token == null) {
-        throw new Error("IllegalArgumentException:id/token is null/undefined");
+      if (userId == null || token == null) {
+        throw new Error(`IllegalArgumentException:id/token is null or undefined`);
       }
-      collection.updateToken(id, token).then((data) => {
-        debug(`Token updated successfully ${data}`);
-        resolve(data);
+      collection.update(tenantId, userId, token).then((result) => {
+        if (result.nModified == 1) {
+          debug(`Token updated successfully ${result}`);
+          resolve(result);
+        } else {
+          debug(`Failed to update token.`);
+          reject("Failed to update token.");
+        }
       }).catch((e) => {
-        debug(`Token updation failed due to ${e}`);
+        debug(`Exception on update token ${e}`);
         reject(e);
       });
     } catch (e) {
-      debug(`caught exception ${e}`);
+      debug(`Caught exception ${e}`);
       reject(e);
     }
   });
