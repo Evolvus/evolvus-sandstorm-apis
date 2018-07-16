@@ -105,6 +105,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
                   object.accessLevel = result[0][0].accessLevel;
                   if (!result[1].length == 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.applicationCode = result[1][0].applicationCode;
                       collection.save(tenantId, object).then((result) => {
                         debug(`User saved successfully ${result}`);
                         resolve(result);

@@ -521,7 +521,6 @@ var userSchema = {
   "required": [
     "tenantId",
     "userId",
-    "applicationCode",
     "userName",
     "userPassword",
     "createdBy",
