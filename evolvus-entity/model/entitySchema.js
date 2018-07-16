@@ -13,6 +13,16 @@ var entitySchema = {
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
     },
+    "wfInstanceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
+    "wfInstanceStatus": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
     "entityCode": {
       "type": "string",
       "minLength": 3,

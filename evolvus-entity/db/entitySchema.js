@@ -12,6 +12,18 @@ var entitySchema = new mongoose.Schema({
     minLength: 1,
     maxLength: 64
   },
+  wfInstanceId: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 20
+  },
+  wfInstanceStatus: {
+    type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 20
+  },
   entityCode: {
     type: String,
     minLength: 1,

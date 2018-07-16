@@ -80,6 +80,10 @@ module.exports.save = (tenantId, roleObject) => {
           reject(res.errors[0].schema.message);
         } else {
           // if the object is valid, save the object to the database
+          docketObject.name = "entity_save";
+          docketObject.keyDataAsJSON = JSON.stringify(entityObject);
+          docketObject.details = `entity creation initiated`;
+          docketClient.postToDocket(docketObject);
           collection.save(tenantId, roleObject).then((result) => {
             debug(`saved successfully ${result}`);
             resolve(result);
