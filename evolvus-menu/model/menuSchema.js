@@ -1,4 +1,3 @@
-
 const _ = require("lodash");
 var menuSchema = {
 
@@ -12,6 +11,16 @@ var menuSchema = {
       "maxLength": 64,
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
+    },
+    "wfInstanceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
+    "wfInstanceStatus": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
     },
     "applicationCode": {
       "type": "string",
@@ -58,7 +67,7 @@ var menuSchema = {
     },
     "enableFlag": {
       "type": "string",
-        "enum": ["0","1"],
+      "enum": ["0", "1"],
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -70,7 +79,7 @@ var menuSchema = {
     },
     "selectedFlag": {
       "type": "string",
-        "enum": ["0","1"],
+      "enum": ["0", "1"],
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -120,7 +129,7 @@ var menuSchema = {
           },
           "selectedFlag": {
             "type": "string",
-              "enum": ["0","1"],
+            "enum": ["0", "1"],
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           }
@@ -137,13 +146,13 @@ var menuSchema = {
 module.exports.schema = menuSchema;
 
 filterAttributes = _.keys(_.pickBy(menuSchema.properties, (a) => {
-    return (a.filterable);
+  return (a.filterable);
 }));
 
 module.exports.filterAttributes = filterAttributes;
 
 sortableAttributes = _.keys(_.pickBy(menuSchema.properties, (a) => {
-    return (a.sortable);
+  return (a.sortable);
 }));
 
 module.exports.sortableAttributes = sortableAttributes;

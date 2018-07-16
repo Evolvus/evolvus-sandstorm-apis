@@ -13,6 +13,16 @@ var masterCurrencySchema = {
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
     },
+    "wfInstanceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
+    "wfInstanceStatus": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
     "currencyCode": {
       "type": "string",
       "minLength": 1,

@@ -13,7 +13,16 @@ var supportedDateFormatsSchema = {
       "maxLength": 64,
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
-
+    },
+    "wfInstanceId": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
+    },
+    "wfInstanceStatus": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 20
     },
     "formatCode": {
       "type": "string",
