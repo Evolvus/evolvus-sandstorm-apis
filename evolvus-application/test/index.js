@@ -21,8 +21,8 @@ const tenantTwo = "KOT";
 describe('application model validation', () => {
   let applicationObject = {
     "tenantId": "IVL",
-    "applicationName": "Docket Audit Server",
-    "applicationCode": "DOCKET",
+    "applicationName": "Dockets",
+    "applicationCode": "DOCKETs",
     "createdBy": "Srihari",
     "createdDate": new Date()
       .toISOString(),
@@ -130,11 +130,11 @@ describe('application model validation', () => {
     });
     it('should update a application with new values', (done) => {
       var res = application.update(tenantOne, "CDA", {
-        "enableFlag": 1,
+        "enableFlag": 0,
+        "applicationCode": "CDA",
         "lastUpdatedDate": new Date()
           .toISOString(),
-        "applicationName": "Updated the application at: " + Date.now()
-      });
+      }, "CDA");
       expect(res)
         .to.have.be.fulfilled.then((app) => {
           debug("result: " + JSON.stringify(app));
@@ -148,7 +148,7 @@ describe('application model validation', () => {
       let undefinedId;
       let res = application.update(undefinedId, "CDA", {
         applicationName: "DOCKET"
-      });
+      }, "CDA");
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);
@@ -157,7 +157,7 @@ describe('application model validation', () => {
     it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
       // an id is a 12 byte string, -1 is an invalid id value+
       let undefinedCode;
-      let res = application.update(tenantOne, undefinedCode, null);
+      let res = application.update(tenantOne, undefinedCode, null, "CDA");
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);
@@ -165,7 +165,7 @@ describe('application model validation', () => {
 
     it("should throw IllegalArgumentException for undefined update parameter ", (done) => {
       let undefinedUpdate;
-      let res = application.update(tenantOne, "CDA", undefinedUpdate);
+      let res = application.update(tenantOne, "CDA", undefinedUpdate, "CDA");
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);
@@ -175,7 +175,7 @@ describe('application model validation', () => {
       // an id is a 12 byte string, -1 is an invalid id value+
       let res = application.update(null, "CDA", {
         applicationName: "DOCKET"
-      });
+      }, "CDA");
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);
@@ -185,7 +185,7 @@ describe('application model validation', () => {
       // an id is a 12 byte string, -1 is an invalid id value+
       let res = application.update(tenantOne, null, {
         applicationName: "DOCKET"
-      });
+      }, null);
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);
@@ -193,7 +193,7 @@ describe('application model validation', () => {
 
     it("should throw IllegalArgumentException for null update parameter ", (done) => {
       // an id is a 12 byte string, -1 is an invalid id value+
-      let res = application.update(tenantOne, "CDA", null);
+      let res = application.update(tenantOne, "CDA", null, "CDA");
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
         .notify(done);

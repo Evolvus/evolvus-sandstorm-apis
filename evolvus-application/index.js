@@ -34,15 +34,19 @@ module.exports = {
 
 module.exports.validate = (tenantId, applicationObject) => {
   return new Promise((resolve, reject) => {
-    if (typeof applicationObject === "undefined") {
-      throw new Error("IllegalArgumentException:menuObject is undefined");
-    }
-    var res = validate(applicationObject, schema);
-    debug("validation status: ", JSON.stringify(res));
-    if (res.valid) {
-      resolve(res.valid);
-    } else {
-      reject(res.errors);
+    try {
+      if (typeof applicationObject === "undefined") {
+        throw new Error("IllegalArgumentException:menuObject is undefined");
+      }
+      var res = validate(applicationObject, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (res.valid) {
+        resolve(res.valid);
+      } else {
+        reject(res.errors);
+      }
+    } catch (err) {
+      reject(err);
     }
   });
 };
@@ -113,19 +117,34 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 
 
 
-module.exports.update = (tenantId, code, update) => {
+module.exports.update = (tenantId, code, update, updateapplicationCode) => {
+
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      collection.update(tenantId, code, update).then((resp) => {
-        debug("updated successfully", resp);
-        resolve(resp);
-      }).catch((error) => {
-        debug(`failed to update ${error}`);
-        reject(error);
-      });
+      collection.find(tenantId, {
+          "applicationCode": update.applicationCode
+        }, {}, 0, 1)
+        .then((result) => {
+          if (_.isEmpty(result[0])) {
+            throw new Error(`application ${update.applicationName},  already exists `);
+          }
+          if ((!_.isEmpty(result[0])) && (result[0].applicationCode != updateapplicationCode)) {
+            throw new Error(`application ${update.applicationName} already exists`);
+          }
+          collection.update(tenantId, code, update).then((resp) => {
+            debug("updated successfully", resp);
+            resolve(resp);
+          }).catch((error) => {
+            debug(`failed to update ${error}`);
+            reject(error);
+          });
+        }).catch((error) => {
+          debug(`failed to update ${error}`);
+          reject(error);
+        });
     } catch (e) {
       debug(`caught exception ${e}`);
       reject(e);
