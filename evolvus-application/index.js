@@ -68,7 +68,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
         docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
         docketObject.details = `application creation initiated`;
         docketClient.postToDocket(docketObject);
-        collection.save(tenantId, ipAddress, createdBy, applicationObject).then((result) => {
+        collection.save(tenantId, applicationObject).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
