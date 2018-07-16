@@ -40,7 +40,6 @@ var userSchema = new mongoose.Schema({
   role: role.db,
   userName: {
     type: String,
-    unique: true,
     min: 6,
     max: 140,
     validate: {
