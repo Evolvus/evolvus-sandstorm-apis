@@ -86,7 +86,7 @@ var roleSchema = {
       "default": 'PENDING_AUTHORIZATION',
       "displayable": true,
       "filterable": true, //custom attributes
-      "sortable": false //custom attributes
+      "sortable": true //custom attributes
     },
     "associatedUsers": {
       "type": "number",

@@ -165,7 +165,7 @@ var userSchema = {
       ],
       "default": "PENDING_AUTHORIZATION",
       "filterable": true,
-      "sortable": false,
+      "sortable": true,
       "displayable": true
     },
     "dailyLimit": {
@@ -278,7 +278,7 @@ var userSchema = {
           "default": "PENDING_AUTHORIZATION",
           "displayable": true,
           "filterable": true,
-          "sortable": false
+          "sortable": true
         },
         "associatedUsers": {
           "type": "number",
