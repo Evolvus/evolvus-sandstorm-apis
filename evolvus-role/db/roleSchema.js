@@ -13,13 +13,11 @@ var roleSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    required: true,
     minlength: 3,
     maxlength: 20
   },
   wfInstanceStatus: {
     type: String,
-    required: true,
     minlength: 3,
     maxlength: 20
   },
