@@ -71,7 +71,6 @@ module.exports.save = (tenantId, roleObject) => {
           throw new Error(`RoleName ${roleObject.roleName} already exists`);
         }
         var res = validate(roleObject, schema);
-        console.log("RES", res);
         debug("validation status: ", JSON.stringify(res));
         if (!res.valid) {
           if (res.errors[0].name == "required") {
@@ -88,7 +87,6 @@ module.exports.save = (tenantId, roleObject) => {
             debug(`saved successfully ${result}`);
             resolve(result);
           }).catch((e) => {
-            console.log("SAVE ERROR", e);
             debug(`failed to save with an error: ${e}`);
             reject(e);
           });
@@ -133,22 +131,17 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      console.log("updateRoleName", updateRoleName);
       collection.find(tenantId, {
           "roleName": update.roleName
         }, {}, 0, 1)
         .then((result) => {
-          console.log("RESULT", result);
           if (_.isEmpty(result[0])) {
-            console.log("if1");
             throw new Error(`Role ${update.roleName},  already exists `);
           }
           if ((!_.isEmpty(result[0])) && (result[0].roleName != updateRoleName)) {
-            console.log("if2");
             throw new Error(`Role ${update.roleName} already exists`);
           }
           collection.update(tenantId, code, update).then((resp) => {
-            console.log("response for update", resp);
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {

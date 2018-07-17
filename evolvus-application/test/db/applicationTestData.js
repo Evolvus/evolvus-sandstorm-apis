@@ -1,6 +1,8 @@
 module.exports.validObject1 = {
   // valid application object
   "applicationName": "Docket Audit Server",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "DOCKET",
   "entityId": "abc12",
   "accessLevel": "1",
@@ -18,6 +20,8 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid application object
   "applicationName": "Corporate Direct Access",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "CDA",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -33,6 +37,8 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid application object
   "applicationName": "Flux PayDirect",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "FPD",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -48,6 +54,8 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid application object
   "applicationName": "Platform",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "PLF",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -63,6 +71,8 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid application object
   "applicationName": "Console",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "CON",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -78,6 +88,8 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid application object
   "applicationName": "ASBA",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "ASBA",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -93,6 +105,8 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid application object
   "applicationName": "Indus Fast Collect",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "IFC",
   "createdBy": "Srihari",
   "createdDate": new Date()
@@ -108,6 +122,8 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid application object
   "applicationName": "Combat AntiMoney Laundry",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "applicationCode": "CAM",
   "createdBy": "Srihari",
   "createdDate": new Date()

@@ -102,13 +102,13 @@ var roleSchema = new mongoose.Schema({
   }
 });
 
-// roleSchema.index({
-//   tenantId: 1,
-//   applicationCode: 1,
-//   roleName: 1
-// }, {
-//   unique: true
-// });
+roleSchema.index({
+  tenantId: 1,
+  applicationCode: 1,
+  roleName: 1
+}, {
+  unique: true
+});
 
 
 module.exports = roleSchema;

@@ -1,6 +1,8 @@
 module.exports.validObject1 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "vignesh",
   "middleName": "varan",
   "lastName": "p",
@@ -26,6 +28,8 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "vinai",
   "middleName": "raj",
   "lastName": "r",
@@ -51,6 +55,8 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "Ram",
   "middleName": "jayam",
   "lastName": "p",
@@ -76,6 +82,8 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "pavithra",
   "middleName": "Thimmapa",
   "lastName": "T",
@@ -101,6 +109,8 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "vijay",
   "middleName": "raj",
   "lastName": "n",
@@ -126,6 +136,8 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "ajay",
   "middleName": "kumar",
   "lastName": "s",
@@ -151,6 +163,8 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "vimal",
   "middleName": "raj",
   "lastName": "p",
@@ -176,6 +190,8 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid contact object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "firstName": "kavin",
   "middleName": "kumar",
   "lastName": "P",

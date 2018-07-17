@@ -174,11 +174,10 @@ describe('role model validation', () => {
         });
     });
     it('should update a role with new values', (done) => {
-      var res = role.update(tenantOne, "admin_One", {
+      var res = role.update(tenantOne, "admin_Two", "admin_Two", {
         "enableFlag": 1,
-        "lastUpdatedDate": new Date()
-          .toISOString(),
-        "roleName": "Updated the role at: " + Date.now()
+        "roleName": "admin_Two",
+        "description": "test update"
       });
       expect(res)
         .to.have.be.fulfilled.then((app) => {

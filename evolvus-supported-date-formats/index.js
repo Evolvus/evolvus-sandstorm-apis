@@ -12,6 +12,8 @@ var sortAttributes = model.sortableAttributes;
 var auditObject = {
   // required fields
   supportedDateFormats: "PLATFORM",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   source: "supportedDateFormats",
   name: "",
   createdBy: "",

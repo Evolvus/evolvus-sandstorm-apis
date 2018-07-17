@@ -29,7 +29,7 @@ describe('contact model validation', () => {
     "phoneNumber": "111111111",
     "mobileNumber": "2222222222222",
     "mobileVerified": true,
-    "faxNumber": "02223344555",
+    "faxNumber": "02223",
     "companyName": "Evolvus",
     "address1": "Bangalore",
     "address2": "chennai",

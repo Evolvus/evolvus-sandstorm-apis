@@ -1,6 +1,8 @@
 module.exports.validObject1 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "IST",
   "zoneName": "ASIA",
   "offsetValue": "+05.30",
@@ -16,6 +18,8 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "CET",
   "zoneName": "Algeria",
   "offsetValue": "+1.00",
@@ -31,6 +35,8 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "JST",
   "zoneName": "Japan",
   "offsetValue": "+09:00",
@@ -46,6 +52,8 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "ART",
   "zoneName": "Argentina",
   "offsetValue": "−03:00",
@@ -61,6 +69,8 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "BDT",
   "zoneName": "Bangladesh",
   "offsetValue": "+06:00",
@@ -76,6 +86,8 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "EAT",
   "zoneName": "Ethiopia",
   "offsetValue": "+03:00",
@@ -91,6 +103,8 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "CET",
   "zoneName": "Germany",
   "offsetValue": "+01:00",
@@ -106,6 +120,8 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid masterTimeZone object
   "tenantId": "IVL",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "zoneCode": "IST",
   "zoneName": "Israel",
   "offsetValue": "+02:00",

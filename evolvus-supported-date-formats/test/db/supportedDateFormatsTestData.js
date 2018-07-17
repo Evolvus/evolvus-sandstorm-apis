@@ -1,6 +1,8 @@
 module.exports.validObject1 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -16,6 +18,8 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -31,6 +35,8 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -46,6 +52,8 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -61,6 +69,8 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -76,6 +86,8 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -91,6 +103,8 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()
@@ -106,6 +120,8 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid supportedDateFormats object
   "formatCode": "DD/MM/YYYY",
+  "wfInstanceStatus": "wfStatus",
+  "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
   "description": "This is supportedDateFormats",
   "createdDate": new Date()

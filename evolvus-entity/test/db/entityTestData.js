@@ -1,6 +1,8 @@
 module.exports.validObject1 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity1",
   "name": "headOffice",
   "parent": "headOffice",
@@ -16,6 +18,8 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity2",
   "name": "southZone",
   "parent": "headOffice",
@@ -31,6 +35,8 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity3",
   "name": "northZone",
   "parent": "headOffice",
@@ -46,6 +52,8 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity4",
   "name": "tamilNadu",
   "parent": "southZone",
@@ -61,6 +69,8 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity5",
   "name": "karnataka",
   "parent": "southZone",
@@ -76,6 +86,8 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity6",
   "name": "mumbai",
   "parent": "northZone",
@@ -91,6 +103,8 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity7",
   "name": "maharastra",
   "parent": "northZone",
@@ -115,6 +129,8 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid entity object
   "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "entityCode": "entity8",
   "name": "chennai",
   "parent": "tamilNadu",

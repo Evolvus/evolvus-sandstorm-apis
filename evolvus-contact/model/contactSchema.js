@@ -76,7 +76,7 @@ var contactSchema = {
     },
     "faxNumber": {
       "type": "string",
-      "minLength": 0,
+      "minLength": 1,
       "maxLength": 10,
       "filterable": false, //custom attributes
       "sortable": false //custom attribute

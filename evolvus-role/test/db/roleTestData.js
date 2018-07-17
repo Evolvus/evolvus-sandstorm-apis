@@ -6,6 +6,8 @@ module.exports.validObject1 = {
   "applicationCode": "CDA",
   "enableFlag": "1",
   "roleName": "admin_One",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "menuGroup": [{
     "tenantId": "tid",
     "applicationCode": "CDA",
@@ -44,6 +46,8 @@ module.exports.validObject2 = {
   "applicationCode": "CDA",
   "enableFlag": "1",
   "roleName": "admin_Two",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "menuGroup": [{
     "tenantId": "tid",
     "applicationCode": "CDA",
@@ -81,6 +85,8 @@ module.exports.validObject3 = {
   "enableFlag": 1,
   "accessLevel": "1",
   "applicationCode": "FLUX",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "roleName": "admin_Three",
   "menuGroup": [{
     "tenantId": "tid",
@@ -117,6 +123,8 @@ module.exports.validObject4 = {
   "accessLevel": "1",
   "enableFlag": 1,
   "applicationCode": "ASBA",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "roleName": "admin_Four",
   "menuGroup": [{
     "tenantId": "tid",
@@ -152,6 +160,8 @@ module.exports.validObject5 = {
   "entityId": "Entity",
   "accessLevel": "1",
   "applicationCode": "CDA-CONSOLE",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "roleName": "admin_Five",
   "enableFlag": 1,
   "menuGroup": [{
@@ -189,6 +199,8 @@ module.exports.validObject6 = {
   "accessLevel": "1",
   "applicationCode": "RTP-CONSOLE",
   "roleName": "admin_SIX",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "enableFlag": 1,
   "menuGroup": [{
     "tenantId": "tid",
@@ -225,6 +237,8 @@ module.exports.validObject7 = {
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Seven",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "enableFlag": 0,
   "menuGroup": [{
     "tenantId": "tid",
@@ -261,6 +275,8 @@ module.exports.validObject8 = {
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Eight",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
   "enableFlag": 0,
   "menuGroup": [{
     "tenantId": "tid",

@@ -76,7 +76,7 @@ var contactSchema = new mongoose.Schema({
   },
   faxNumber: {
     type: String,
-    minLength: 0,
+    minLength: 1,
     maxLength: 10,
     validate: {
       validator: function(v) {

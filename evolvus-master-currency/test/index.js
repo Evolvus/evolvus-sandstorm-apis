@@ -21,6 +21,8 @@ const tenantTwo = "KOT";
 describe('masterCurrency model validation', () => {
   let masterCurrencyObject = {
     "tenantId": "IVL",
+    "wfInstanceStatus": "wfStatus",
+    "entityCode": "entity1",
     "currencyCode": "DZD",
     "currencyName": "Algerian dinar",
     "decimalDigit": "2",
