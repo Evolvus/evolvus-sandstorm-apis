@@ -5,6 +5,8 @@ const _ = require('lodash');
 const collection = require("./db/entity");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
+const randomString = require("randomstring");
+
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -133,7 +135,6 @@ module.exports.save = (tenantId, entityId, accessLevel, entityObject) => {
     }
   });
 };
-
 
 // tenantId should be valid
 // createdBy should be requested user, not database object user, used for auditObject
