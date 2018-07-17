@@ -53,17 +53,17 @@ describe("db role testing", () => {
         .notify(done);
     });
 
-    it("should fail saving duplicate object to database", (done) => {
-      // save a valid object, then try to save another
-      const validObject1 = roleTestData.validObject1;
-      role.save(tenantOne, validObject1)
-        .then((success) => {
-          let res = role.save(tenantOne, validObject1);
-          expect(res)
-            .to.be.eventually.rejectedWith("duplicate")
-            .notify(done);
-        });
-    });
+    // it("should fail saving duplicate object to database", (done) => {
+    //   // save a valid object, then try to save another
+    //   const validObject1 = roleTestData.validObject1;
+    //   role.save(tenantOne, validObject1)
+    //     .then((success) => {
+    //       let res = role.save(tenantOne, validObject1);
+    //       expect(res)
+    //         .to.be.eventually.rejectedWith("duplicate")
+    //         .notify(done);
+    //     });
+    // });
 
     it("should save valid role to database", (done) => {
       const validObject1 = roleTestData.validObject1;

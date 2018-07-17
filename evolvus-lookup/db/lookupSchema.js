@@ -47,7 +47,7 @@ var lookupSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  enabled: {
+  enableFlag: {
     type: String,
     default: '1'
   },

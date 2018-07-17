@@ -13,6 +13,20 @@ var roleSchema = {
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
     },
+    "roleType": {
+      "type": "string",
+      "minLength": 5,
+      "maxLength": 30,
+      "filterable": true, //custom attributes
+      "sortable": false //custom attribute
+    },
+    "txnType": {
+      "type": ["string"],
+      "minItems": 1,
+
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
+    },
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,

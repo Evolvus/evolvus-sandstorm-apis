@@ -57,7 +57,7 @@ var lookupSchema = {
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
-    "enabled": {
+    "enableFlag": {
       "type": "string",
       "default": "1",
       "filterable": true, //custom attributes
