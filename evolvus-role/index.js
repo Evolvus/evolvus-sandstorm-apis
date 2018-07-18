@@ -11,7 +11,7 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-var auditObject = {
+var docketObject = {
   // required fields
   role: "PLATFORM",
   source: "role",
