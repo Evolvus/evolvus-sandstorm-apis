@@ -21,9 +21,10 @@ var roleSchema = {
       "sortable": false //custom attribute
     },
     "txnType": {
-      "type": ["string"],
-      "minItems": 1,
-
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
     },
@@ -246,7 +247,7 @@ var roleSchema = {
       "displayable": true
     }
   },
-  "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate", "accessLevel", "entityId"]
+  "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate"]
 };
 
 module.exports.schema = roleSchema;

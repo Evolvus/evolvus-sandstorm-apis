@@ -17,9 +17,10 @@ var roleSchema = new mongoose.Schema({
     maxLength: 30
   },
   txnType: {
-    type: [String],
-    minItems: 1
-
+    type: Array,
+    items: {
+      type: String
+    }
   },
   wfInstanceId: {
     type: String,
@@ -101,12 +102,12 @@ var roleSchema = new mongoose.Schema({
     required: true
   },
   accessLevel: {
-    type: String,
-    required: true
+    type: String
+
   },
   entityId: {
-    type: String,
-    required: true
+    type: String
+
   }
 });
 
