@@ -24,7 +24,7 @@ var roleSchema = {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
     },
