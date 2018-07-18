@@ -60,6 +60,7 @@ describe('role model validation', () => {
   let invalidObject = {
     //add invalid role Object here
     "tenantId": "IVL",
+    "entityId": "Entity2",
     "accessLevel": "1",
     "applicationCode": "CDA",
     "enableFlag": "1",
@@ -158,16 +159,16 @@ describe('role model validation', () => {
           return db.deleteAll(tenantTwo);
         })
         .then((value) => {
-          return db.save(tenantOne, roleTestData.validObject1);
+          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject1);
         })
         .then((value) => {
-          return db.save(tenantOne, roleTestData.validObject2);
+          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject2);
         })
         .then((value) => {
-          return db.save(tenantOne, roleTestData.validObject3);
+          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject3);
         })
         .then((value) => {
-          return db.save(tenantOne, roleTestData.validObject4);
+          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject4);
         })
         .then((value) => {
           done();

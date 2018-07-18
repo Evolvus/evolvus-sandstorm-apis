@@ -47,7 +47,7 @@ describe("db role testing", () => {
     it("should fail saving invalid object to database", (done) => {
       // try to save an invalid object
       const invalidObject1 = roleTestData.invalidObject1;
-      let res = role.save(tenantOne, invalidObject1);
+      let res = role.save(tenantOne, "kamalarani", "1", "Entity2", invalidObject1);
       expect(res)
         .to.be.eventually.rejectedWith("role validation failed")
         .notify(done);
@@ -67,21 +67,21 @@ describe("db role testing", () => {
 
     it("should save valid role to database", (done) => {
       const validObject1 = roleTestData.validObject1;
-      let res = role.save(tenantOne, validObject1);
+      let res = role.save(tenantOne, "kamalarani", "1", "Entity2", validObject1);
       expect(res)
         .to.eventually.have.property("_id")
         .notify(done);
     });
 
-    it("should save multple valid role(s) to database", (done) => {
+    it("should save multiple valid role(s) to database", (done) => {
       const validObject1 = roleTestData.validObject1;
       const validObject2 = roleTestData.validObject2;
 
-      role.save(tenantOne, validObject1)
+      role.save(tenantOne, "kamalarani", "1", "Entity2", validObject1)
         .then((value) => {
           expect(value)
             .to.have.property("id");
-          return role.save(tenantOne, validObject2);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", validObject2);
         })
         .then((value) => {
           expect(value)
@@ -94,11 +94,11 @@ describe("db role testing", () => {
       const validObject1 = roleTestData.validObject1;
       const validObject2 = roleTestData.validObject2;
 
-      role.save(tenantOne, validObject1)
+      role.save(tenantOne, "kamalarani", "1", "Entity2", validObject1)
         .then((value) => {
           expect(value)
             .to.have.property("id");
-          return role.save(tenantTwo, validObject2);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", validObject2);
         })
         .then((value) => {
           expect(value)
@@ -120,52 +120,52 @@ describe("db role testing", () => {
           return role.deleteAll(tenantTwo);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject1);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject1);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject2);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject2);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject3);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject3);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject4);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject4);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject5);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject5);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject6);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject6);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject7);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject7);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject8);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject8);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject1);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject1);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject2);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject2);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject3);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject3);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject4);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject4);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject5);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject5);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject6);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject6);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject7);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject7);
         })
         .then((value) => {
-          return role.save(tenantTwo, roleTestData.validObject8);
+          return role.save(tenantTwo, "kamalarani", "1", "Entity2", roleTestData.validObject8);
         })
         .then((value) => {
           done();
@@ -275,16 +275,16 @@ describe("db role testing", () => {
           return role.deleteAll(tenantTwo);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject1);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject1);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject2);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject2);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject3);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject3);
         })
         .then((value) => {
-          return role.save(tenantOne, roleTestData.validObject4);
+          return role.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject4);
         })
         .then((value) => {
           done();

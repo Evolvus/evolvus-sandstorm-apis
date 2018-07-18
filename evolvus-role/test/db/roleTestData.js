@@ -1,7 +1,7 @@
 module.exports.validObject1 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "CDA",
   "enableFlag": "1",
@@ -85,7 +85,7 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "enableFlag": 1,
   "accessLevel": "1",
   "roleType": "CHECKER",
@@ -125,7 +125,7 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "enableFlag": 1,
   "applicationCode": "ASBA",
@@ -165,7 +165,7 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "CDA-CONSOLE",
   "roleType": "CHECKER",
@@ -205,7 +205,7 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "RTP-CONSOLE",
   "roleName": "admin_SIX",
@@ -245,7 +245,7 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Seven",
@@ -285,7 +285,7 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity",
+  "entityId": "Entity2",
   "accessLevel": "1",
   "applicationCode": "FLUX-CONSOLE",
   "roleName": "admin_Eight",

@@ -12,7 +12,7 @@ var collection = mongoose.model("role", schema);
 // Saves the role object to the database and returns a Promise
 // The assumption here is that the Object is valid
 // tenantId must match object.tenantId,if missing it will get added here
-module.exports.save = (tenantId, object) => {
+module.exports.save = (tenantId, createdBy, accessLevel, entityId, object) => {
   let result = _.merge(object, {
     "tenantId": tenantId
   });

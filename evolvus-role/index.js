@@ -53,7 +53,7 @@ module.exports.validate = (tenantId, roleObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, roleObject) => {
+module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof roleObject === 'undefined' || roleObject == null) {
@@ -83,7 +83,7 @@ module.exports.save = (tenantId, roleObject) => {
           docketObject.keyDataAsJSON = JSON.stringify(roleObject);
           docketObject.details = `entity creation initiated`;
           docketClient.postToDocket(docketObject);
-          collection.save(tenantId, roleObject).then((result) => {
+          collection.save(tenantId, createdBy, accessLevel, entityId, roleObject).then((result) => {
             debug(`saved successfully ${result}`);
             resolve(result);
           }).catch((e) => {
