@@ -37,8 +37,7 @@ var entitySchema = new mongoose.Schema({
   entityId: {
     type: String,
     minLength: 5,
-    maxLength: 100,
-    required: true
+    maxLength: 100
   },
   name: {
     type: String,
@@ -53,8 +52,7 @@ var entitySchema = new mongoose.Schema({
     }
   },
   accessLevel: {
-    type: String,
-    required: true
+    type: String
   },
   description: {
     type: String,

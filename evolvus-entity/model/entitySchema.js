@@ -226,7 +226,7 @@ var entitySchema = {
       "required": ["tenantId", "firstName", "lastName", "emailId", "mobileNumber", "phoneNumber", "faxNumber", "city", "state", "country", "createdDate", "lastUpdatedDate"]
     }
   },
-  "required": ["tenantId", "entityCode", "name", "parent", "description", "createdBy", "createdDate", "accessLevel", "entityId", "lastUpdatedDate"]
+  "required": ["tenantId", "entityCode", "name", "parent", "description", "createdBy", "createdDate", "lastUpdatedDate"]
 };
 
 module.exports.schema = entitySchema;
