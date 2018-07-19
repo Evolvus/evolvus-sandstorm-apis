@@ -447,7 +447,6 @@ var userSchema = {
         "createdBy",
         "createdDate",
         "lastUpdatedDate",
-        "accessLevel",
         "entityId"
       ]
     },
@@ -472,7 +471,8 @@ var userSchema = {
         "emailId": {
           "type": "string",
           "minLength": 8,
-          "maxLength": 140
+          "maxLength": 140,
+          "format": "email"
         },
         "emailVerified": {
           "type": "boolean"
