@@ -49,6 +49,16 @@ var menuSchema = new mongoose.Schema({
         maxLength: 20,
         required: true
       },
+      icon: {
+        type: String,
+        minLength: 0,
+        maxLength: 30
+      },
+      link: {
+        type: String,
+        minLength: 0,
+        maxLength: 30
+      },
       applicationCode: {
         type: String,
         minLength: 3,

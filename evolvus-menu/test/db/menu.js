@@ -213,7 +213,7 @@ describe("db menu testing", () => {
             .to.equal(tenantOne);
           expect(app[0])
             .to.have.property("menuGroupCode")
-            .to.equal("Audit");
+            .to.equal("AuditOne");
           done();
         });
     });
