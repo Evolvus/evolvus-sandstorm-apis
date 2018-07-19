@@ -50,7 +50,7 @@ var roleSchema = {
       "minLength": 1,
       "maxLength": 100,
       "pattern": "^[a-zA-Z-0-9-_ ]+$",
-      "message": "RoleName can contain only alphabets and numbers",
+      "message": "RoleName can contain only alphanumeric and two specialcharacters hyphen and underscore",
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },

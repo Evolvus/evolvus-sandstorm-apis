@@ -29,8 +29,8 @@ var entitySchema = {
       "maxLength": 20,
       "filterable": true, //custom attributes
       "sortable": true, //custom attributes
-      "pattern": "^[a-zA-Z\-0-9]+$",
-      "message": "EntityCode can contain only alphabets and numbers"
+      "pattern": "^[a-zA-Z-0-9-_ ]+$",
+      "message": "EntityCode can contain only alphanumeric and two specialcharacters hyphen and underscore"
     },
     "name": {
       "type": "string",

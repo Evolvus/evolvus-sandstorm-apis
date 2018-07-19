@@ -29,7 +29,7 @@ var entitySchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        return /^[a-zA-Z\-0-9]+$/.test(v);
+          return /^[a-zA-Z-0-9-_ ]+$/.test(v);
       },
       message: "{PATH} can contain only alphabets and numbers"
     }
