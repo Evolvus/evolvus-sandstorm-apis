@@ -194,13 +194,16 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
 
 
 // tenantId should be valid
-module.exports.update = (tenantId, userId, object, accessLevel) => {
+module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || userId == null) {
         throw new Error("IllegalArgumentException:tenantId/userName is null or undefined");
       }
       userId = userId.toUpperCase();
+      var filterUser = {
+        userId: userId
+      };
       // var res = validate(object, schema);
       // debug("Validation status: ", JSON.stringify(res));
       // if (!res.valid) {
@@ -211,46 +214,62 @@ module.exports.update = (tenantId, userId, object, accessLevel) => {
       //   }
       // } else {
       // Other validations here
-      var filterEntity = {
-        entityId: object.entityId
-      };
-      var filterRole = {
-        roleName: object.role.roleName
-      };
-      Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
-        .then((result) => {
-          if (!result[0].length == 0) {
-            object.accessLevel = result[0][0].accessLevel;
-            if (!result[1].length == 0) {
-              if (result[1][0].processingStatus === "AUTHORIZED") {
-                collection.update(tenantId, userId, object).then((result) => {
-                  if (result.nModified === 1) {
-                    debug(`User updated successfully ${result}`);
-                    resolve(`User updated successfully ${result}`);
-                  } else {
-                    debug(`Failed to update.`);
-                    reject(`Failed to update.`);
-                  }
-                }).catch((e) => {
-                  debug(`Failed to update with an error: ${e}`);
-                  reject(e);
-                });
-              } else {
-                debug(`Role ${object.role.roleName} must be AUTHORIZED`);
-                reject(`Role ${object.role.roleName} must be AUTHORIZED`);
-              }
-            } else {
-              debug(`Role ${object.role.roleName} not found`);
-              reject(`Role ${object.role.roleName} not found`);
-            }
-          } else {
-            debug("Entity not found");
-            reject(`Entity not found`);
+      collection.find(tenantId, entityId, accessLevel, filterUser, {}, 0, 1).then((user) => {
+        if (user.length != 0) {
+          if (object.entityId == null) {
+            object.entityId = user[0].entityId;
           }
-        }).catch((e) => {
-          debug(`Failed to save with an error: ${e}`);
-          reject(e);
-        });
+          if (object.role == null || objet.role.roleName == null) {
+            object.role = user[0].role;
+          }
+          var filterEntity = {
+            entityId: object.entityId
+          };
+          var filterRole = {
+            roleName: object.role.roleName
+          };
+          Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
+            .then((result) => {
+              if (!result[0].length == 0) {
+                object.accessLevel = result[0][0].accessLevel;
+                if (!result[1].length == 0) {
+                  if (result[1][0].processingStatus === "AUTHORIZED") {
+                    collection.update(tenantId, userId, object).then((result) => {
+                      if (result.nModified === 1) {
+                        debug(`User updated successfully ${result}`);
+                        resolve(`User updated successfully ${result}`);
+                      } else {
+                        debug(`Failed to update.`);
+                        reject(`Failed to update.`);
+                      }
+                    }).catch((e) => {
+                      debug(`Failed to update with an error: ${e}`);
+                      reject(e);
+                    });
+                  } else {
+                    debug(`Role ${object.role.roleName} must be AUTHORIZED`);
+                    reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                  }
+                } else {
+                  debug(`Role ${object.role.roleName} not found`);
+                  reject(`Role ${object.role.roleName} not found`);
+                }
+              } else {
+                debug("Entity not found");
+                reject(`Entity not found`);
+              }
+            }).catch((e) => {
+              debug(`Failed to save with an error: ${e}`);
+              reject(e);
+            });
+        } else {
+          debug("No user found matching the userId " + userId);
+          reject("No user found matching the userId " + userId);
+        }
+      }).catch((e) => {
+        debug(`Failed to update a user due to an error: ${e}`);
+        reject(e);
+      });
       // }
     } catch (e) {
       debug(`Caught exception ${e}`);
