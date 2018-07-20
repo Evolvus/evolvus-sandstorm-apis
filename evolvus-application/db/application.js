@@ -13,6 +13,7 @@ var collection = mongoose.model("application", schema);
 // The assumption here is that the Object is valid
 // tenantId must match object.tenantId,if missing it will get added here
 module.exports.save = (tenantId, object) => {
+  debug("db save method,tenantId, object are parameters ", tenantId, object);
   let result = _.merge(object, {
     "tenantId": tenantId
   });
@@ -31,6 +32,7 @@ module.exports.save = (tenantId, object) => {
 // any number other than 1 and -1 throws an error;
 // skip can be 0 or more, it cannot be negative
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  debug("db find method,tenantId, filter, orderby, skipCount, limit are parameters ", tenantId, filter, orderby, skipCount, limit);
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
@@ -45,6 +47,8 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 // null, undefined should be rejected with Invalid Argument Error
 // Should return a Promise
 module.exports.findOne = (tenantId, filter) => {
+  debug("db findOne method,tenantId, filter are parameters ", tenantId, filter);
+
   let query = _.merge(filter, {
     "tenantId": tenantId
   });
@@ -58,6 +62,7 @@ module.exports.findOne = (tenantId, filter) => {
 // All returns are wrapped in a Promise
 //
 module.exports.findById = (tenantId, id) => {
+  debug("db findById method,tenantId, id are parameters ", tenantId, id);
   let query = {
     "tenantId": tenantId,
     "_id": new ObjectId(id)
@@ -68,6 +73,7 @@ module.exports.findById = (tenantId, id) => {
 //Finds one application by its code and updates it with new values
 // Using the unique key i.e. tenantId/applicationCode
 module.exports.update = (tenantId, code, update) => {
+  debug("db update method,tenantId, code, update are parameters ", tenantId, code, update);
   let query = {
     "tenantId": tenantId,
     "applicationCode": code
@@ -78,6 +84,8 @@ module.exports.update = (tenantId, code, update) => {
 // Deletes all the entries of the collection.
 // To be used by test only
 module.exports.deleteAll = (tenantId) => {
+  debug("db deleteAll method,tenantId is parameters ", tenantId);
+
   let query = {
     "tenantId": tenantId
   };
