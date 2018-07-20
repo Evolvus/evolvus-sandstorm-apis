@@ -40,7 +40,6 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
   query.entityId = {
     $regex: entityId + ".*"
   };
-  console.log(query,"query");
   return collection.find(query)
     .sort(orderby)
     .skip(skipCount)
