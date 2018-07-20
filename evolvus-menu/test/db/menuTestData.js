@@ -11,14 +11,56 @@ module.exports.validObject1 = {
       "applicationCode": "FLUX-CDA",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "icon": "eve-role",
+      "link": "ROLE",
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "menuItemCode": "ROLE",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "menuItemCode": "USER",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        }
+      ],
     },
     {
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
       "menuItemCode": "USER",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "icon": "eve-role",
+      "link": "ROLE",
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "menuItemCode": "ROLE",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "menuItemCode": "USER",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        }
+      ],
     }
   ],
   "menuGroupOrder": 1,
@@ -38,16 +80,58 @@ module.exports.validObject2 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     },
     {
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
       "menuItemCode": "USER",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "User Management",
-      "menuItemOrder": 2
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     }
   ],
   "menuGroupOrder": 2,
@@ -66,16 +150,58 @@ module.exports.validObject3 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     },
     {
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
       "menuItemCode": "USER",
       "title": "User Management",
-      "menuItemOrder": 2
+      "icon": "eve-role",
+      "link": "ROLE",
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     }
   ],
   "menuGroupOrder": 3,
@@ -94,16 +220,58 @@ module.exports.validObject4 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     },
     {
       "menuItemType": "menu",
       "applicationCode": "FLUX-CDA",
       "menuItemCode": "USER",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "User Management",
-      "menuItemOrder": 2
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     }
   ],
   "menuGroupOrder": 4,
@@ -123,15 +291,57 @@ module.exports.validObject5 = {
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
       "menuItemCode": "ROLE",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     },
     {
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
       "menuItemCode": "USER",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "User Management",
-      "menuItemOrder": 2
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     }
   ],
   "menuGroupOrder": 4,
@@ -150,16 +360,58 @@ module.exports.validObject6 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     },
     {
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
       "menuItemCode": "USER",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "User Management",
-      "menuItemOrder": 2
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     }
   ],
   "menuGroupOrder": 5,
@@ -178,16 +430,58 @@ module.exports.validObject7 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 1
+      "menuItemOrder": 1,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     },
     {
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
       "menuItemCode": "USER",
       "title": "User Management",
-      "menuItemOrder": 2
+      "icon": "eve-role",
+      "link": "ROLE",
+      "menuItemOrder": 2,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ]
     }
   ],
   "menuGroupOrder": 7,
@@ -206,16 +500,58 @@ module.exports.validObject8 = {
   "menuItems": [{
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
+      "icon": "eve-role",
+      "link": "ROLE",
       "menuItemCode": "ROLE",
       "title": "Role Management",
-      "menuItemOrder": 8
+      "menuItemOrder": 8,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     },
     {
       "menuItemType": "menu",
       "applicationCode": "CDA-OPERATION",
       "menuItemCode": "USER",
+      "icon": "eve-role",
+      "link": "ROLE",
       "title": "User Management",
-      "menuItemOrder": 8
+      "menuItemOrder": 8,
+      "subMenuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "ROLE",
+          "title": "Role Management",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "FLUX-CDA",
+          "icon": "eve-role",
+          "link": "ROLE",
+          "menuItemCode": "USER",
+          "title": "User Management",
+          "menuItemOrder": 2
+        }
+      ],
     }
   ],
   "menuGroupOrder": 8,

@@ -85,6 +85,53 @@ var menuSchema = new mongoose.Schema({
         type: Boolean,
         required: false,
         default: false
+      },
+      subMenuItems: {
+        type: Array,
+        menuItemType: {
+          type: String,
+          minLength: 1,
+          maxLength: 20,
+          required: true
+        },
+        icon: {
+          type: String,
+          minLength: 0,
+          maxLength: 30
+        },
+        link: {
+          type: String,
+          minLength: 0,
+          maxLength: 30
+        },
+        applicationCode: {
+          type: String,
+          minLength: 3,
+          maxLength: 20,
+          required: true
+        },
+        menuItemCode: {
+          type: String,
+          minLength: 1,
+          maxLength: 20,
+          required: true
+        },
+        title: {
+          type: String,
+          minLength: 1,
+          maxLength: 20,
+          required: true
+        },
+        menuItemOrder: {
+          type: Number,
+          required: true
+        },
+        selectedFlag: {
+          type: Boolean,
+          required: false,
+          default: false
+        }
+
       }
     }
   },
