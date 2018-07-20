@@ -3,7 +3,7 @@ const model = require("./model/masterCurrencySchema");
 const db = require("./db/masterCurrencySchema");
 const collection = require("./db/masterCurrency");
 const validate = require("jsonschema").validate;
-const docketClient = require("evolvus-docket-client");
+const docketClient = require("@evolvus/evolvus-docket-client");
 const _ = require("lodash");
 
 var schema = model.schema;

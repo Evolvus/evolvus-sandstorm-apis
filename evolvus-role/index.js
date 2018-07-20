@@ -4,7 +4,7 @@ const _ = require('lodash');
 const db = require("./db/roleSchema");
 const collection = require("./db/role");
 const validate = require("jsonschema").validate;
-const docketClient = require("evolvus-docket-client");
+const docketClient = require("@evolvus/evolvus-docket-client");
 const application = require("@evolvus/evolvus-application");
 
 var schema = model.schema;

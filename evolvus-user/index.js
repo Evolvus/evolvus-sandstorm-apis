@@ -3,12 +3,12 @@ const model = require("./model/userSchema");
 const dbSchema = require("./db/userSchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
-const docketClient = require("evolvus-docket-client");
-const entity = require("evolvus-entity");
-const role = require("evolvus-role");
+const docketClient = require("@evolvus/evolvus-docket-client");
+const entity = require("@evolvus/evolvus-entity");
+const role = require("@evolvus/evolvus-role");
 const bcrypt = require("bcryptjs");
 
-const Dao = require("evolvus-mongo-dao").Dao;
+const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("user", dbSchema);
 
 var schema = model.schema;

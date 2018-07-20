@@ -5,7 +5,7 @@ const collection = require("./db/lookup");
 const validate = require("jsonschema")
   .validate;
 const _ = require("lodash");
-const docketClient = require("evolvus-docket-client");
+const docketClient = require("@evolvus/evolvus-docket-client");
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;

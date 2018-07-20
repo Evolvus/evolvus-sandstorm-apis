@@ -5,7 +5,7 @@ const _ = require('lodash');
 const collection = require("./db/application");
 const validate = require("jsonschema")
   .validate;
-const docketClient = require("evolvus-docket-client");
+const docketClient = require("@evolvus/evolvus-docket-client");
 var shortid = require('shortid');
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;

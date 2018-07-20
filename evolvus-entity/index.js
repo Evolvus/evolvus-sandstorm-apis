@@ -4,7 +4,7 @@ const db = require("./db/entitySchema");
 const _ = require('lodash');
 const collection = require("./db/entity");
 const validate = require("jsonschema").validate;
-const docketClient = require("evolvus-docket-client");
+const docketClient = require("@evolvus/evolvus-docket-client");
 const randomString = require("randomstring");
 
 

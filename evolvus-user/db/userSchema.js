@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
-const role = require('evolvus-role');
-const contact = require("evolvus-contact");
+const role = require('@evolvus/evolvus-role');
+const contact = require("@evolvus/evolvus-contact");
 
 var userSchema = new mongoose.Schema({
   // Add all attributes below tenantId

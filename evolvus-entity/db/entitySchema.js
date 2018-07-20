@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const contact = require("evolvus-contact");
+const contact = require("@evolvus/evolvus-contact");
 
 var Contact = mongoose.model("contact", contact.db);
 
