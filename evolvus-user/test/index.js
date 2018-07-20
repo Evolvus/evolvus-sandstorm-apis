@@ -15,8 +15,8 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const user = require("../index");
-const db = require("../db/user");
-const userTestData = require("./db/userTestData");
+// const db = require("../db/user");
+const userTestData = require("./userTestData");
 
 describe('user model validation', () => {
 

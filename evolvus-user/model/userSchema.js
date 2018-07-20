@@ -385,6 +385,16 @@ var userSchema = {
                       "filterable": true,
                       "sortable": false
                     },
+                    "icon": {
+                      "type": "string",
+                      "minLength": 0,
+                      "maxLength": 30
+                    },
+                    "link": {
+                      "type": "string",
+                      "minLength": 0,
+                      "maxLength": 30
+                    },
                     "menuItemCode": {
                       "type": "string",
                       "minLength": 1,

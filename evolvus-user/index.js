@@ -1,13 +1,15 @@
 const debug = require("debug")("evolvus-user:index");
 const model = require("./model/userSchema");
-const db = require("./db/userSchema");
+const dbSchema = require("./db/userSchema");
 const _ = require('lodash');
-const collection = require("./db/user");
 const validate = require("jsonschema").validate;
 const docketClient = require("evolvus-docket-client");
-const entity = require('evolvus-entity');
-const role = require('evolvus-role');
+const entity = require("evolvus-entity");
+const role = require("evolvus-role");
+const bcrypt = require("bcryptjs");
 
+const Dao = require("evolvus-mongo-dao").Dao;
+const collection = new Dao("user", dbSchema);
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -30,7 +32,7 @@ var docketObject = {
 
 module.exports = {
   model,
-  db,
+  dbSchema,
   filterAttributes,
   sortAttributes
 };
@@ -64,7 +66,7 @@ module.exports.validate = (userObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
+module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) => {
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || object == null) {
@@ -76,7 +78,11 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
       docketObject.keyDataAsJSON = JSON.stringify(object);
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
+      let object = _.merge(userObject, {
+        "tenantId": tenantId
+      });
       var res = validate(object, schema);
+
       debug("Validation status: ", JSON.stringify(res));
       if (!res.valid) {
         if (res.errors[0].name === 'required') {
@@ -87,7 +93,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
       } else {
         // Other validations here
         object.userId = object.userId.toUpperCase();
-        collection.findOne(tenantId, {
+        collection.findOne({
           userId: object.userId
         }).then((userObject) => {
           if (userObject) {
@@ -106,12 +112,20 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, object) => {
                   if (!result[1].length == 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
                       object.applicationCode = result[1][0].applicationCode;
-                      collection.save(tenantId, object).then((result) => {
-                        debug(`User saved successfully ${result}`);
-                        resolve(result);
-                      }).catch((e) => {
-                        debug(`Failed to save with an error: ${e}`);
-                        reject(e);
+                      bcrypt.genSalt(10, function(err, salt) {
+                        bcrypt.hash(object.userPassword, salt, function(err, hash) {
+                          // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
+                          object.userPassword = hash;
+                          object.saltString = salt;
+                          collection.save(object).then((result) => {
+                            var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
+                            debug(`User saved successfully ${savedObject}`);
+                            resolve(savedObject);
+                          }).catch((e) => {
+                            debug(`Failed to save with an error: ${e}`);
+                            reject(e);
+                          });
+                        });
                       });
                     } else {
                       debug(`Role ${object.role.roleName} must be AUTHORIZED`);
@@ -172,7 +186,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       docketObject.details = `user getAll method`;
       docketClient.postToDocket(docketObject);
 
-      collection.find(tenantId, entityId, accessLevel, filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(filter, orderby, skipCount, limit).then((docs) => {
         debug(`User(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -214,7 +228,7 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
       //   }
       // } else {
       // Other validations here
-      collection.find(tenantId, entityId, accessLevel, filterUser, {}, 0, 1).then((user) => {
+      collection.find(filterUser, {}, 0, 1).then((user) => {
         if (user.length != 0) {
           if (object.entityId == null) {
             object.entityId = user[0].entityId;
@@ -234,7 +248,7 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
                 object.accessLevel = result[0][0].accessLevel;
                 if (!result[1].length == 0) {
                   if (result[1][0].processingStatus === "AUTHORIZED") {
-                    collection.update(tenantId, userId, object).then((result) => {
+                    collection.update(filterUser, object).then((result) => {
                       if (result.nModified === 1) {
                         debug(`User updated successfully ${result}`);
                         resolve(`User updated successfully ${result}`);
@@ -283,7 +297,6 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
 module.exports.getById = (id) => {
   return new Promise((resolve, reject) => {
     try {
-
       if (typeof(id) == "undefined" || id == null) {
         throw new Error("IllegalArgumentException: id is null or undefined");
       }
@@ -324,12 +337,13 @@ module.exports.getOne = (attribute, value) => {
       if (attribute == null || value == null || typeof attribute === 'undefined' || typeof value === 'undefined') {
         throw new Error("IllegalArgumentException: attribute/value is null or undefined");
       }
-
       docketObject.name = "user_getOne";
       docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
       docketObject.details = `user getOne initiated`;
       docketClient.postToDocket(docketObject);
-      collection.findOne(attribute, value).then((data) => {
+      var query = {};
+      query[attribute] = value;
+      collection.findOne(query).then((data) => {
         if (data) {
           debug(`User found ${data}`);
           resolve(data);
@@ -363,7 +377,9 @@ module.exports.getMany = (attribute, value) => {
       docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
       docketObject.details = `user getMany initiated`;
       docketClient.postToDocket(docketObject);
-      collection.findMany(attribute, value).then((data) => {
+      var query = {};
+      query[attribute] = value;
+      collection.findMany(query).then((data) => {
         if (data) {
           debug(`User found ${data}`);
           resolve(data);
@@ -440,7 +456,11 @@ module.exports.updateToken = (tenantId, userId, token) => {
       if (userId == null || token == null) {
         throw new Error(`IllegalArgumentException:id/token is null or undefined`);
       }
-      collection.update(tenantId, userId, token).then((result) => {
+      let filter = {
+        "tenantId": tenantId,
+        "userId": userId
+      };
+      collection.update(filter, token).then((result) => {
         if (result.nModified == 1) {
           debug(`Token updated successfully ${result}`);
           resolve(result);
