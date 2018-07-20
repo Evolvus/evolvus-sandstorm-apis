@@ -1,6 +1,6 @@
 {
-  "name": "evolvus-master-currency",
-  "version": "0.1.5",
+  "name": "@evolvus/evolvus-master-currency",
+  "version": "1.0.0",
   "description": "MasterCurrency encapsulates MasterCurrency functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -42,8 +42,5 @@
   },
   "directories": {
     "test": "test"
-  },
-  "publishConfig": {
-    "registry": "http://10.10.69.203:8081/repository/npm-private/"
   }
 }
