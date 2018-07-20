@@ -6,11 +6,10 @@ const collection = require("./db/application");
 const validate = require("jsonschema")
   .validate;
 const docketClient = require("evolvus-docket-client");
-
+var shortid = require('shortid');
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
-
 var docketObject = {
   // required fields
   application: "PLATFORM",
@@ -33,6 +32,7 @@ module.exports = {
 };
 
 module.exports.validate = (tenantId, applicationObject) => {
+  debug("index validate method.tenantId, applicationObject are parameters ", tenantId, applicationObject);
   return new Promise((resolve, reject) => {
     try {
       if (typeof applicationObject === "undefined") {
@@ -46,12 +46,15 @@ module.exports.validate = (tenantId, applicationObject) => {
         reject(res.errors);
       }
     } catch (err) {
+      var reference = shortid.generate();
+      debug("index validate method.exception in try .. catch,reference", reference, err);
       reject(err);
     }
   });
 };
 
 module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
+  debug("index save method,tenantId, ipAddress, createdBy, applicationObject are parameters ", tenantId, ipAddress, createdBy, applicationObject);
   return new Promise((resolve, reject) => {
     try {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
@@ -76,12 +79,15 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
-          debug(`failed to save with an error: ${e}`);
+          var reference = shortid.generate();
+          debug(`failed to save with an error: ${e},and reference: ${reference}`);
           reject(e);
         });
       }
       // Other validations here
     } catch (e) {
+      var reference = shortid.generate();
+      debug("index save method, try_catch failure . referenceId,error", reference, e);
       docketObject.name = "application_ExceptionOnSave";
       docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
       docketObject.details = `caught Exception on application_save ${e.message}`;
@@ -99,6 +105,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  debug("index find method,tenantId, filter, orderby, skipCount, limit are parameters", tenantId, filter, orderby, skipCount, limit);
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
@@ -106,10 +113,13 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         debug(`application(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        debug(`failed to find all the menu(s) ${e}`);
+        var reference = shortid.generate();
+        debug(`failed to find all the menu(s) ${e} and reference id : ${reference}`);
         reject(e);
       });
     } catch (e) {
+      var reference = shortid.generate();
+      debug("index find method, try_catch failure . referenceId,error", reference, e);
       reject(e);
     }
   });
@@ -118,7 +128,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 
 
 module.exports.update = (tenantId, code, update, updateapplicationCode) => {
-
+  debug("index update method,tenantId, code, update, updateapplicationCode are parameters", tenantId, code, update, updateapplicationCode);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
@@ -138,15 +148,18 @@ module.exports.update = (tenantId, code, update, updateapplicationCode) => {
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {
-            debug(`failed to update ${error}`);
+            var reference = shortid.generate();
+            debug(`update promise failed due to ${error}, and reference Id :${reference}`);
             reject(error);
           });
         }).catch((error) => {
-          debug(`failed to update ${error}`);
+          var reference = shortid.generate();
+          debug(`find promise failed due to ${error}`);
           reject(error);
         });
     } catch (e) {
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug("index update method, try_catch failure . referenceId,error", reference, e);
       reject(e);
     }
   });

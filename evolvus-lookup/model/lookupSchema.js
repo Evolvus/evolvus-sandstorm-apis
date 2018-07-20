@@ -10,18 +10,22 @@ var lookupSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceStatus": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "lookupCode": {
       "type": "string",
@@ -34,44 +38,44 @@ var lookupSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueOne": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueTwo": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueThree": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueFour": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "enableFlag": {
       "type": "string",
       "default": "1",
       "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "sortable": true //custom attribute
     },
     "createdBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "updatedBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "createdDate": {
       "type": "string",
@@ -82,8 +86,8 @@ var lookupSchema = {
     "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     }
   },
   "required": ["tenantId", "lookupCode", "value", "createdBy", "createdDate"]
