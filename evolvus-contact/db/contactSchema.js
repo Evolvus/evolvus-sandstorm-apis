@@ -49,7 +49,6 @@ var contactSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    minLength: 5,
     maxLength: 15,
     validate: {
       validator: function(v) {
@@ -60,7 +59,6 @@ var contactSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    minLength: 5,
     maxLength: 15,
     validate: {
       validator: function(v) {
@@ -74,7 +72,6 @@ var contactSchema = new mongoose.Schema({
   },
   faxNumber: {
     type: String,
-    minLength: 1,
     maxLength: 10,
     validate: {
       validator: function(v) {
@@ -110,12 +107,10 @@ var contactSchema = new mongoose.Schema({
     type: String
   },
   createdDate: {
-    type: Date,
-
+    type: Date
   },
   lastUpdatedDate: {
-    type: Date,
-
+    type: Date
   }
 });
 
@@ -124,9 +119,7 @@ var contactSchema = new mongoose.Schema({
 module.exports = contactSchema;
 contactSchema.index({
   tenantId: 1,
-  emailId: 1,
-  mobileNumber: 1,
-  phoneNumber: 1
+  emailId: 1
 }, {
   unique: true
 });
