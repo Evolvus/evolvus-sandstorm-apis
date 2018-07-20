@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-master-time-zone",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "It encapsulates time-zone functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/Evolvus/evolvus-sandstorm-apis#readme",
   "dependencies": {
-    "@evolvus/evolvus-docket-client": "^1.0.0",
+    "@evolvus/evolvus-docket-client": "^1.0.2",
     "debug": "^3.1.0",
     "express": "^4.16.3",
     "jsonschema": "^1.2.4",
