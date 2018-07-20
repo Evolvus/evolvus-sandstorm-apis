@@ -122,12 +122,30 @@ module.exports.save = (tenantId, entityId, accessLevel, entityObject) => {
                 docketClient.postToDocket(docketObject);
                 collection.save(tenantId, entityObject).then((result) => {
                   debug(`saved successfully ${result}`);
-                  resolve(result);
+
+                  var sweEventObject = {
+                    "tenantId": tenantId,
+                    "wfEntity": "ENTITY",
+                    "wfEntityAction": "CREATE",
+                    "createdBy": createdBy,
+                    "query": result._id
+                  };
+                  return sweClient.initialize(sweEventObject);
+                }).then((result) => {
+                  collection.update(tenantId, entityObject.entityCode, {
+                    "wfInstanceStatus": result.data.wfInstanceStatus,
+                    "wfInstanceId": result.data.wfInstanceId
+                  }).then((result) => {
+                    debug(`update wfInstanceId and wfInstanceStatus successfully ${result}`);
+                    resolve(result);
+                  }).catch((e) => {
+                    debug(`failed to update with an error: ${e}`);
+                    reject(e);
+                  });
                 }).catch((e) => {
                   debug(`failed to save with an error: ${e}`);
                   reject(e);
                 });
-
               }).catch((e) => {
                 reject(e);
               });
