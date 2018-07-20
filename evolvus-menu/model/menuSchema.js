@@ -142,6 +142,90 @@ var menuSchema = {
             "enum": ["0", "1"],
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
+          },
+          "menuItems": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "menuItemType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20,
+                  "filterable": false, //custom attributes
+                  "sortable": false //custom attributes
+                },
+                "applicationCode": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 20,
+                  "filterable": true, //custom attributes
+                  "sortable": false //custom attributes
+                },
+                "menuItemCode": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20,
+                  "filterable": false, //custom attributes
+                  "sortable": false //custom attributes
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20,
+                  "filterable": false, //custom attributes
+                  "sortable": false //custom attributes
+                },
+                "menuItemOrder": {
+                  "type": "number",
+                  "required": "true",
+                  "filterable": false, //custom attributes
+                  "sortable": false //custom attributes
+                },
+                "subMenuItems": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "menuItemType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "applicationCode": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 20,
+                        "filterable": true, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "menuItemCode": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "menuItemOrder": {
+                        "type": "number",
+                        "required": "true",
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      }
+                    }
+                  }
+                }
+              },
+              "required": ["menuItemType", "applicationCode", "menuItemCode", "title", "menuItemOrder"]
+            }
           }
         },
         "required": ["menuItemType", "applicationCode", "menuItemCode", "title", "menuItemOrder"]
