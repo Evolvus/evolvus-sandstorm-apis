@@ -246,12 +246,7 @@ var roleSchema = {
       "type": "string",
       "minLength": 0,
       "maxLength": 255,
-      validate: {
-        validator: function(v) {
-          return /^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$/.test(v);
-        },
-        message: "{PATH} can contain only alphabets and numbers and specialcharacters"
-      },
+      "pattern": "^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$",
       "filterable": false, //custom attributes
       "sortable": false, //custom attributes
       "displayable": true
