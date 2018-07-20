@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-master-time-zone",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "It encapsulates time-zone functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
