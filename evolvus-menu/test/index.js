@@ -15,7 +15,7 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const menu = require("../index");
-const db = require("../db/menu");
+
 const tenantOne = "IVL";
 const tenantTwo = "KOT";
 describe('menu model validation', () => {
@@ -88,7 +88,7 @@ describe('menu model validation', () => {
   describe("validation against jsonschema", () => {
     it("valid menu should validate successfully", (done) => {
       try {
-        var res = menu.validate(tenantOne, menuObject);
+        var res = menu.validate(menuObject);
         expect(res)
           .to.eventually.equal(true)
           .notify(done);
