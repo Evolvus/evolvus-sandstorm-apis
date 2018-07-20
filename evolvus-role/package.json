@@ -1,7 +1,7 @@
 {
-  "name": "evolvus-role",
-  "version": "2.0.7",
-  "description": "Application encapsulates Application functionality across all Evolvus products",
+  "name": "@evolvus/evolvus-role",
+  "version": "1.0.0",
+  "description": "Evolvus-role encapsulates role functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -41,8 +41,5 @@
     "grunt-env": "^0.4.4",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.0.5"
-  },
-  "publishConfig": {
-    "registry": "http://10.10.69.203:8081/repository/npm-private/"
   }
 }
