@@ -7,7 +7,7 @@ module.exports.validObject1 = {
   "enableFlag": "1",
   "roleName": "admin_One",
   "roleType": "CHECKER",
-  "txnType": "[BANKING]",
+  "txnType": ["BANKING"],
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
   "menuGroup": [{

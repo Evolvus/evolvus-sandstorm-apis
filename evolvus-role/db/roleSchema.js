@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
-const menu = require("evolvus-menu");
+const menu = require("@evolvus/evolvus-menu");
 
 // const Menu = mongoose.model("menu", menu.db);
 var roleSchema = new mongoose.Schema({

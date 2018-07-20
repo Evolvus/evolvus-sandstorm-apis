@@ -211,6 +211,16 @@ var roleSchema = {
                   "filterable": false, //custom attributes
                   "sortable": false //custom attributes
                 },
+                "icon": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 30
+                },
+                "link": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 30
+                },
                 "title": {
                   "type": "string",
                   "minLength": 1,

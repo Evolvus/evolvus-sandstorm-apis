@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "evolvus-lookup",
   "version": "2.0.1",
+=======
+  "name": "@evolvus/evolvus-lookup",
+  "version": "1.0.0",
+>>>>>>> 958f8c9b8c60aeb6b9258073c906318e55d04632
   "description": "lookup encapsulates lookup functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -39,8 +44,5 @@
     "grunt-env": "^0.4.4",
     "grunt-mocha-test": "^0.13.3",
     "mocha": "^5.0.5"
-  },
-  "publishConfig": {
-    "registry": "http://10.10.69.203:8081/repository/npm-private/"
   }
 }
