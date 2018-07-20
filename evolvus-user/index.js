@@ -453,13 +453,16 @@ module.exports.authenticate = (credentials) => {
 module.exports.updateToken = (id, token) => {
   return new Promise((resolve, reject) => {
     try {
-      if (userId == null || token == null) {
+      if (id == null || token == null) {
         throw new Error(`IllegalArgumentException:id/token is null or undefined`);
       }
       let filter = {
         "_id": id
       };
-      collection.update(filter, token).then((result) => {
+      var update = {
+        token: token
+      };
+      collection.update(filter, update).then((result) => {
         if (result.nModified == 1) {
           debug(`Token updated successfully ${result}`);
           resolve(result);
