@@ -450,15 +450,14 @@ module.exports.authenticate = (credentials) => {
   });
 };
 
-module.exports.updateToken = (tenantId, userId, token) => {
+module.exports.updateToken = (id, token) => {
   return new Promise((resolve, reject) => {
     try {
       if (userId == null || token == null) {
         throw new Error(`IllegalArgumentException:id/token is null or undefined`);
       }
       let filter = {
-        "tenantId": tenantId,
-        "userId": userId
+        "_id": id
       };
       collection.update(filter, token).then((result) => {
         if (result.nModified == 1) {
