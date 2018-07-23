@@ -50,19 +50,12 @@ var roleSchema = new mongoose.Schema({
       message: "{PATH} can contain only alphabets and numbers"
     }
   },
-  menuGroup: [menu.db],
+  menuGroup: [menu.dbSchema],
 
   description: {
     type: String,
-    minLength: 6,
-    maxLength: 140,
-    required: true,
-    validate: {
-      validator: function(v) {
-        return /^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$/.test(v);
-      },
-      message: "{PATH} can contain only alphabets and numbers and specialcharacters"
-    }
+    minLength: 0,
+    maxLength: 140
   },
   createdBy: {
     type: String,
