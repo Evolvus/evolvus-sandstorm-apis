@@ -1,11 +1,12 @@
 const debug = require("debug")("evolvus-menu:index");
 const model = require("./model/menuSchema");
-const db = require("./db/menuSchema");
+const dbSchema = require("./db/menuSchema");
 const _ = require("lodash");
-
-const collection = require("./db/menu");
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
+
+const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
+const collection = new Dao("menu", dbSchema);
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -27,12 +28,12 @@ var docketObject = {
 };
 module.exports = {
   model,
-  db,
+  dbSchema,
   filterAttributes,
   sortAttributes
 };
 
-module.exports.validate = (tenantId, menuObject) => {
+module.exports.validate = (menuObject) => {
   return new Promise((resolve, reject) => {
     if (typeof menuObject === "undefined") {
       throw new Error("IllegalArgumentException:menuObject is undefined");
@@ -53,18 +54,24 @@ module.exports.save = (tenantId, menuObject) => {
       if (typeof menuObject === 'undefined' || menuObject == null) {
         throw new Error("IllegalArgumentException: menuObject is null or undefined");
       }
-      var res = validate(menuObject, schema);
-      debug("validation status: ", JSON.stringify(res));
-      if (!res.valid) {
-        reject(res.errors);
-      } else {
-        // if the object is valid, save the object to the database
+      docketObject.name = "menu_save";
+      docketObject.keyDataAsJSON = JSON.stringify(menuObject);
+      docketObject.details = `menu creation initiated`;
+      docketClient.postToDocket(docketObject);
+      let object = _.merge(menuObject, {
+        "tenantId": tenantId
+      });
+      var res = validate(object, schema);
 
-        docketObject.name = "menu_save";
-        docketObject.keyDataAsJSON = JSON.stringify(menuObject);
-        docketObject.details = `menu creation initiated`;
-        docketClient.postToDocket(docketObject);
-        collection.save(tenantId, menuObject).then((result) => {
+      debug("Validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        if (res.errors[0].name === 'required') {
+          reject(`${res.errors[0].argument} is Required`);
+        } else {
+          reject(res.errors[0].stack);
+        }
+      } else {
+        collection.save(object).then((result) => {
           debug(`saved successfully ${result}`);
           resolve(result);
         }).catch((e) => {
@@ -90,11 +97,20 @@ module.exports.save = (tenantId, menuObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
-      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+      if (tenantId == null) {
+        throw new Error("IllegalArgumentException: tenantId is null or undefined");
+      }
+      docketObject.name = "menu_getAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
+      docketObject.details = `menu getAll method`;
+      docketClient.postToDocket(docketObject);
+
+      collection.find(filter, orderby, skipCount, limit).then((docs) => {
         debug(`menu(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
