@@ -69,13 +69,13 @@ module.exports.validate = (userObject) => {
 module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) => {
   return new Promise((resolve, reject) => {
     try {
-      if (tenantId == null || object == null) {
+      if (tenantId == null || userObject == null) {
         throw new Error("IllegalArgumentException: tenantId/userObject is null or undefined");
       }
       docketObject.name = "user_save";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(object);
+      docketObject.keyDataAsJSON = JSON.stringify(userObject);
       docketObject.details = `user creation initiated`;
       docketClient.postToDocket(docketObject);
       let object = _.merge(userObject, {
@@ -153,7 +153,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
       docketObject.name = "user_ExceptionOnSave";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(object);
+      docketObject.keyDataAsJSON = JSON.stringify(userObject);
       docketObject.details = `caught Exception on user_save ${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
