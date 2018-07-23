@@ -133,8 +133,8 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, entityObject)
                   return sweClient.initialize(sweEventObject);
                 }).then((result) => {
                   collection.update(tenantId, entityObject.entityCode, {
-                    "wfInstanceStatus": result.data.wfInstanceStatus,
-                    "wfInstanceId": result.data.wfInstanceId
+                    "wfInstanceStatus": result.wfInstanceStatus,
+                    "wfInstanceId": result.wfInstanceId
                   }).then((result) => {
                     debug(`update wfInstanceId and wfInstanceStatus successfully ${result}`);
                     resolve(result);
