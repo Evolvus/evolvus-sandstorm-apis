@@ -6,6 +6,8 @@ const collection = require("./db/entity");
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const randomString = require("randomstring");
+const sweClient = require("@evolvus/evolvus-swe-client");
+const shortid = require("shortid");
 
 
 var schema = model.schema;
@@ -62,7 +64,7 @@ module.exports.validate = (tenantId, entityObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, entityId, accessLevel, entityObject) => {
+module.exports.save = (tenantId, createdBy, entityId, accessLevel, entityObject) => {
   return new Promise((resolve, reject) => {
     try {
       const response = {
@@ -77,14 +79,12 @@ module.exports.save = (tenantId, entityId, accessLevel, entityObject) => {
       if (!res.valid) {
         if (res.errors[0].name == "required") {
           reject(`${res.errors[0].argument} is required`);
-        }
-        if (res.errors[0].name == "enum") {
+        } else if (res.errors[0].name == "enum") {
           reject(`${res.errors[0].stack} `);
-        }
-        if (res.errors[0].name == "type") {
+        } else if (res.errors[0].name == "type") {
           reject(`${res.errors[0].stack} `);
         } else {
-          reject(res.errors[0].schema.message);
+          reject(res.errors[0].stack);
         }
       } else {
         debug("validation status: ", JSON.stringify(res));
