@@ -10,8 +10,8 @@ var masterTimeZoneSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceId": {
       "type": "string",
@@ -27,15 +27,15 @@ var masterTimeZoneSchema = {
       "type": "string",
       "minLength": 3,
       "maxLength": 20,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attributes
     },
     "zoneName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true, //custom attributes
+      "sortable": true //custom attributes
     },
     "offsetValue": {
       "type": "string"

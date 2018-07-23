@@ -13,11 +13,13 @@ const chaiAsPromised = require("chai-as-promised");
 
 const expect = chai.expect;
 chai.use(chaiAsPromised);
-const contactTestData = require("./db/contactTestData");
+const contactTestData = require("./contactTestData");
 const contact = require("../index");
-const db = require("../db/contact");
+
+
 const tenantOne = "IVL";
 const tenantTwo = "KOT";
+
 describe('contact model validation', () => {
   let contactObject = {
     "tenantId": "IVL",

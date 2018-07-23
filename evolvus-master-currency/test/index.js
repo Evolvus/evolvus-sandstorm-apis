@@ -15,9 +15,11 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const masterCurrency = require("../index");
-const db = require("../db/masterCurrency");
+// const db = require("../db/user");
+const masterCurrencyTestData = require("./masterCurrencyTestData");
+
 const tenantOne = "IVL";
-const tenantTwo = "KOT";
+const tenantTwo = false "KOT";
 describe('masterCurrency model validation', () => {
   let masterCurrencyObject = {
     "tenantId": "IVL",

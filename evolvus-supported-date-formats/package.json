@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-supported-date-formats",
-  "version": "1.0.3",
+  "version": "1.0.2",
   "description": "SupportedDateFormats encapsulates SupportedDateFormats functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -22,12 +22,14 @@
   "homepage": "https://github.com/Evolvus/evolvus-sandstorm-apis#readme",
   "dependencies": {
     "@evolvus/evolvus-docket-client": "^1.0.2",
+    "@evolvus/evolvus-mongo-dao": "^1.0.1",
     "debug": "^3.1.0",
     "express": "^4.16.3",
     "jsonschema": "^1.2.4",
-    "mongoose": "^5.0.7",
+    "mongoose": "^5.2.4",
     "mongoose-unique-validator": "^2.0.0",
     "password-validator": "^4.0.0",
+    "shortid": "^2.2.12",
     "validator": "^9.4.1"
   },
   "devDependencies": {

@@ -10,8 +10,8 @@ var contactSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceId": {
       "type": "string",
