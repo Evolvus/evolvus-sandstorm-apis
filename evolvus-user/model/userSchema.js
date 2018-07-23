@@ -434,7 +434,6 @@ var userSchema = {
           "type": "string",
           "minLength": 0,
           "maxLength": 255,
-          "pattern": "^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$",
           "filterable": false, //custom attributes
           "sortable": false, //custom attributes
           "displayable": true
