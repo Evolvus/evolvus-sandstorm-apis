@@ -1,6 +1,11 @@
 const debug = require("debug")("evolvus-application.test.index");
 const chai = require("chai");
 const mongoose = require("mongoose");
+const dbSchema = require("../db/applicationSchema");
+
+const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
+const collection = new Dao("application", dbSchema);
+
 
 var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
 /*
@@ -13,9 +18,9 @@ const chaiAsPromised = require("chai-as-promised");
 
 const expect = chai.expect;
 chai.use(chaiAsPromised);
-const applicationTestData = require("./db/applicationTestData");
+const applicationTestData = require("./applicationTestData");
 const application = require("../index");
-const db = require("../db/application");
+
 const tenantOne = "IVL";
 const tenantTwo = "KOT";
 describe('application model validation', () => {
@@ -60,7 +65,7 @@ describe('application model validation', () => {
   describe("validation against jsonschema", () => {
     it("valid application should validate successfully", (done) => {
       try {
-        var res = application.validate(tenantOne, applicationObject);
+        var res = application.validate(applicationTestData.validObject1);
         expect(res)
           .to.eventually.equal(true)
           .notify(done);
@@ -108,21 +113,21 @@ describe('application model validation', () => {
 
   describe("testing update application", () => {
     beforeEach((done) => {
-      db.deleteAll(tenantOne)
+      collection.deleteAll(tenantOne)
         .then((value) => {
-          return db.deleteAll(tenantTwo);
+          return collection.deleteAll(tenantTwo);
         })
         .then((value) => {
-          return db.save(tenantOne, applicationTestData.validObject1);
+          return collection.save(tenantOne, applicationTestData.validObject1);
         })
         .then((value) => {
-          return db.save(tenantOne, applicationTestData.validObject2);
+          return collection.save(tenantOne, applicationTestData.validObject2);
         })
         .then((value) => {
-          return db.save(tenantOne, applicationTestData.validObject3);
+          return collection.save(tenantOne, applicationTestData.validObject3);
         })
         .then((value) => {
-          return db.save(tenantOne, applicationTestData.validObject4);
+          return collection.save(tenantOne, applicationTestData.validObject4);
         })
         .then((value) => {
           done();

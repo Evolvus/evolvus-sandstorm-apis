@@ -1,5 +1,6 @@
 module.exports.validObject1 = {
   // valid application object
+  "tenantId": "T001",
   "applicationName": "Docket Audit Server",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
