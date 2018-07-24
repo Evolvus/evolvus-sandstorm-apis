@@ -15,8 +15,8 @@ const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const role = require("../index");
-const db = require("../db/role");
-const roleTestData = require("./db/roleTestData");
+
+const roleTestData = require("./roleTestData");
 const tenantOne = "IVL";
 const tenantTwo = "KOT";
 describe('role model validation', () => {

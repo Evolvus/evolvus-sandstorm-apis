@@ -1,11 +1,14 @@
 const debug = require("debug")("evolvus-role:index");
 const model = require("./model/roleSchema");
 const _ = require('lodash');
-const db = require("./db/roleSchema");
-const collection = require("./db/role");
+const dbSchema = require("./db/roleSchema");
+
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const application = require("@evolvus/evolvus-application");
+
+const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
+const collection = new Dao("role", dbSchema);
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -27,11 +30,11 @@ var docketObject = {
 };
 module.exports = {
   model,
-  db,
+  dbSchema,
   filterAttributes,
   sortAttributes
 };
-module.exports.validate = (tenantId, roleObject) => {
+module.exports.validate = (roleObject) => {
   return new Promise((resolve, reject) => {
     if (typeof roleObject === "undefined") {
       throw new Error("IllegalArgumentException:roleObject is undefined");
@@ -53,15 +56,15 @@ module.exports.validate = (tenantId, roleObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) => {
+module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, roleObject) => {
   return new Promise((resolve, reject) => {
     try {
-      if (typeof roleObject === 'undefined' || roleObject == null) {
-        throw new Error("IllegalArgumentException: roleObject is null or undefined");
+      if (tenantId == null || roleObject == null) {
+        throw new Error("IllegalArgumentException: tenantId/roleObject is null or undefined");
       }
       Promise.all([application.find(tenantId, {
         "applicationCode": roleObject.applicationCode
-      }, {}, 0, 1), collection.find(tenantId, {
+      }, {}, 0, 1), collection.find({
         "roleName": roleObject.roleName
       }, {}, 0, 1)]).then((result) => {
         if (_.isEmpty(result[0])) {
@@ -70,7 +73,16 @@ module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) =
         if (!_.isEmpty(result[1])) {
           throw new Error(`RoleName ${roleObject.roleName} already exists`);
         }
-        var res = validate(roleObject, schema);
+        docketObject.name = "role_save";
+        docketObject.ipAddress = ipAddress;
+        docketObject.createdBy = createdBy;
+        docketObject.keyDataAsJSON = JSON.stringify(roleObject);
+        docketObject.details = `role creation initiated`;
+        docketClient.postToDocket(docketObject);
+        let object = _.merge(roleObject, {
+          "tenantId": tenantId
+        });
+        var res = validate(object, schema);
         debug("validation status: ", JSON.stringify(res));
         if (!res.valid) {
           if (res.errors[0].name == "required") {
@@ -79,11 +91,8 @@ module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) =
           reject(res.errors[0].schema.message);
         } else {
           // if the object is valid, save the object to the database
-          docketObject.name = "role_save";
-          docketObject.keyDataAsJSON = JSON.stringify(roleObject);
-          docketObject.details = `entity creation initiated`;
-          docketClient.postToDocket(docketObject);
-          collection.save(tenantId, createdBy, accessLevel, entityId, roleObject).then((result) => {
+
+          collection.save(roleObject).then((result) => {
             debug(`saved successfully ${result}`);
             resolve(result);
           }).catch((e) => {
@@ -96,6 +105,12 @@ module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) =
       });
       // Other validations here
     } catch (e) {
+      docketObject.name = "role_ExceptionOnSave";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(roleObject);
+      docketObject.details = `caught Exception on role_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -111,8 +126,16 @@ module.exports.save = (tenantId, createdBy, accessLevel, entityId, roleObject) =
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
-      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(tenantId, filter, orderby, skipCount, limit).then((docs) => {
+      if (tenantId == null) {
+        throw new Error("IllegalArgumentException: tenantId is null or undefined");
+      }
+      docketObject.name = "role_getAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
+      docketObject.details = `role getAll method`;
+      docketClient.postToDocket(docketObject);
+      collection.find(filter, orderby, skipCount, limit).then((docs) => {
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -120,6 +143,12 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         reject(e);
       });
     } catch (e) {
+      docketObject.name = "role_ExceptionOngetAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = "roleObject";
+      docketObject.details = `caught Exception on role_getAll ${e.message}`;
+      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });
@@ -131,7 +160,10 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      collection.find(tenantId, {
+      var filterRole = {
+        roleName: roleName
+      };
+      collection.find({
           "roleName": update.roleName
         }, {}, 0, 1)
         .then((result) => {
@@ -141,7 +173,7 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].roleName != updateRoleName)) {
             throw new Error(`Role ${update.roleName} already exists`);
           }
-          collection.update(tenantId, code, update).then((resp) => {
+          collection.update(code, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {
