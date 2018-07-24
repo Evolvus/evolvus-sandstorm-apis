@@ -78,7 +78,6 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`save promise failed due to :${e} and referenceId is ${reference}`);
-          debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
@@ -90,7 +89,6 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
       docketObject.details = `caught Exception on masterCurrency_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });

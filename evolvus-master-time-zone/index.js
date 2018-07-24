@@ -79,7 +79,6 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`save promise failed due to :${e} and referenceId is : ${reference}`);
-          debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
@@ -91,7 +90,6 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
       docketObject.details = `caught Exception on masterTimeZone_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });

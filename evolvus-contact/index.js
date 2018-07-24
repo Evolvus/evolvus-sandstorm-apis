@@ -91,7 +91,6 @@ module.exports.save = (tenantId, contactObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(contactObject);
       docketObject.details = `caught Exception on contact_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -139,13 +138,11 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         var reference = shortid.generate();
         debug(`update promise failed due to :${error},and reference id ${reference}`);
-        debug(`failed to update ${error}`);
         reject(error);
       });
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${error},and reference id ${reference}`);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });

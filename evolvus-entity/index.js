@@ -34,6 +34,7 @@ module.exports = {
   sortAttributes
 };
 module.exports.validate = (tenantId, entityObject) => {
+  debug(`index validate method.entityObject :${JSON.stringify(entityObject)} is a parameter`);
   return new Promise((resolve, reject) => {
     try {
       if (typeof entityObject === "undefined") {
@@ -50,6 +51,8 @@ module.exports.validate = (tenantId, entityObject) => {
         reject(res.errors);
       }
     } catch (err) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${err} and referenceId :${reference}`);
       reject(err);
     }
   });
@@ -64,6 +67,7 @@ module.exports.validate = (tenantId, entityObject) => {
 //
 // object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
+  debug(`index save method,tenantId :${tenantId}, createdBy :${createdBy},entityId :${entityId},accessLevel :${accessLevel}, object :${JSON.stringify(object)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (typeof object === 'undefined' || object == null) {
@@ -99,9 +103,8 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
         let query1 = _.merge(query, {
           "name": entityObject.parent
         });
-        console.log(query1);
+        debug(`calling db find query1 :${JSON.stringify(query1)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
         collection.find(query1, {}, 0, 1).then((result) => {
-          console.log("find res ",result);
           if (_.isEmpty(result)) {
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
@@ -118,7 +121,8 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
             let query3 = _.merge(query, {
               "entityCode": entityObject.entityCode
             });
-
+            debug(`calling db find query2 :${JSON.stringify(query2)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
+            debug(`calling db find query3 :${JSON.stringify(query3)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
               .then((result) => {
                 if (!_.isEmpty(result[0][0])) {
@@ -132,6 +136,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                 docketObject.keyDataAsJSON = JSON.stringify(entityObject);
                 docketObject.details = `entity creation initiated`;
                 docketClient.postToDocket(docketObject);
+                debug(`calling db save entityObject :${JSON.stringify(entityObject)} is a parameter`);
                 collection.save(entityObject).then((result) => {
                   debug(`saved successfully ${result}`);
                   var sweEventObject = {
@@ -141,26 +146,36 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     "createdBy": createdBy,
                     "query": result._id
                   };
+                  debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                   sweClient.initialize(sweEventObject).then((result) => {
-                    collection.update(tenantId, entityObject.entityCode, {
+                    var filterEntity = {
+                      "entityCode": entityObject.entityCode
+                    };
+                    debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
+                    collection.update(filterEntity, {
                       "wfInstanceStatus": result.data.wfInstanceStatus,
                       "wfInstanceId": result.data.wfInstanceId
                     }).then((result) => {
                       resolve(result);
                     }).catch((e) => {
-                      debug(`failed to update with an error: ${e}`);
+                      var reference = shortid.generate();
+                      debug(`try catch failed due to :${e} and referenceId :${reference}`);
                       reject(e);
                     });
                   }).catch((e) => {
-                    debug(`failed to save with an error: ${e}`);
+                    var reference = shortid.generate();
+                    debug(`try catch failed due to :${e} and referenceId :${reference}`);
                     reject(e);
                   });
 
                 }).catch((e) => {
-                  debug(`failed to save with an error: ${e}`);
+                  var reference = shortid.generate();
+                  debug(`try catch failed due to :${e} and referenceId :${reference}`);
                   reject(e);
                 });
               }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`try catch failed due to :${e} and referenceId :${reference}`);
                 reject(e);
               });
 
@@ -169,11 +184,14 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
           }
 
         }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`try catch failed due to :${e} and referenceId :${reference}`);
           reject(e);
         });
       }
     } catch (e) {
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
@@ -184,6 +202,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
+  debug(`index find method,tenantId :${tenantId},entityId :${entityId},accessLevel :${accessLevel},  filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       let query = _.merge(filter, {
@@ -198,13 +217,16 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
 
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
       collection.find(query, orderby, skipCount, limit).then((docs) => {
-        debug(`menu(s) stored in the database are ${docs}`);
+        debug(`entity(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        debug(`failed to find all the menu(s) ${e}`);
+        var reference = shortid.generate();
+        debug(`try catch failed due to :${e} and referenceId :${reference}`);
         reject(e);
       });
     } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
@@ -212,24 +234,27 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
 
 // tenantId should be valid
 module.exports.update = (tenantId, code, update) => {
+  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)}, updateapplicationCode :${updateapplicationCode} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      let query={
-        "tenantId":tenantId,
-        "entityCode":code
+      let query = {
+        "tenantId": tenantId,
+        "entityCode": code
       };
       collection.update(query, update).then((resp) => {
         debug("updated successfully", resp);
         resolve(resp);
       }).catch((error) => {
-        debug(`failed to update ${error}`);
+        var reference = shortid.generate();
+        debug(`try catch failed due to :${e} and referenceId :${reference}`);
         reject(error);
       });
     } catch (e) {
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
