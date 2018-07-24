@@ -11,7 +11,7 @@ var applicationSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
+    minlength: 0,
     maxlength: 20
   },
   wfInstanceStatus: {

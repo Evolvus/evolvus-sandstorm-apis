@@ -2,7 +2,7 @@ const debug = require("debug")("evolvus-application:index");
 const model = require("./model/applicationSchema");
 const dbSchema = require("./db/applicationSchema");
 const _ = require('lodash');
-
+const sweClient = require("@evolvus/evolvus-swe-client");
 const validate = require("jsonschema")
   .validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
@@ -76,6 +76,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
           let object = _.merge(applicationObject, {
             "tenantId": tenantId
           });
+
           var res = validate(object, schema);
           debug("validation status: ", JSON.stringify(res));
           if (!res.valid) {
@@ -94,7 +95,33 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
             debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
             collection.save(object).then((result) => {
               debug(`saved successfully ${result}`);
-              resolve(result);
+              var sweEventObject = {
+                "tenantId": tenantId,
+                "wfEntity": "APPLICATION",
+                "wfEntityAction": "CREATE",
+                "createdBy": createdBy,
+                "query": result._id
+              };
+              sweClient.initialize(sweEventObject).then((result) => {
+                console.log("result initialized", result);
+                var filterApplication = {
+                  "applicationCode": applicationObject.applicationCode
+                };
+                collection.update(filterApplication, {
+                  "wfInstanceStatus": result.data.wfInstanceStatus,
+                  "wfInstanceId": result.data.wfInstanceId
+                }).then((result) => {
+                  resolve(result);
+                }).catch((e) => {
+                  var reference = shortid.generate();
+                  debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
+                  reject(e);
+                });
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
             }).catch((e) => {
               var reference = shortid.generate();
               debug(`failed to save with an error: ${e},and reference: ${reference}`);

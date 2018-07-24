@@ -62,24 +62,25 @@ describe('application model validation', () => {
     });
   });
 
-  describe("validation against jsonschema", () => {
-    it("valid application should validate successfully", (done) => {
+
+  describe("testing application.save method", () => {
+
+    it('should save a valid application object to database', (done) => {
       try {
-        var res = application.validate(applicationTestData.validObject1);
-        expect(res)
-          .to.eventually.equal(true)
+        var result = application.save("T001", "192.168.1.122", "user", applicationTestData.validObject1);
+        //replace anyAttribute with one of the valid attribute of a entity Object
+        expect(result)
+          .to.eventually.have.property("_id")
           .notify(done);
-        // if notify is not done the test will fail
-        // with timeout
       } catch (e) {
-        expect.fail(e, null, `valid application object should not throw exception: ${e}`);
+        expect.fail(e, null, `saving application object should not throw exception: ${e}`);
       }
     });
 
-    it("invalid application should return errors", (done) => {
+    it('should not save a invalid application object to database', (done) => {
       try {
-        var res = application.validate(invalidObject);
-        expect(res)
+        var result = application.save("T001", "192.168.1.122", "user", applicationTestData.validObject1);
+        expect(result)
           .to.be.rejected
           .notify(done);
       } catch (e) {
@@ -87,122 +88,148 @@ describe('application model validation', () => {
       }
     });
 
-    if ("should error out for undefined objects", (done) => {
-        try {
-          var res = application.validate(undefinedObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
+    //   it("valid application should validate successfully", (done) => {
+    //     try {
+    //       var res = application.validate(applicationTestData.validObject1);
+    //       expect(res)
+    //         .to.eventually.equal(true)
+    //         .notify(done);
+    //       // if notify is not done the test will fail
+    //       // with timeout
+    //     } catch (e) {
+    //       expect.fail(e, null, `valid application object should not throw exception: ${e}`);
+    //     }
+    //   });
+    //
+    //   it("invalid application should return errors", (done) => {
+    //     try {
+    //       var res = application.validate(invalidObject);
+    //       expect(res)
+    //         .to.be.rejected
+    //         .notify(done);
+    //     } catch (e) {
+    //       expect.fail(e, null, `exception: ${e}`);
+    //     }
+    //   });
+    //
+    //   if ("should error out for undefined objects", (done) => {
+    //       try {
+    //         var res = application.validate(undefinedObject);
+    //         expect(res)
+    //           .to.be.rejected
+    //           .notify(done);
+    //       } catch (e) {
+    //         expect.fail(e, null, `exception: ${e}`);
+    //       }
+    //     });
+    //
+    //   if ("should error out for null objects", (done) => {
+    //       try {
+    //         var res = application.validate(nullObject);
+    //         expect(res)
+    //           .to.be.rejected
+    //           .notify(done);
+    //       } catch (e) {
+    //         expect.fail(e, null, `exception: ${e}`);
+    //       }
+    //     });
+    //
+    // });
 
-    if ("should error out for null objects", (done) => {
-        try {
-          var res = application.validate(nullObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
-
-  });
-
-  describe("testing update application", () => {
-    beforeEach((done) => {
-      collection.deleteAll(tenantOne)
-        .then((value) => {
-          return collection.deleteAll(tenantTwo);
-        })
-        .then((value) => {
-          return collection.save(tenantOne, applicationTestData.validObject1);
-        })
-        .then((value) => {
-          return collection.save(tenantOne, applicationTestData.validObject2);
-        })
-        .then((value) => {
-          return collection.save(tenantOne, applicationTestData.validObject3);
-        })
-        .then((value) => {
-          return collection.save(tenantOne, applicationTestData.validObject4);
-        })
-        .then((value) => {
-          done();
-        });
-    });
-    it('should update a application with new values', (done) => {
-      var res = application.update(tenantOne, "CDA", {
-        "enableFlag": 0,
-        "applicationCode": "CDA",
-        "lastUpdatedDate": new Date()
-          .toISOString(),
-      }, "CDA");
-      expect(res)
-        .to.have.be.fulfilled.then((app) => {
-          debug("result: " + JSON.stringify(app));
-          expect(app)
-            .to.have.property("nModified")
-            .to.equal(1);
-          done();
-        });
-    });
-    it("should throw IllegalArgumentException for undefined tenantId parameter ", (done) => {
-      let undefinedId;
-      let res = application.update(undefinedId, "CDA", {
-        applicationName: "DOCKET"
-      }, "CDA");
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let undefinedCode;
-      let res = application.update(tenantOne, undefinedCode, null, "CDA");
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for undefined update parameter ", (done) => {
-      let undefinedUpdate;
-      let res = application.update(tenantOne, "CDA", undefinedUpdate, "CDA");
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null tenantId parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = application.update(null, "CDA", {
-        applicationName: "DOCKET"
-      }, "CDA");
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = application.update(tenantOne, null, {
-        applicationName: "DOCKET"
-      }, null);
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null update parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = application.update(tenantOne, "CDA", null, "CDA");
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
+    // describe("testing update application", () => {
+    //   beforeEach((done) => {
+    //     collection.deleteAll(tenantOne)
+    //       .then((value) => {
+    //         return collection.deleteAll(tenantTwo);
+    //       })
+    //       .then((value) => {
+    //         return collection.save(tenantOne, applicationTestData.validObject1);
+    //       })
+    //       .then((value) => {
+    //         return collection.save(tenantOne, applicationTestData.validObject2);
+    //       })
+    //       .then((value) => {
+    //         return collection.save(tenantOne, applicationTestData.validObject3);
+    //       })
+    //       .then((value) => {
+    //         return collection.save(tenantOne, applicationTestData.validObject4);
+    //       })
+    //       .then((value) => {
+    //         done();
+    //       });
+    //   });
+    //   it('should update a application with new values', (done) => {
+    //     var res = application.update(tenantOne, {
+    //       applicationCode: "CDA"
+    //     }, {
+    //       "enableFlag": 0,
+    //       "applicationCode": "CDA",
+    //       "lastUpdatedDate": new Date()
+    //         .toISOString(),
+    //     }, "CDA");
+    //     expect(res)
+    //       .to.have.be.fulfilled.then((app) => {
+    //         debug("result: " + JSON.stringify(app));
+    //         expect(app)
+    //           .to.have.property("nModified")
+    //           .to.equal(1);
+    //         done();
+    //       });
+    //   });
+    //   it("should throw IllegalArgumentException for undefined tenantId parameter ", (done) => {
+    //     let undefinedId;
+    //     let res = application.update(undefinedId, "CDA", {
+    //       applicationName: "DOCKET"
+    //     }, "CDA");
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
+    //
+    //   it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
+    //     // an id is a 12 byte string, -1 is an invalid id value+
+    //     let undefinedCode;
+    //     let res = application.update(tenantOne, undefinedCode, null, "CDA");
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
+    //
+    //   it("should throw IllegalArgumentException for undefined update parameter ", (done) => {
+    //     let undefinedUpdate;
+    //     let res = application.update(tenantOne, "CDA", undefinedUpdate, "CDA");
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
+    //
+    //   it("should throw IllegalArgumentException for null tenantId parameter ", (done) => {
+    //     // an id is a 12 byte string, -1 is an invalid id value+
+    //     let res = application.update(null, "CDA", {
+    //       applicationName: "DOCKET"
+    //     }, "CDA");
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
+    //
+    //   it("should throw IllegalArgumentException for null code parameter ", (done) => {
+    //     // an id is a 12 byte string, -1 is an invalid id value+
+    //     let res = application.update(tenantOne, null, {
+    //       applicationName: "DOCKET"
+    //     }, null);
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
+    //
+    //   it("should throw IllegalArgumentException for null update parameter ", (done) => {
+    //     // an id is a 12 byte string, -1 is an invalid id value+
+    //     let res = application.update(tenantOne, "CDA", null, "CDA");
+    //     expect(res)
+    //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+    //       .notify(done);
+    //   });
   });
 
 
