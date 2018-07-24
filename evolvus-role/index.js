@@ -122,12 +122,12 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
                 resolve(result);
               }).catch((e) => {
                 var reference = shortid.generate();
-                debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                debug(`initialize update promise failed due to :${e} and referenceId :${reference}`);
                 reject(e);
               });
             }).catch((e) => {
               var reference = shortid.generate();
-              debug(`try catch failed due to :${e} and referenceId :${reference}`);
+              debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
               reject(e);
             });
           }).catch((e) => {
@@ -138,7 +138,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
         }
       }).catch((e) => {
         var reference = shortid.generate();
-        debug(`failed to save promise due to : ${e},and reference: ${reference}`);
+        debug(`promiseAll failed due to : ${e},and reference: ${reference}`);
         reject(e);
       });
       // Other validations here
@@ -230,7 +230,7 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
           });
         }).catch((e) => {
           var reference = shortid.generate();
-          debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+          debug(`find promise failed due to ${error}, and reference Id :${reference}`);
           reject(e);
         });
     } catch (e) {
