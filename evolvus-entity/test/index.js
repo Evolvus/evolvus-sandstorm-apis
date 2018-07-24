@@ -1,8 +1,13 @@
-const debug = require("debug")("evolvus-menu.test.index");
+const debug = require("debug")("evolvus-entity.test.index");
 const chai = require("chai");
+const dbSchema = require("../db/entitySchema");
 const mongoose = require("mongoose");
+// const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
+// const collection = new Dao("entity", dbSchema);
+//const connection = require("@evolvus/evolvus-mongo-dao").connection;
 
-var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
+
+ var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
 /*
  ** chaiAsPromised is needed to test promises
  ** it adds the "eventually" property
@@ -10,15 +15,14 @@ var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/Tes
  ** chai and others do not support async / await
  */
 const chaiAsPromised = require("chai-as-promised");
-
+const entityTestData = require("./entityTestData");
 const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const entity = require("../index");
-const db = require("../db/entity");
 const tenantOne = "IVL";
 const tenantTwo = "KOT";
-describe('menu model validation', () => {
+describe('entity model validation', () => {
   let entityObject = {
     "tenantId": "IVL",
     "entityCode": "entity1",
@@ -58,52 +62,87 @@ describe('menu model validation', () => {
     });
   });
 
-  describe("validation against jsonschema", () => {
-    it("valid menu should validate successfully", (done) => {
+    // mongoose.connection.once("open", () => {
+    //   debug("ok got the connection");
+    //   done();
+    // });
+  //});
+
+  // describe("validation against jsonschema", () => {
+  //   it("valid menu should validate successfully", (done) => {
+  //     try {
+  //       var res = entity.validate(tenantOne, entityObject);
+  //       expect(res)
+  //         .to.eventually.equal(true)
+  //         .notify(done);
+  //       // if notify is not done the test will fail
+  //       // with timeout
+  //     } catch (e) {
+  //       expect.fail(e, null, `valid entity object should not throw exception: ${e}`);
+  //     }
+  //   });
+  //
+  //   it("invalid menu should return errors", (done) => {
+  //     try {
+  //       var res = entity.validate(invalidObject);
+  //       expect(res)
+  //         .to.be.rejected
+  //         .notify(done);
+  //     } catch (e) {
+  //       expect.fail(e, null, `exception: ${e}`);
+  //     }
+  //   });
+  //
+  //   if ("should error out for undefined objects", (done) => {
+  //       try {
+  //         var res = entity.validate(undefinedObject);
+  //         expect(res)
+  //           .to.be.rejected
+  //           .notify(done);
+  //       } catch (e) {
+  //         expect.fail(e, null, `exception: ${e}`);
+  //       }
+  //     });
+  //
+  //   if ("should error out for null objects", (done) => {
+  //       try {
+  //         var res = entity.validate(nullObject);
+  //         expect(res)
+  //           .to.be.rejected
+  //           .notify(done);
+  //       } catch (e) {
+  //         expect.fail(e, null, `exception: ${e}`);
+  //       }
+  //     });
+  //
+  // });
+
+  describe("testing entity.save method", () => {
+
+    it('should save a valid entity object to database', (done) => {
       try {
-        var res = entity.validate(tenantOne, entityObject);
-        expect(res)
-          .to.eventually.equal(true)
+        var result = entity.save("T001", "user", "H001B001", "1",entityTestData.validObject2);
+        console.log("testcase result",result);
+        //replace anyAttribute with one of the valid attribute of a entity Object
+        expect(result)
+          .to.eventually.have.property("_id")
           .notify(done);
-        // if notify is not done the test will fail
-        // with timeout
       } catch (e) {
-        expect.fail(e, null, `valid entity object should not throw exception: ${e}`);
+        console.log(e);
+        expect.fail(e, null, `saving entity object should not throw exception: ${e}`);
       }
     });
 
-    it("invalid menu should return errors", (done) => {
-      try {
-        var res = entity.validate(invalidObject);
-        expect(res)
-          .to.be.rejected
-          .notify(done);
-      } catch (e) {
-        expect.fail(e, null, `exception: ${e}`);
-      }
-    });
-
-    if ("should error out for undefined objects", (done) => {
-        try {
-          var res = entity.validate(undefinedObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
-
-    if ("should error out for null objects", (done) => {
-        try {
-          var res = entity.validate(nullObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
-
+    // it('should not save a invalid entity object to database', (done) => {
+    //   try {
+    //     var result = entity.save("T001", "user", "H001B001", "1",entityTestData.validObject2);
+    //     expect(result)
+    //       .to.be.rejected
+    //       .notify(done);
+    //   } catch (e) {
+    //     expect.fail(e, null, `exception: ${e}`);
+    //   }
+    // });
   });
+
 });
