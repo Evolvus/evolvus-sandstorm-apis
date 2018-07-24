@@ -2,12 +2,9 @@ const debug = require("debug")("evolvus-entity.test.index");
 const chai = require("chai");
 const dbSchema = require("../db/entitySchema");
 const mongoose = require("mongoose");
-// const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
-// const collection = new Dao("entity", dbSchema);
-//const connection = require("@evolvus/evolvus-mongo-dao").connection;
 
 
- var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
+var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
 /*
  ** chaiAsPromised is needed to test promises
  ** it adds the "eventually" property
@@ -116,8 +113,8 @@ describe('entity model validation', () => {
 
     it('should save a valid entity object to database', (done) => {
       try {
-        var result = entity.save("T001", "user", "H001B001", "1",entityTestData.validObject2);
-        console.log("testcase result",result);
+        var result = entity.save("T001", "user", "H001B001", "1", entityTestData.validObject2);
+        console.log("testcase result", result);
         //replace anyAttribute with one of the valid attribute of a entity Object
         expect(result)
           .to.eventually.have.property("_id")
@@ -130,7 +127,7 @@ describe('entity model validation', () => {
 
     it('should not save a invalid entity object to database', (done) => {
       try {
-        var result = entity.save("T001", "user", "H001B001", "1",entityTestData.validObject2);
+        var result = entity.save("T001", "user", "H001B001", "1", entityTestData.validObject2);
         expect(result)
           .to.be.rejected
           .notify(done);

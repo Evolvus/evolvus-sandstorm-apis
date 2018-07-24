@@ -99,9 +99,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
         let query1 = _.merge(query, {
           "name": entityObject.parent
         });
-        console.log(query1);
         collection.find(query1, {}, 0, 1).then((result) => {
-          console.log("find res ",result);
           if (_.isEmpty(result)) {
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
@@ -217,9 +215,9 @@ module.exports.update = (tenantId, code, update) => {
       if (code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      let query={
-        "tenantId":tenantId,
-        "entityCode":code
+      let query = {
+        "tenantId": tenantId,
+        "entityCode": code
       };
       collection.update(query, update).then((resp) => {
         debug("updated successfully", resp);
