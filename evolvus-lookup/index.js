@@ -2,6 +2,7 @@ const debug = require("debug")("evolvus-lookup:index");
 const model = require("./model/lookupSchema");
 const dbSchema = require("./db/lookupSchema");
 const _ = require('lodash');
+const shortid = require('shortid');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 
@@ -114,7 +115,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });
