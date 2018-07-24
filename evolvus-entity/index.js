@@ -159,23 +159,23 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                       resolve(result);
                     }).catch((e) => {
                       var reference = shortid.generate();
-                      debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                      debug(`update promise failed due to :${e} and referenceId :${reference}`);
                       reject(e);
                     });
                   }).catch((e) => {
                     var reference = shortid.generate();
-                    debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                    debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
                     reject(e);
                   });
 
                 }).catch((e) => {
                   var reference = shortid.generate();
-                  debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                  debug(`collection entity save promise failed due to :${e} and referenceId :${reference}`);
                   reject(e);
                 });
               }).catch((e) => {
                 var reference = shortid.generate();
-                debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                debug(`collection find promiseAll failed due to :${e} and referenceId :${reference}`);
                 reject(e);
               });
 
@@ -185,7 +185,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
 
         }).catch((e) => {
           var reference = shortid.generate();
-          debug(`try catch failed due to :${e} and referenceId :${reference}`);
+          debug(`collection find promise failed due to :${e} and referenceId :${reference}`);
           reject(e);
         });
       }
@@ -221,7 +221,7 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
         resolve(docs);
       }).catch((e) => {
         var reference = shortid.generate();
-        debug(`try catch failed due to :${e} and referenceId :${reference}`);
+        debug(`collection find promise failed due to :${e} and referenceId :${reference}`);
         reject(e);
       });
     } catch (e) {
@@ -249,7 +249,7 @@ module.exports.update = (tenantId, code, update) => {
         resolve(resp);
       }).catch((error) => {
         var reference = shortid.generate();
-        debug(`try catch failed due to :${e} and referenceId :${reference}`);
+        debug(`collection update failed due to :${e} and referenceId :${reference}`);
         reject(error);
       });
     } catch (e) {
