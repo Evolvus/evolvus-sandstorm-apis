@@ -118,6 +118,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
                 "wfInstanceStatus": result.data.wfInstanceStatus,
                 "wfInstanceId": result.data.wfInstanceId
               }).then((result) => {
+                console.log("result", result);
                 resolve(result);
               }).catch((e) => {
                 var reference = shortid.generate();
