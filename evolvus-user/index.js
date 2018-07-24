@@ -7,6 +7,7 @@ const docketClient = require("@evolvus/evolvus-docket-client");
 const entity = require("@evolvus/evolvus-entity");
 const role = require("@evolvus/evolvus-role");
 const bcrypt = require("bcryptjs");
+const shortid = require("shortid");
 
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("user", dbSchema);
@@ -38,6 +39,7 @@ module.exports = {
 };
 
 module.exports.validate = (userObject) => {
+  debug(`index validate method,userObject :${JSON.stringify(userObject)} is a parameter`);
   return new Promise((resolve, reject) => {
     try {
       if (typeof userObject == null) {
@@ -67,6 +69,7 @@ module.exports.validate = (userObject) => {
 //
 // object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) => {
+  debug(`index save method:tenantId :${tenantId}, createdBy:${createdBy}, ipAddress:${ipAddress},accessLevel:${accessLevel}, userObject:${JSON.stringify(userObject)} are parameters)`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || userObject == null) {
@@ -117,46 +120,51 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                           // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
                           object.userPassword = hash;
                           object.saltString = salt;
+                          debug("calling dao save method and parameter is object ", object);
                           collection.save(object).then((result) => {
                             var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
                             debug(`User saved successfully ${savedObject}`);
                             resolve(savedObject);
                           }).catch((e) => {
-                            debug(`Failed to save with an error: ${e}`);
+                            var reference = shortid.generate();
+                            debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
                             reject(e);
                           });
                         });
                       });
                     } else {
-                      debug(`Role ${object.role.roleName} must be AUTHORIZED`);
+                      debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
                       reject(`Role ${object.role.roleName} must be AUTHORIZED`);
                     }
                   } else {
-                    debug(`Role ${object.role.roleName} not found`);
+                    debug(`User save failed due to the Role ${object.role.roleName} which is assigned to user not found`);
                     reject(`Role ${object.role.roleName} not found`);
                   }
                 } else {
-                  debug("Entity not found");
-                  reject(`Entity not found`);
+                  debug("User save failed due the selected Entity not found");
+                  reject(`User save failed due the selected Entity not found`);
                 }
               }).catch((e) => {
-                debug(`Failed to save with an error: ${e}`);
+                var reference = shortid.generate();
+                debug(`entity.find promise failed due to ${e} and reference id ${reference}`);
                 reject(e);
               });
           }
         }).catch((e) => {
-          debug(`Failed to save with an error: ${e}`);
+          var reference = shortid.generate();
+          debug(`user.find promise failed due to ${e} and reference id ${reference}`);
           reject(e);
         });
       }
     } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
       docketObject.name = "user_ExceptionOnSave";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
       docketObject.keyDataAsJSON = JSON.stringify(userObject);
       docketObject.details = `caught Exception on user_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -174,6 +182,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
 
 
 module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
+  debug(`index find method:tenantId:${tenantId},entityId:${entityId},accessLevel:${accessLevel},createdBy:${createdBy},ipAddress:${ipAddress},filter:${JSON.stringify(filter)},orderby:${JSON.stringify(orderby)},skipCount:${skipCount},limit:${limit} are input parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null) {
@@ -185,22 +194,26 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
       docketObject.details = `user getAll method`;
       docketClient.postToDocket(docketObject);
-
       collection.find(filter, orderby, skipCount, limit).then((docs) => {
-        debug(`User(s) stored in the database are ${docs}`);
-        resolve(docs);
+        let filteredArray = _.map(docs, function(object) {
+          return _.omit(object, "userPassword", "token", "saltString");
+        });
+        debug(`User(s) stored in the database are ${filteredArray}`);
+        resolve(filteredArray);
       }).catch((e) => {
-        debug(`Failed to find all the user(s) ${e}`);
+        var reference = shortid.generate();
+        debug(`collection.find promise failed due to ${e} and reference id ${reference}`);
         reject(e);
       });
     } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
       docketObject.name = "user_ExceptionOngetAll";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
       docketObject.keyDataAsJSON = "userObject";
       docketObject.details = `caught Exception on user_getAll ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -209,10 +222,11 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
 
 // tenantId should be valid
 module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
+  debug(`index update method: tenantId:${tenantId},userId:${userId},object:${JSON.stringify(object)},accessLevel:${accessLevel},entityId:${entityId} are input paramaters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || userId == null) {
-        throw new Error("IllegalArgumentException:tenantId/userName is null or undefined");
+        throw new Error("IllegalArgumentException:tenantId/userId is null or undefined");
       }
       userId = userId.toUpperCase();
       var filterUser = {
@@ -255,30 +269,32 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
                       collection.update(filterUser, object).then((result) => {
                         if (result.nModified === 1) {
-                          debug(`User updated successfully ${result}`);
-                          resolve(`User updated successfully ${result}`);
+                          debug(`User updated successfully ${JSON.stringify(result)}`);
+                          resolve(`User updated successfully ${JSON.stringify(result)}`);
                         } else {
                           debug(`Failed to update.`);
                           reject(`Failed to update.`);
                         }
                       }).catch((e) => {
-                        debug(`Failed to update with an error: ${e}`);
+                        var reference = shortid.generate();
+                        debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
                         reject(e);
                       });
                     } else {
-                      debug(`Role ${object.role.roleName} must be AUTHORIZED`);
+                      debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
                       reject(`Role ${object.role.roleName} must be AUTHORIZED`);
                     }
                   } else {
-                    debug(`Role ${object.role.roleName} not found`);
+                    debug(`User save failed due to the Role ${object.role.roleName} which is assigned to user not found`);
                     reject(`Role ${object.role.roleName} not found`);
                   }
                 } else {
-                  debug("Entity not found");
-                  reject(`Entity not found`);
+                  debug("User save failed due the selected Entity not found");
+                  reject(`User save failed due the selected Entity not found`);
                 }
               }).catch((e) => {
-                debug(`Failed to save with an error: ${e}`);
+                var reference = shortid.generate();
+                debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
                 reject(e);
               });
           } else {
@@ -286,12 +302,14 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
             reject("No user found matching the userId " + userId);
           }
         }).catch((e) => {
-          debug(`Failed to update a user due to an error: ${e}`);
+          var reference = shortid.generate();
+          debug(`user.find promise failed due to ${e} and reference id ${reference}`);
           reject(e);
         });
       }
     } catch (e) {
-      debug(`Caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
       reject(e);
     }
   });
@@ -408,36 +426,39 @@ module.exports.getMany = (attribute, value) => {
   });
 };
 
-//Authenticate User credentials {userName,userPassword,application}
+//Authenticate User credentials {userId,userPassword,application}
 module.exports.authenticate = (credentials) => {
+  debug(`index authenticate method: Input parameters are ${JSON.stringify(credentials)}`);
   return new Promise((resolve, reject) => {
     try {
       if (credentials == null || typeof credentials === 'undefined') {
-        throw new Error("IllegalArgumentException:credentials is null or undefined");
+        throw new Error("IllegalArgumentException:Input credentials is null or undefined");
+      }
+      if (credentials.userId != null) {
+        credentials.userId = credentials.userId.toUpperCase();
       }
       let query = {
-        "userName": credentials.userName,
+        "userId": credentials.userId,
         "enabledFlag": 1,
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
       collection.findOne(query)
         .then((userObj) => {
+          debug(`user object found with input credentials:${JSON.stringify(credentials)} is ${JSON.stringify(userObj)}`);
           if (userObj) {
             bcrypt.hash(credentials.userPassword, userObj.saltString, (err, hash) => {
               if (hash === userObj.userPassword) {
-                userObj = userObj.toObject();
-                delete userObj.saltString;
-                delete userObj.userPassword;
-                debug("Authentication successful: ", userObj);
-                resolve(userObj);
+                var userObject = _.omit(userObj.toJSON(), ["userPassword", "saltString", "token"]);
+                debug("Index authenticate method:Authentication successful for user: ", userObject.userName);
+                resolve(userObject);
               } else {
-                debug(`Authentication failed.Password Error`);
-                reject("Authentication failed.Password Error");
+                debug(`Index authenticate method:Authentication failed due to invalid Password:${credentials.userPassword}`);
+                reject(`Authentication failed due to invalid Password:${credentials.userPassword}`);
               }
             });
           } else {
-            debug(`Invalid username/password`);
+            debug(`Index authenticate method:Authentication failed due to Invalid username/password`);
             reject("Invalid username/password");
           }
         }, (err) => {
@@ -445,11 +466,13 @@ module.exports.authenticate = (credentials) => {
           reject(`Failed to authenticate due to ${err}`);
         })
         .catch((e) => {
-          debug(`Exception on authenticating user: ${e}`);
+          var reference = shortid.generate();
+          debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
           reject(e);
         });
     } catch (e) {
-      debug(`Caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
       reject(e);
     }
   });
@@ -469,18 +492,20 @@ module.exports.updateToken = (id, token) => {
       };
       collection.update(filter, update).then((result) => {
         if (result.nModified == 1) {
-          debug(`Token updated successfully ${result}`);
+          debug(`Index updatedToken method: Token updated successfully ${result}`);
           resolve(result);
         } else {
-          debug(`Failed to update token.`);
-          reject("Failed to update token.");
+          debug(`Index updatedToken method:Failed to update token.`);
+          reject("Index updatedToken method:Failed to update token.");
         }
       }).catch((e) => {
-        debug(`Exception on update token ${e}`);
+        var reference = shortid.generate();
+        debug(`collection.update promise failed due to ${e} and reference id ${reference}`);
         reject(e);
       });
     } catch (e) {
-      debug(`Caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
       reject(e);
     }
   });

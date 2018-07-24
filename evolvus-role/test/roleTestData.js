@@ -1,18 +1,18 @@
 module.exports.validObject1 = {
   // valid role object
-  "tenantId": "IVL",
-  "entityId": "Entity2",
+  "tenantId": "T001",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "CDA",
+  "applicationCode": "DOCKET",
+  "wfInstanceId": "",
+  "wfInstanceStatus": "INITIALIZE",
   "enableFlag": "1",
   "roleName": "admin_One",
   "roleType": "CHECKER",
   "txnType": ["BANKING"],
-  "wfInstanceId": "wfID",
-  "wfInstanceStatus": "wfStatus",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -20,13 +20,13 @@ module.exports.validObject1 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemOrder": 1,
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemOrder": 2,
       "menuItemCode": "mic",
       "title": "menuItem title"
@@ -35,7 +35,7 @@ module.exports.validObject1 = {
   "description": "admin_One decription *",
   "activationStatus": "ACTIVE",
   "associatedUsers": 5,
-  "createdBy": "kamalarani",
+  "createdBy": "user",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString()
 };

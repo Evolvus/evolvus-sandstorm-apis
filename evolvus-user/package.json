@@ -23,6 +23,7 @@
   "dependencies": {
     "@evolvus/evolvus-contact": "^1.0.3",
     "@evolvus/evolvus-docket-client": "^1.0.2",
+    "@evolvus/evolvus-entity": "^1.0.5",
     "@evolvus/evolvus-mongo-dao": "^1.0.0",
     "@evolvus/evolvus-role": "^1.0.7",
     "bcryptjs": "^2.4.3",
@@ -32,6 +33,7 @@
     "mongoose": "^5.1.6",
     "mongoose-unique-validator": "^2.0.0",
     "password-validator": "^4.1.1",
+    "shortid": "^2.2.12",
     "validator": "^9.4.1"
   },
   "devDependencies": {

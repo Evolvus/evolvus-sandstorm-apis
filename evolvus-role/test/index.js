@@ -102,146 +102,173 @@ describe('role model validation', () => {
     });
   });
 
-  describe("validation against jsonschema", () => {
-    it("valid role should validate successfully", (done) => {
-      try {
-        const validObject1 = roleTestData.validObject1;
-        var res = role.validate(tenantOne, validObject1);
-        expect(res)
-          .to.eventually.equal(true)
-          .notify(done);
-        // if notify is not done the test will fail
-        // with timeout
+  // describe("validation against jsonschema", () => {
+  //   it("valid role should validate successfully", (done) => {
+  //     try {
+  //       const validObject1 = roleTestData.validObject1;
+  //       var res = role.validate(tenantOne, validObject1);
+  //       expect(res)
+  //         .to.eventually.equal(true)
+  //         .notify(done);
+  //       // if notify is not done the test will fail
+  //       // with timeout
+  //
+  //     } catch (e) {
+  //       expect.fail(e, null, `valid role object should not throw exception: ${e}`);
+  //     }
+  //   });
+  //
+  //   it("invalid role should return errors", (done) => {
+  //     try {
+  //       var res = role.validate(invalidObject);
+  //       expect(res)
+  //         .to.be.rejected
+  //         .notify(done);
+  //     } catch (e) {
+  //       expect.fail(e, null, `exception: ${e}`);
+  //     }
+  //   });
+  //
+  //   if ("should error out for undefined objects", (done) => {
+  //       try {
+  //         var res = role.validate(undefinedObject);
+  //         expect(res)
+  //           .to.be.rejected
+  //           .notify(done);
+  //       } catch (e) {
+  //         expect.fail(e, null, `exception: ${e}`);
+  //       }
+  //     });
+  //
+  //   if ("should error out for null objects", (done) => {
+  //       try {
+  //         var res = role.validate(nullObject);
+  //         expect(res)
+  //           .to.be.rejected
+  //           .notify(done);
+  //       } catch (e) {
+  //         expect.fail(e, null, `exception: ${e}`);
+  //       }
+  //     });
+  // });
 
+  describe("testing role.save method", () => {
+
+    it('should save a valid role object to database', (done) => {
+      try {
+        var result = role.save("T001", "user", "192.168.1.122", "1", "H001B001", roleTestData.validObject1);
+        //replace anyAttribute with one of the valid attribute of a entity Object
+        expect(result)
+          .to.eventually.have.property("_id")
+          .notify(done);
       } catch (e) {
-        expect.fail(e, null, `valid role object should not throw exception: ${e}`);
+        expect.fail(e, null, `saving role object should not throw exception: ${e}`);
       }
     });
 
-    it("invalid role should return errors", (done) => {
+    it('should not save a invalid role object to database', (done) => {
       try {
-        var res = role.validate(invalidObject);
-        expect(res)
+        var result = role.save("T001", "user", "H001B001", "1", roleTestData.validObject1);
+        expect(result)
           .to.be.rejected
           .notify(done);
       } catch (e) {
         expect.fail(e, null, `exception: ${e}`);
       }
     });
-
-    if ("should error out for undefined objects", (done) => {
-        try {
-          var res = role.validate(undefinedObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
-
-    if ("should error out for null objects", (done) => {
-        try {
-          var res = role.validate(nullObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
   });
 
-  describe("testing update Role", () => {
-    beforeEach((done) => {
-      db.deleteAll(tenantOne)
-        .then((value) => {
-          return db.deleteAll(tenantTwo);
-        })
-        .then((value) => {
-          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject1);
-        })
-        .then((value) => {
-          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject2);
-        })
-        .then((value) => {
-          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject3);
-        })
-        .then((value) => {
-          return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject4);
-        })
-        .then((value) => {
-          done();
-        });
-    });
-    it('should update a role with new values', (done) => {
-      var res = role.update(tenantOne, "admin_Two", "admin_Two", {
-        "enableFlag": 1,
-        "roleName": "admin_Two",
-        "description": "test update"
-      });
-      expect(res)
-        .to.have.be.fulfilled.then((app) => {
-          debug("result: " + JSON.stringify(app));
-          expect(app)
-            .to.have.property("nModified")
-            .to.equal(1);
-          done();
-        });
-    });
-    it("should throw IllegalArgumentException for undefined tenantId parameter ", (done) => {
-      let undefinedId;
-      let res = role.update(undefinedId, "admin_One", {
-        roleName: "Admin"
-      });
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
 
-    it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let undefinedCode;
-      let res = role.update(tenantOne, undefinedCode, null);
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for undefined update parameter ", (done) => {
-      let undefinedUpdate;
-      let res = role.update(tenantOne, "admin_One", undefinedUpdate);
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null tenantId parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = role.update(null, "admin_One", {
-        roleName: "Admin"
-      });
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = role.update(tenantOne, null, {
-        roleName: "Admin"
-      });
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-
-    it("should throw IllegalArgumentException for null update parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
-      let res = role.update(tenantOne, "admin_One", null);
-      expect(res)
-        .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-        .notify(done);
-    });
-  });
+  // describe("testing update Role", () => {
+  //   beforeEach((done) => {
+  //     db.deleteAll(tenantOne)
+  //       .then((value) => {
+  //         return db.deleteAll(tenantTwo);
+  //       })
+  //       .then((value) => {
+  //         return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject1);
+  //       })
+  //       .then((value) => {
+  //         return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject2);
+  //       })
+  //       .then((value) => {
+  //         return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject3);
+  //       })
+  //       .then((value) => {
+  //         return db.save(tenantOne, "kamalarani", "1", "Entity2", roleTestData.validObject4);
+  //       })
+  //       .then((value) => {
+  //         done();
+  //       });
+  //   });
+  //   it('should update a role with new values', (done) => {
+  //     var res = role.update(tenantOne, "admin_Two", "admin_Two", {
+  //       "enableFlag": 1,
+  //       "roleName": "admin_Two",
+  //       "description": "test update"
+  //     });
+  //     expect(res)
+  //       .to.have.be.fulfilled.then((app) => {
+  //         debug("result: " + JSON.stringify(app));
+  //         expect(app)
+  //           .to.have.property("nModified")
+  //           .to.equal(1);
+  //         done();
+  //       });
+  //   });
+  //   it("should throw IllegalArgumentException for undefined tenantId parameter ", (done) => {
+  //     let undefinedId;
+  //     let res = role.update(undefinedId, "admin_One", {
+  //       roleName: "Admin"
+  //     });
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  //
+  //   it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
+  //     // an id is a 12 byte string, -1 is an invalid id value+
+  //     let undefinedCode;
+  //     let res = role.update(tenantOne, undefinedCode, null);
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  //
+  //   it("should throw IllegalArgumentException for undefined update parameter ", (done) => {
+  //     let undefinedUpdate;
+  //     let res = role.update(tenantOne, "admin_One", undefinedUpdate);
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  //
+  //   it("should throw IllegalArgumentException for null tenantId parameter ", (done) => {
+  //     // an id is a 12 byte string, -1 is an invalid id value+
+  //     let res = role.update(null, "admin_One", {
+  //       roleName: "Admin"
+  //     });
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  //
+  //   it("should throw IllegalArgumentException for null code parameter ", (done) => {
+  //     // an id is a 12 byte string, -1 is an invalid id value+
+  //     let res = role.update(tenantOne, null, {
+  //       roleName: "Admin"
+  //     });
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  //
+  //   it("should throw IllegalArgumentException for null update parameter ", (done) => {
+  //     // an id is a 12 byte string, -1 is an invalid id value+
+  //     let res = role.update(tenantOne, "admin_One", null);
+  //     expect(res)
+  //       .to.eventually.to.be.rejectedWith("IllegalArgumentException")
+  //       .notify(done);
+  //   });
+  // });
 });

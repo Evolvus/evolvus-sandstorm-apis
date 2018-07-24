@@ -2,11 +2,11 @@ const debug = require("debug")("evolvus-role:index");
 const model = require("./model/roleSchema");
 const _ = require('lodash');
 const dbSchema = require("./db/roleSchema");
-
+const shortid = require("shortid");
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const application = require("@evolvus/evolvus-application");
-
+const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("role", dbSchema);
 
@@ -70,7 +70,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
       if (tenantId == null || roleObject == null) {
         throw new Error("IllegalArgumentException: tenantId/roleObject is null or undefined");
       }
-      Promise.all([application.find(tenantId, {
+      Promise.all([application.find(tenantId, createdBy, ipAddress, {
         "applicationCode": roleObject.applicationCode
       }, {}, 0, 1), collection.find({
         "roleName": roleObject.roleName
@@ -95,14 +95,40 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
         if (!res.valid) {
           if (res.errors[0].name == "required") {
             reject(`${res.errors[0].argument} is required`);
+          } else {
+            reject(res.errors);
           }
-          reject(res.errors[0].schema.message);
         } else {
           // if the object is valid, save the object to the database
-
+          debug(`calling db save method, roleObject: ${JSON.stringify(roleObject)}`);
           collection.save(roleObject).then((result) => {
             debug(`saved successfully ${result}`);
-            resolve(result);
+            var sweEventObject = {
+              "tenantId": tenantId,
+              "wfEntity": "ROLE",
+              "wfEntityAction": "CREATE",
+              "createdBy": createdBy,
+              "query": result._id
+            };
+            sweClient.initialize(sweEventObject).then((result) => {
+              var filterRole = {
+                "roleName": roleObject.roleName
+              };
+              collection.update(filterRole, {
+                "wfInstanceStatus": result.data.wfInstanceStatus,
+                "wfInstanceId": result.data.wfInstanceId
+              }).then((result) => {
+                resolve(result);
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`try catch failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`try catch failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
           }).catch((e) => {
             var reference = shortid.generate();
             debug(`failed to save promise due to : ${e},and reference: ${reference}`);
@@ -149,6 +175,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
       docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
       docketObject.details = `role getAll method`;
       docketClient.postToDocket(docketObject);
+      debug(`calling db find method, filter: ${JSON.stringify(filter)},orderby: ${orderby}, skipCount: ${skipCount},limit: ${limit}`);
       collection.find(filter, orderby, skipCount, limit).then((docs) => {
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
@@ -191,7 +218,8 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].roleName != updateRoleName)) {
             throw new Error(`Role ${update.roleName} already exists`);
           }
-          collection.update(code, update).then((resp) => {
+          debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
+          collection.update(filterRole, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {
