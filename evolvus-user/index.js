@@ -12,6 +12,9 @@ const shortid = require("shortid");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("user", dbSchema);
 
+const sweClient = require("@evolvus/evolvus-swe-client");
+
+
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
@@ -124,7 +127,35 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                           collection.save(object).then((result) => {
                             var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
                             debug(`User saved successfully ${savedObject}`);
-                            resolve(savedObject);
+                            var sweEventObject = {
+                              "tenantId": tenantId,
+                              "wfEntity": "USER",
+                              "wfEntityAction": "CREATE",
+                              "createdBy": createdBy,
+                              "query": result._id
+                            };
+
+                            debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+                            sweClient.initialize(sweEventObject).then((sweResult) => {
+                              var filterUser = {
+                                "userId": result.userId
+                              };
+                              debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
+                              collection.update(filterUser, {
+                                "wfInstanceStatus": sweResult.data.wfInstanceStatus,
+                                "wfInstanceId": sweResult.data.wfInstanceId
+                              }).then((userObject) => {
+                                resolve(userObject);
+                              }).catch((e) => {
+                                var reference = shortid.generate();
+                                debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                                reject(e);
+                              });
+                            }).catch((e) => {
+                              var reference = shortid.generate();
+                              debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
+                              reject(e);
+                            });
                           }).catch((e) => {
                             var reference = shortid.generate();
                             debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
