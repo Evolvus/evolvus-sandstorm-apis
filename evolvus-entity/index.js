@@ -103,6 +103,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
         let query1 = _.merge(query, {
           "name": entityObject.parent
         });
+        debug(`calling db find query1 :${JSON.stringify(query1)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
         collection.find(query1, {}, 0, 1).then((result) => {
           if (_.isEmpty(result)) {
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
@@ -120,7 +121,8 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
             let query3 = _.merge(query, {
               "entityCode": entityObject.entityCode
             });
-
+            debug(`calling db find query2 :${JSON.stringify(query2)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
+            debug(`calling db find query3 :${JSON.stringify(query3)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
               .then((result) => {
                 if (!_.isEmpty(result[0][0])) {
@@ -134,6 +136,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                 docketObject.keyDataAsJSON = JSON.stringify(entityObject);
                 docketObject.details = `entity creation initiated`;
                 docketClient.postToDocket(docketObject);
+                debug(`calling db save entityObject :${JSON.stringify(entityObject)} is a parameter`);
                 collection.save(entityObject).then((result) => {
                   debug(`saved successfully ${result}`);
                   var sweEventObject = {
@@ -143,10 +146,12 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     "createdBy": createdBy,
                     "query": result._id
                   };
+                  debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                   sweClient.initialize(sweEventObject).then((result) => {
                     var filterEntity = {
                       "entityCode": entityObject.entityCode
                     };
+                    debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
                     collection.update(filterEntity, {
                       "wfInstanceStatus": result.data.wfInstanceStatus,
                       "wfInstanceId": result.data.wfInstanceId
