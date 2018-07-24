@@ -2,9 +2,9 @@ module.exports.validObject1 = {
   // valid application object
   "tenantId": "T001",
   "applicationName": "Docket Audit Server",
-  "wfInstanceId": "wfID",
-  "wfInstanceStatus": "wfStatus",
-  "applicationCode": "DOCKET",
+  "wfInstanceId": "",
+  "wfInstanceStatus": "INITIALIZE",
+  "applicationCode": "CDA",
   "entityId": "abc12",
   "accessLevel": "1",
   "createdBy": "Srihari",
