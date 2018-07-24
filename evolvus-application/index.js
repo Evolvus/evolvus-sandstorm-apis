@@ -6,7 +6,7 @@ const _ = require('lodash');
 const validate = require("jsonschema")
   .validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-var shortid = require('shortid');
+const shortid = require('shortid');
 
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("application", dbSchema);
@@ -100,7 +100,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
       docketObject.details = `caught Exception on application_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });

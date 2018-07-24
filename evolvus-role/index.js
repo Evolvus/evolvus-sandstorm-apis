@@ -35,16 +35,23 @@ module.exports = {
   sortAttributes
 };
 module.exports.validate = (roleObject) => {
+  debug(`index validate method.roleObject :${JSON.stringify(roleObject)} is a parameter`);
   return new Promise((resolve, reject) => {
-    if (typeof roleObject === "undefined") {
-      throw new Error("IllegalArgumentException:roleObject is undefined");
-    }
-    var res = validate(roleObject, schema);
-    debug("validation status: ", JSON.stringify(res));
-    if (res.valid) {
-      resolve(res.valid);
-    } else {
-      reject(res.errors);
+    try {
+      if (typeof roleObject === "undefined") {
+        throw new Error("IllegalArgumentException:roleObject is undefined");
+      }
+      var res = validate(roleObject, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (res.valid) {
+        resolve(res.valid);
+      } else {
+        reject(res.errors);
+      }
+    } catch (err) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
+      reject(err);
     }
   });
 };
@@ -57,6 +64,7 @@ module.exports.validate = (roleObject) => {
 //
 // object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, roleObject) => {
+  debug(`index save method,tenantId :${tenantId}, createdBy :${createdBy}, ipAddress :${ipAddress},accessLevel: ${accessLevel},entityId: ${entityId}, roleObject :${JSON.stringify(roleObject)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || roleObject == null) {
@@ -96,15 +104,20 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
             debug(`saved successfully ${result}`);
             resolve(result);
           }).catch((e) => {
-            debug(`failed to save with an error: ${e}`);
+            var reference = shortid.generate();
+            debug(`failed to save promise due to : ${e},and reference: ${reference}`);
             reject(e);
           });
         }
       }).catch((e) => {
+        var reference = shortid.generate();
+        debug(`failed to save promise due to : ${e},and reference: ${reference}`);
         reject(e);
       });
       // Other validations here
     } catch (e) {
+      var reference = shortid.generate();
+      debug(`index save method, try_catch failure due to :${e} and referenceId :${reference}`);
       docketObject.name = "role_ExceptionOnSave";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
@@ -124,6 +137,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null) {
@@ -139,10 +153,13 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
-        debug(`failed to find all the role(s) ${e}`);
+        var reference = shortid.generate();
+        debug(`find promise failed due to : ${e} and reference id : ${reference}`);
         reject(e);
       });
     } catch (e) {
+      var reference = shortid.generate();
+      debug(`index find method, try_catch failure due to :${e} and referenceId :${reference}`);
       docketObject.name = "role_ExceptionOngetAll";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
@@ -155,6 +172,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 };
 
 module.exports.update = (tenantId, code, updateRoleName, update) => {
+  debug(`index update method,tenantId :${tenantId}, code :${code},updateRoleName: ${updateRoleName}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
@@ -177,14 +195,18 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {
-            debug(`failed to update ${error}`);
+            var reference = shortid.generate();
+            debug(`update promise failed due to ${error}, and reference Id :${reference}`);
             reject(error);
           });
         }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`update promise failed due to ${error}, and reference Id :${reference}`);
           reject(e);
         });
     } catch (e) {
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
