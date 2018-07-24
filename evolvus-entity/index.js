@@ -140,7 +140,10 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     "query": result._id
                   };
                   sweClient.initialize(sweEventObject).then((result) => {
-                    collection.update(tenantId, entityObject.entityCode, {
+                    var filterEntity = {
+                      "entityCode": entityObject.entityCode
+                    };
+                    collection.update(filterEntity, {
                       "wfInstanceStatus": result.data.wfInstanceStatus,
                       "wfInstanceId": result.data.wfInstanceId
                     }).then((result) => {
