@@ -65,74 +65,75 @@ module.exports.validate = (tenantId, entityObject) => {
 // object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
   return new Promise((resolve, reject) => {
-      try {
-        if (typeof object === 'undefined' || object == null) {
-          throw new Error("IllegalArgumentException: object is null or undefined");
+    try {
+      if (typeof object === 'undefined' || object == null) {
+        throw new Error("IllegalArgumentException: object is null or undefined");
+      }
+      let entityObject = _.merge(object, {
+        "tenantId": tenantId
+      });
+      let query = ({
+        "tenantId": tenantId
+      });
+      query.accessLevel = {
+        $gte: accessLevel
+      };
+      query.entityId = {
+        $regex: entityId + ".*"
+      };
+      var res = validate(entityObject, schema);
+      if (!res.valid) {
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
         }
-        let entityObject = _.merge(object, {
-          "tenantId": tenantId
-        });
-        let query = ({
-          "tenantId": tenantId
-        });
-        query.accessLevel = {
-          $gte: accessLevel
-        };
-        query.entityId = {
-          $regex: entityId + ".*"
-        };
-        var res = validate(entityObject, schema);
-        if (!res.valid) {
-          if (res.errors[0].name == "required") {
-            reject(`${res.errors[0].argument} is required`);
-          }
-          if (res.errors[0].name == "enum") {
-            reject(`${res.errors[0].stack} `);
-          }
-          if (res.errors[0].name == "type") {
-            reject(`${res.errors[0].stack} `);
-          } else {
-            reject(res.errors[0].schema.message);
-          }
+        if (res.errors[0].name == "enum") {
+          reject(`${res.errors[0].stack} `);
+        }
+        if (res.errors[0].name == "type") {
+          reject(`${res.errors[0].stack} `);
         } else {
-          debug("validation status: ", JSON.stringify(res));
-          let query1 = _.merge(query, {
-            "name": entityObject.parent
-          });
-      collection.find(query1, {}, 0, 1).then((result) => {
-            if (_.isEmpty(result)) {
-              throw new Error(`No ParentEntity found with ${entityObject.parent}`);
-            }
-            var randomId = randomString.generate(5);
-            if (result[0].enableFlag == "1") {
-              var aces = parseInt(result[0].accessLevel) + 1;
-              entityObject.accessLevel = JSON.stringify(aces);
-              entityObject.entityId = result[0].entityId + randomId;
-              entityObject.name = entityObject.name.toUpperCase();
-              entityObject.entityCode = entityObject.entityCode.toUpperCase();
-              let query2 = _.merge(query, {
-                "name": entityObject.name,
-              });
-              let query3 = _.merge(query, {
-                "entityCode": entityObject.entityCode
-              });
+          reject(res.errors[0].schema.message);
+        }
+      } else {
+        debug("validation status: ", JSON.stringify(res));
+        let query1 = _.merge(query, {
+          "name": entityObject.parent
+        });
+        console.log(query1);
+        collection.find(query1, {}, 0, 1).then((result) => {
+          console.log("find res ",result);
+          if (_.isEmpty(result)) {
+            throw new Error(`No ParentEntity found with ${entityObject.parent}`);
+          }
+          var randomId = randomString.generate(5);
+          if (result[0].enableFlag == "1") {
+            var aces = parseInt(result[0].accessLevel) + 1;
+            entityObject.accessLevel = JSON.stringify(aces);
+            entityObject.entityId = result[0].entityId + randomId;
+            entityObject.name = entityObject.name.toUpperCase();
+            entityObject.entityCode = entityObject.entityCode.toUpperCase();
+            let query2 = _.merge(query, {
+              "name": entityObject.name,
+            });
+            let query3 = _.merge(query, {
+              "entityCode": entityObject.entityCode
+            });
 
-              Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
-                .then((result) => {
-                  if (!_.isEmpty(result[0][0])) {
-                    throw new Error(`Entity ${entityObject.name} already exists`);
-                  }
-                  if (!_.isEmpty(result[1][0])) {
-                    throw new Error(`Entity ${entityObject.entityCode} already exists`);
-                  }
-                  // if the object is valid, save the object to the database
-                  docketObject.name = "entity_save";
-                  docketObject.keyDataAsJSON = JSON.stringify(entityObject);
-                  docketObject.details = `entity creation initiated`;
-                  docketClient.postToDocket(docketObject);
-                  collection.save(entityObject).then((result) => {
-                    debug(`saved successfully ${result}`);
-
+            Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
+              .then((result) => {
+                if (!_.isEmpty(result[0][0])) {
+                  throw new Error(`Entity ${entityObject.name} already exists`);
+                }
+                if (!_.isEmpty(result[1][0])) {
+                  throw new Error(`Entity ${entityObject.entityCode} already exists`);
+                }
+                // if the object is valid, save the object to the database
+                docketObject.name = "entity_save";
+                docketObject.keyDataAsJSON = JSON.stringify(entityObject);
+                docketObject.details = `entity creation initiated`;
+                docketClient.postToDocket(docketObject);
+                collection.save(entityObject).then((result) => {
+                  debug(`saved successfully ${result}`);
                   var sweEventObject = {
                     "tenantId": tenantId,
                     "wfEntity": "ENTITY",
@@ -140,16 +141,18 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     "createdBy": createdBy,
                     "query": result._id
                   };
-                  return sweClient.initialize(sweEventObject);
-                }).then((result) => {
-                  collection.update(tenantId, entityObject.entityCode, {
-                    "wfInstanceStatus": result.wfInstanceStatus,
-                    "wfInstanceId": result.wfInstanceId
-                  }).then((result) => {
-                    debug(`update wfInstanceId and wfInstanceStatus successfully ${result}`);
-                    resolve(result);
+                  sweClient.initialize(sweEventObject).then((result) => {
+                    collection.update(tenantId, entityObject.entityCode, {
+                      "wfInstanceStatus": result.data.wfInstanceStatus,
+                      "wfInstanceId": result.data.wfInstanceId
+                    }).then((result) => {
+                      resolve(result);
+                    }).catch((e) => {
+                      debug(`failed to update with an error: ${e}`);
+                      reject(e);
+                    });
                   }).catch((e) => {
-                    debug(`failed to update with an error: ${e}`);
+                    debug(`failed to save with an error: ${e}`);
                     reject(e);
                   });
 
@@ -157,24 +160,18 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                   debug(`failed to save with an error: ${e}`);
                   reject(e);
                 });
-            }
-          }).catch((e) => {
-            reject(e);
-          });
+              }).catch((e) => {
+                reject(e);
+              });
 
+          } else {
+            throw new Error(`ParentEntity is disabled`);
+          }
+
+        }).catch((e) => {
+          reject(e);
+        });
       }
-      // else {
-      //   throw new Error(`ParentEntity is disabled`);
-      // }
-      //}
-      // }).catch((e) => {
-      //   console.log(e);
-      //   reject(e);
-      // });
-      // else {
-      //     throw new Error(`ParentEntity is disabled`);
-      //   }
-
     } catch (e) {
       debug(`caught exception ${e}`);
       reject(e);
@@ -223,7 +220,7 @@ module.exports.update = (tenantId, code, update) => {
       let query={
         "tenantId":tenantId,
         "entityCode":code
-      }
+      };
       collection.update(query, update).then((resp) => {
         debug("updated successfully", resp);
         resolve(resp);
