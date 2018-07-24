@@ -30,7 +30,7 @@ var roleSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
+      "minLength": 0,
       "maxLength": 20
     },
     "wfInstanceStatus": {
