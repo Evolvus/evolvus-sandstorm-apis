@@ -99,9 +99,10 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
       } else {
         // Other validations here
         object.userId = object.userId.toUpperCase();
-        collection.findOne({
+        let query = {
           userId: object.userId
-        }).then((userObject) => {
+        };
+        collection.findOne(query).then((userObject) => {
           if (userObject) {
             reject(`UserId ${object.userId} already exists`);
           } else {
@@ -225,7 +226,16 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
       docketObject.details = `user getAll method`;
       docketClient.postToDocket(docketObject);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
+      query.accessLevel = {
+        $gte: accessLevel
+      };
+      query.entityId = {
+        $regex: entityId + ".*"
+      };
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         let filteredArray = _.map(docs, function(object) {
           return _.omit(object, "userPassword", "token", "saltString");
         });
@@ -261,7 +271,14 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
       }
       userId = userId.toUpperCase();
       var filterUser = {
-        userId: userId
+        userId: userId,
+        tenantId: tenantId
+      };
+      filterUser.entityId = {
+        $regex: entityId + ".*"
+      };
+      filterUser.accessLevel = {
+        $gte: accessLevel
       };
       var result;
       var errors = [];
