@@ -7,7 +7,6 @@ var roleSchema = new mongoose.Schema({
   // Add all attributes below tenantId
   tenantId: {
     type: String,
-    required: true,
     minLength: 1,
     maxLength: 64
   },
@@ -34,13 +33,11 @@ var roleSchema = new mongoose.Schema({
   },
   applicationCode: {
     type: String,
-    required: true,
     minLength: 3,
     maxLength: 20
   },
   roleName: {
     type: String,
-    required: true,
     minLength: 6,
     maxLength: 35,
     validate: {
@@ -70,7 +67,7 @@ var roleSchema = new mongoose.Schema({
   },
   selectedFlag: {
     type: String,
-    enum: ["0", "1"]
+    enum: ["true", "false"]
   },
   lastUpdatedDate: {
     type: Date,
@@ -78,7 +75,7 @@ var roleSchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    enum: ["0", "1"]
+    enum: ["true", "false"]
   },
   activationStatus: {
     type: String,

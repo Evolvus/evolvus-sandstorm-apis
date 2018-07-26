@@ -9,6 +9,7 @@ var entitySchema = {
   "properties": {
     "tenantId": {
       "type": "string",
+      "minLength": 1,
       "maxLength": 64,
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
@@ -43,7 +44,7 @@ var entitySchema = {
     },
     "enableFlag": {
       "type": "string",
-      "enum": ["0", "1"],
+      "enum": ["true", "false"],
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
@@ -71,7 +72,7 @@ var entitySchema = {
     },
     "selectedFlag": {
       "type": "string",
-      "enum": ["0", "1"],
+      "enum": ["true", "false"],
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -85,11 +86,16 @@ var entitySchema = {
     },
     "accessLevel": {
       "type": "string",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 10,
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
     "parent": {
       "type": "string",
+      "minLength": 3,
+      "maxLength": 25,
       "pattern": "^[a-zA-Z\-0-9 ]+$",
       "message": "parent can contain only alphabets and numbers",
       "filterable": true, //custom attributes
@@ -149,7 +155,8 @@ var entitySchema = {
           "sortable": false //custom attribute
         },
         "emailVerified": {
-          "type": "boolean"
+          "type": "string",
+          "enum": ["true", "false"]
         },
         "phoneNumber": {
           "type": "string",
@@ -168,7 +175,8 @@ var entitySchema = {
           "sortable": false //custom attribute
         },
         "mobileVerified": {
-          "type": "boolean"
+          "type": "string",
+          "enum": ["true", "false"],
         },
         "faxNumber": {
           "type": "string",
@@ -223,10 +231,10 @@ var entitySchema = {
           "sortable": false //custom attributes
         }
       },
-      "required": ["tenantId", "firstName", "lastName", "emailId", "mobileNumber", "phoneNumber", "faxNumber", "city", "state", "country", "createdDate", "lastUpdatedDate"]
+
     }
   },
-  "required": ["tenantId", "entityCode", "name", "parent", "description", "createdBy", "createdDate", "lastUpdatedDate"]
+
 };
 
 module.exports.schema = entitySchema;

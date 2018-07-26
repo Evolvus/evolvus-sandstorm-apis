@@ -9,6 +9,7 @@ var roleSchema = {
   "properties": {
     "tenantId": {
       "type": "string",
+      "minLength": 1,
       "maxLength": 64,
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
@@ -47,7 +48,7 @@ var roleSchema = {
     },
     "roleName": {
       "type": "string",
-      "minLength": 1,
+      "minLength": 6,
       "maxLength": 100,
       "pattern": "^[a-zA-Z-0-9-_ ]+$",
       "message": "RoleName can contain only alphanumeric and two specialcharacters hyphen and underscore",
@@ -56,7 +57,7 @@ var roleSchema = {
     },
     "enableFlag": {
       "type": "string",
-      "enum": ["0", "1"],
+      "enum": ["true", "false"],
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
@@ -84,13 +85,14 @@ var roleSchema = {
     },
     "selectedFlag": {
       "type": "string",
-      "enum": ["0", "1"],
+      "enum": ["true", "false"],
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
     "activationStatus": {
       "type": "string",
       "enum": ["ACTIVE", "INACTIVE"],
+      "minLength": 1,
       "displayable": true,
       "filterable": true, //custom attributes
       "sortable": false //custom attributes
@@ -105,6 +107,8 @@ var roleSchema = {
     },
     "associatedUsers": {
       "type": "number",
+      "minLength": 1,
+      "maxLength": 10,
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -154,6 +158,8 @@ var roleSchema = {
           },
           "createdBy": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
@@ -176,12 +182,14 @@ var roleSchema = {
           },
           "enableFlag": {
             "type": "string",
-            "enum": ["0", "1"],
+            "enum": ["true", "false"],
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
           "menuGroupOrder": {
             "type": "number",
+            "minLength": 1,
+            "maxLength": 10,
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
@@ -230,16 +238,15 @@ var roleSchema = {
                 },
                 "menuItemOrder": {
                   "type": "number",
-                  "required": "true",
+                  "minLength": 1,
+                  "maxLength": 10,
                   "filterable": false, //custom attributes
                   "sortable": false //custom attributes
                 }
-              },
-              "required": ["menuItemType", "applicationCode", "menuItemCode", "title", "menuItemOrder"]
+              }
             }
           }
-        },
-        "required": ["tenantId", "applicationCode", "menuGroupCode", "menuGroupOrder", "title", "createdDate", "createdBy", "menuItems"]
+        }
       }
     },
     "description": {
@@ -250,8 +257,7 @@ var roleSchema = {
       "sortable": false, //custom attributes
       "displayable": true
     }
-  },
-  "required": ["tenantId", "applicationCode", "roleName", "menuGroup", "activationStatus", "associatedUsers", "createdBy", "createdDate", "lastUpdatedDate"]
+  }
 };
 
 module.exports.schema = roleSchema;

@@ -70,11 +70,16 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
       if (tenantId == null || roleObject == null) {
         throw new Error("IllegalArgumentException: tenantId/roleObject is null or undefined");
       }
-      Promise.all([application.find(tenantId, createdBy, ipAddress, {
-        "applicationCode": roleObject.applicationCode
-      }, {}, 0, 1), collection.find({
+      let query = _.merge({
+        "tenantId": tenantId,
         "roleName": roleObject.roleName
-      }, {}, 0, 1)]).then((result) => {
+      });
+      console.log("query", query);
+      console.log("typeof query",typeof query);
+      Promise.all([application.find(tenantId,createdBy, ipAddress, {
+        "applicationCode": roleObject.applicationCode
+      }, {}, 0, 1), collection.find(query, {}, 0, 1)]).then((result) => {
+        console.log("find result", result);
         if (_.isEmpty(result[0])) {
           throw new Error(`No Application with ${roleObject.applicationCode} found`);
         }
@@ -108,7 +113,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
               "wfEntity": "ROLE",
               "wfEntityAction": "CREATE",
               "createdBy": createdBy,
-              "query": result._id
+              "query": result.roleName
             };
             sweClient.initialize(sweEventObject).then((result) => {
               var filterRole = {
@@ -137,6 +142,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
           });
         }
       }).catch((e) => {
+        console.log("promise all catch", e);
         var reference = shortid.generate();
         debug(`promiseAll failed due to : ${e},and reference: ${reference}`);
         reject(e);
@@ -170,6 +176,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
       if (tenantId == null) {
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
+      let query = _.merge(filter, tenantId);
       docketObject.name = "role_getAll";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
@@ -177,7 +184,7 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
       docketObject.details = `role getAll method`;
       docketClient.postToDocket(docketObject);
       debug(`calling db find method, filter: ${JSON.stringify(filter)},orderby: ${orderby}, skipCount: ${skipCount},limit: ${limit}`);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`role(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -206,12 +213,13 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
+      let query = _.merge(tenantId, {
+        "roleName": update.roleName
+      });
       var filterRole = {
         roleName: roleName
       };
-      collection.find({
-          "roleName": update.roleName
-        }, {}, 0, 1)
+      collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
             throw new Error(`Role ${update.roleName},  already exists `);

@@ -8,7 +8,6 @@ var entitySchema = new mongoose.Schema({
   // Add all attributes below tenantId
   tenantId: {
     type: String,
-    required: true,
     minLength: 1,
     maxLength: 64
   },
@@ -26,7 +25,6 @@ var entitySchema = new mongoose.Schema({
     type: String,
     minLength: 1,
     maxLength: 50,
-    required: true,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z-0-9-_ ]+$/.test(v);
@@ -43,7 +41,6 @@ var entitySchema = new mongoose.Schema({
     type: String,
     minLength: 1,
     maxLength: 50,
-    required: true,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z\-0-9]+$/.test(v);
@@ -58,7 +55,6 @@ var entitySchema = new mongoose.Schema({
     type: String,
     minLength: 1,
     maxLength: 255,
-    required: true,
     validate: {
       validator: function(v) {
         return /^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$/.test(v);
@@ -68,31 +64,30 @@ var entitySchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    enum: ["0", "1"]
+    enum: ["true","false"]
   },
   selectedFlag: {
     type: String,
-    enum: ["0", "1"]
+      enum: ["true","false"]
+      
   },
   processingStatus: {
     type: String,
     default: "PENDING_AUTHORIZATION"
   },
   createdBy: {
-    type: String,
-    required: true
+    type: String
   },
   createdDate: {
-    type: Date,
-    required: true
+    type: Date
   },
   lastUpdatedDate: {
-    type: Date,
-    required: true
+    type: Date
   },
   parent: {
     type: String,
-    required: true,
+    minLength: 1,
+    maxLength: 25,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z\-0-9 ]+$/.test(v);

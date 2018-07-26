@@ -144,7 +144,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     "wfEntity": "ENTITY",
                     "wfEntityAction": "CREATE",
                     "createdBy": createdBy,
-                    "query": result._id
+                    "query": result.entityCode
                   };
                   debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                   sweClient.initialize(sweEventObject).then((result) => {

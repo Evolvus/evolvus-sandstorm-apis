@@ -143,7 +143,7 @@ var menuSchema = {
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
-          "SubMenuItems": {
+          "subMenuItems": {
             "type": "array",
             "items": {
               "properties": {

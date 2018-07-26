@@ -6,7 +6,7 @@ module.exports.validObject1 = {
   "applicationCode": "DOCKET",
   "wfInstanceId": "",
   "wfInstanceStatus": "INITIALIZE",
-  "enableFlag": "1",
+  "enableFlag": "true",
   "roleName": "admin_One",
   "roleType": "CHECKER",
   "txnType": ["BANKING"],
