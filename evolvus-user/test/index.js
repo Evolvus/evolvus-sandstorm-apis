@@ -1,8 +1,8 @@
 const debug = require("debug")("evolvus-user.test.index");
 const chai = require("chai");
 const mongoose = require("mongoose");
-
-var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204/TestPlatform_Dev";
+const _ = require("lodash");
+var randomstring = require("randomstring");
 /*
  ** chaiAsPromised is needed to test promises
  ** it adds the "eventually" property
@@ -10,13 +10,18 @@ var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204/TestPlatf
  ** chai and others do not support async / await
  */
 const chaiAsPromised = require("chai-as-promised");
-
 const expect = chai.expect;
 chai.use(chaiAsPromised);
 
 const user = require("../index");
-// const db = require("../db/user");
+const entity = require("@evolvus/evolvus-entity");
+const role = require("@evolvus/evolvus-role");
+const dbSchema = require("../db/userSchema");
 const userTestData = require("./userTestData");
+const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
+const collection = new Dao("user", dbSchema);
+const connection = require("@evolvus/evolvus-mongo-dao").connection;
+
 
 describe('user model validation', () => {
 
@@ -30,12 +35,14 @@ describe('user model validation', () => {
 
   // before we start the tests, connect to the database
   before((done) => {
-    mongoose.connect(MONGO_DB_URL);
-    let connection = mongoose.connection;
-    connection.once("open", () => {
-      debug("ok got the connection");
+
+    var dbConnection = connection.connect("PLATFORM").then(() => {
+      // app.on('application_started', done());
       done();
+    }).catch((e) => {
+      done(e);
     });
+
   });
 
   describe("validation against jsonschema", () => {
@@ -63,57 +70,21 @@ describe('user model validation', () => {
       }
     });
 
-    if ("should error out for undefined objects", (done) => {
-        try {
-          var res = user.validate(undefinedObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
+    // it("should error out for undefined objects", (done) => {
+    //   try {
+    //     var res = user.validate(undefinedObject);
+    //     expect(res)
+    //       .to.be.rejected
+    //       .notify(done);
+    //   } catch (e) {
+    //     expect.fail(e, null, `exception: ${e}`);
+    //   }
+    // });
 
-    if ("should error out for null objects", (done) => {
-        try {
-          var res = user.validate(nullObject);
-          expect(res)
-            .to.be.rejected
-            .notify(done);
-        } catch (e) {
-          expect.fail(e, null, `exception: ${e}`);
-        }
-      });
-  });
-
-  describe("testing user.save method", () => {
-
-    beforeEach((done) => {
-      db.deleteAll(tenantOne)
-        .then((data) => {
-          return db.deleteAll(tenantTwo);
-        })
-        .then((data) => {
-          done();
-        });
-    });
-
-    it('should save a valid user object to database', (done) => {
+    it("should error out for null objects", (done) => {
       try {
-        var result = user.save(tenantOne, "192.168.1.115", "Kavya", userTestData.validObject1);
-        //replace anyAttribute with one of the valid attribute of a user Object
-        expect(result)
-          .to.eventually.have.property("_id")
-          .notify(done);
-      } catch (e) {
-        expect.fail(e, null, `saving user object should not throw exception: ${e}`);
-      }
-    });
-
-    it('should not save a invalid user object to database', (done) => {
-      try {
-        var result = user.save(tenantOne, "192.168.1.115", "Kavya", userTestData.invalidObject1);
-        expect(result)
+        var res = user.validate(nullObject);
+        expect(res)
           .to.be.rejected
           .notify(done);
       } catch (e) {
@@ -122,99 +93,222 @@ describe('user model validation', () => {
     });
   });
 
+  // describe("testing user.save method", () => {
+  //
+  //   beforeEach(function(done) {
+  //     this.timeout(10000);
+  //     collection.deleteAll({
+  //         tenantId: tenantOne
+  //       })
+  //       .then((data) => {
+  //         return collection.deleteAll({
+  //           tenantId: tenantTwo
+  //         });
+  //       })
+  //       .then((data) => {
+  //         done();
+  //       });
+  //   });
+  //
+  //   it('should save a valid user object to database', (done) => {
+  //     try {
+  //       // Promise.all([entity.save(tenantOne, "Kavya", "H001B001", "1", userTestData.entityObject), role.save(tenantOne, "Kavya", "1", "H001B001", userTestData.roleObject)]).then((res) => {
+  //       //   var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
+  //       //   //replace anyAttribute with one of the valid attribute of a user Object
+  //       //   expect(result)
+  //       //     .to.eventually.have.property("_id")
+  //       //     .notify(done);
+  //       // }).then((e) => {
+  //       //   done(e);
+  //       // });
+  //       var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
+  //       //replace anyAttribute with one of the valid attribute of a user Object
+  //       expect(result)
+  //         .to.be.eventually.have.property("nModified")
+  //         .to.eql(1)
+  //         .notify(done);
+  //     } catch (e) {
+  //       expect.fail(e, null, `saving user object should not throw exception: ${e}`);
+  //     }
+  //   }, 10000);
+  //
+  //   it('should not save a invalid user object to database', (done) => {
+  //     try {
+  //       var result = user.save(tenantOne, "192.168.1.115", "Kavya", userTestData.invalidObject1);
+  //       expect(result)
+  //         .to.be.rejected
+  //         .notify(done);
+  //     } catch (e) {
+  //       expect.fail(e, null, `exception: ${e}`);
+  //     }
+  //   });
+  // });
+
   describe('testing user.find', () => {
+    let object1 = userTestData.validObject1,
+      object2 = userTestData.validObject2,
+      object3 = userTestData.validObject3,
+      object4 = userTestData.validObject4,
+      object5 = userTestData.validObject5;
 
     beforeEach(function(done) {
       this.timeout(10000);
-      db.deleteAll(tenantOne)
-        .then((value) => {
-          return db.deleteAll(tenantTwo);
+      collection.deleteAll({
+          tenantId: tenantOne
         })
         .then((value) => {
-          return db.save(tenantOne, userTestData.validObject1);
+          return collection.deleteAll({
+            tenantId: tenantTwo
+          });
         })
         .then((value) => {
-
-          return db.save(tenantOne, userTestData.validObject2);
-        })
-        .then((value) => {
-
-          return db.save(tenantOne, userTestData.validObject3);
-        })
-        .then((value) => {
-
-          return db.save(tenantOne, userTestData.validObject4);
+          return collection.save(_.merge(object1, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantOne, userTestData.validObject5);
+          return collection.save(_.merge(object2, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantOne, userTestData.validObject6);
+          return collection.save(_.merge(object3, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantOne, userTestData.validObject7);
+          return collection.save(_.merge(object4, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantOne, userTestData.validObject8);
-        })
-        .then((value) => {
-          return db.save(tenantTwo, userTestData.validObject9);
-        })
-        .then((value) => {
-
-          return db.save(tenantTwo, userTestData.validObject10);
+          return collection.save(_.merge(object5, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantTwo, userTestData.validObject11);
+          return collection.save(_.merge(object1, {
+            "tenantId": tenantTwo,
+            "userId": "SRIHARIG",
+            "contact.emailId": randomstring.generate(6) + "@gmail.com"
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantTwo, userTestData.validObject12);
+          return collection.save(_.merge(object2, {
+            "tenantId": tenantTwo,
+            "userId": "KAVYAKM",
+            "contact.emailId": randomstring.generate(6) + "@gmail.com"
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantTwo, userTestData.validObject13);
+          return collection.save(_.merge(object3, {
+            "tenantId": tenantTwo,
+            "userId": "PAVITHRAT",
+            "contact.emailId": randomstring.generate(6) + "@gmail.com"
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantTwo, userTestData.validObject14);
+          return collection.save(_.merge(object4, {
+            "tenantId": tenantTwo,
+            "userId": "KAMALAK",
+            "contact.emailId": randomstring.generate(6) + "@gmail.com"
+          }));
         })
         .then((value) => {
 
-          return db.save(tenantTwo, userTestData.validObject15);
+          return collection.save(_.merge(object5, {
+            "tenantId": tenantTwo,
+            "userId": "VIGNESHP",
+            "contact.emailId": randomstring.generate(6) + "@gmail.com"
+          }));
         })
         .then((value) => {
-
-          return db.save(tenantTwo, userTestData.validObject16);
-        })
-        .then((value) => {
-
           done();
         });
     });
 
-    it("should return all the values of a tenant", (done) => {
+    it("should return all the values of tenant One only", (done) => {
       let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 0);
 
       expect(res)
-        .to.eventually.have.lengthOf(8)
-        .notify(done);
+        .to.have.be.fulfilled.then((users) => {
+          expect(users)
+            .to.have.lengthOf(5);
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[1])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[2])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[3])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[4])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          done();
+        });
     });
 
-    it("should return a single value of a tenant", (done) => {
-      let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 1);
+    it("should return all the values of tenant Two only", (done) => {
+      let res = user.find(tenantTwo, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 0);
 
       expect(res)
-        .to.eventually.have.lengthOf(1)
-        .notify(done);
+        .to.have.be.fulfilled.then((users) => {
+          expect(users)
+            .to.have.lengthOf(5);
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          expect(users[1])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          expect(users[2])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          expect(users[3])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          expect(users[4])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          done();
+        });
     });
 
-    it("should return a user Object ", (done) => {
+    //There are two users with same userName as kavyak and different tenantId
+    //It should return only one user from one tenant
+    it("should return a user Object from tenantTwo", (done) => {
+      var filter = {
+        userName: "kavyak"
+      };
+      let res = user.find(tenantTwo, entityId, accessLevel, "kavya", "192.168.1.115", filter, {}, 0, 0);
+
+      expect(res)
+        .to.have.be.fulfilled.then((users) => {
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantTwo);
+          expect(users[0])
+            .to.have.property("userName")
+            .to.equal("kavyak");
+          done();
+        });
+    });
+
+
+    it("should return a single value of a tenantOne", (done) => {
       let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {
         "userName": "kavyak"
       }, {}, 0, 1);
@@ -268,9 +362,9 @@ describe('user model validation', () => {
         });
     });
 
-    it("should return 6 enabled users", (done) => {
+    it("should return 3 enabled users", (done) => {
       let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {
-        "enabledFlag": "1"
+        "enabledFlag": "true"
       }, {
         "userName": -1
       }, 0, 10);
@@ -279,16 +373,102 @@ describe('user model validation', () => {
         .to.have.be.fulfilled.then((user) => {
           debug("result: " + JSON.stringify(user));
           expect(user)
-            .to.have.lengthOf(6);
+            .to.have.lengthOf(3);
           expect(user[0])
             .to.have.property("tenantId")
             .to.equal(tenantOne);
           expect(user[0])
             .to.have.property("userName")
             .to.equal("sriharig");
-          expect(user[5])
+          expect(user[2])
             .to.have.property("userName")
             .to.equal("kavyak");
+          done();
+        });
+    });
+
+    it("should return all users from tenantOne if accessLevel is 0", (done) => {
+      let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 10);
+
+      expect(res)
+        .to.have.be.fulfilled.then((users) => {
+          debug("result: " + JSON.stringify(user));
+          expect(users)
+            .to.have.lengthOf(5);
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          done();
+        });
+    });
+
+    it("should return only 2 users from tenantOne if accessLevel is 2", (done) => {
+      let res = user.find(tenantOne, entityId, "2", "kavya", "192.168.1.115", {}, {
+        userName: -1
+      }, 0, 10);
+
+      expect(res)
+        .to.have.be.fulfilled.then((users) => {
+          debug("result: " + JSON.stringify(user));
+          expect(users)
+            .to.have.lengthOf(2);
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[0])
+            .to.have.property("userId")
+            .to.equal(object5.userId);
+          expect(users[1])
+            .to.have.property("userId")
+            .to.equal(object4.userId);
+          done();
+        });
+    });
+
+    it("should return only 4 users from tenantOne if accessLevel is 1", (done) => {
+      let res = user.find(tenantOne, entityId, "1", "kavya", "192.168.1.115", {}, {
+        userName: -1
+      }, 0, 10);
+
+      expect(res)
+        .to.have.be.fulfilled.then((users) => {
+          debug("result: " + JSON.stringify(user));
+          expect(users)
+            .to.have.lengthOf(4);
+          expect(users[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(users[0])
+            .to.have.property("userId")
+            .to.equal(object5.userId);
+          expect(users[3])
+            .to.have.property("userId")
+            .to.equal(object4.userId);
+          done();
+        });
+    });
+
+    it("should not contain userPassword,token and saltString properties", (done) => {
+      let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 10);
+
+      expect(res)
+        .to.have.be.fulfilled.then((users) => {
+          debug("result: " + JSON.stringify(user));
+          expect(users)
+            .to.have.lengthOf(5);
+          expect(users[0])
+            .to.not.have.property("userPassword");
+          expect(users[0])
+            .to.not.have.property("token");
+          expect(users[0])
+            .to.not.have.property("saltString");
+          expect(users[1])
+            .to.not.have.property("userPassword");
+          expect(users[1])
+            .to.not.have.property("token");
+          expect(users[1])
+            .to.not.have.property("saltString");
+
           done();
         });
     });
@@ -308,21 +488,33 @@ describe('user model validation', () => {
 
   describe("update testing", () => {
     beforeEach((done) => {
-      db.deleteAll(tenantOne)
-        .then((value) => {
-          return db.deleteAll(tenantTwo);
+      collection.deleteAll({
+          tenantId: tenantOne
         })
         .then((value) => {
-          return db.save(tenantOne, userTestData.validObject1);
+          return collection.deleteAll({
+            tenantId: tenantTwo
+          });
         })
         .then((value) => {
-          return db.save(tenantOne, userTestData.validObject2);
+          return collection.save(_.merge(userTestData.validObject1, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
-          return db.save(tenantOne, userTestData.validObject3);
+          return collection.save(_.merge(userTestData.validObject2, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
-          return db.save(tenantOne, userTestData.validObject4);
+          return collection.save(_.merge(userTestData.validObject3, {
+            "tenantId": tenantOne
+          }));
+        })
+        .then((value) => {
+          return collection.save(_.merge(userTestData.validObject4, {
+            "tenantId": tenantOne
+          }));
         })
         .then((value) => {
           done();
@@ -330,594 +522,83 @@ describe('user model validation', () => {
     });
 
     it("should disable user kavya", (done) => {
-      let res = user.update(tenantOne, "kavyak", {
-        "enabledFlag": "0",
-        "updatedDate": new Date()
-          .toISOString()
-      });
+      let res = user.update(tenantOne, "KAVYAKM", {
+        "enabledFlag": "false"
+      }, accessLevel, entityId);
       expect(res)
-        .to.have.be.fulfilled.then((app) => {
-          debug("result: " + JSON.stringify(app));
-          expect(app)
+        .to.have.be.fulfilled.then((user) => {
+          debug("result: " + JSON.stringify(user));
+          expect(user)
             .to.have.property("nModified")
             .to.equal(1);
           done();
         });
     });
+
+    it("should not update user with wrong entity value", (done) => {
+      let res = user.update(tenantOne, "KAVYAKM", {
+        "entityId": "Kavya"
+      }, accessLevel, entityId);
+      expect(res)
+        .to.be.rejectedWith("User update failed due the selected Entity not found")
+        .notify(done);
+    });
+
+    it("should not update user with invalid role object", (done) => {
+      let res = user.update(tenantOne, "KAVYAKM", {
+        "role": userTestData.roleObject
+      }, accessLevel, entityId);
+      expect(res)
+        .to.be.rejectedWith(`Role ${userTestData.roleObject.roleName} not found`)
+        .notify(done);
+    });
+
+    it("should not update user if selected role is not the authorized one", (done) => {
+      var roleObj = _.merge(userTestData.roleObject, {
+        "roleName": "ADMIN"
+      });
+      let res = user.update(tenantOne, "KAVYAKM", {
+        "role": roleObj
+      }, accessLevel, entityId);
+      expect(res)
+        .to.be.rejectedWith(`Role ${userTestData.roleObject.roleName} must be AUTHORIZED`)
+        .notify(done);
+    });
+
+    it("should be rejected if no user found", (done) => {
+      var roleObj = _.merge(userTestData.roleObject, {
+        "roleName": "ADMIN"
+      });
+      let res = user.update(tenantOne, "sffsdgh", {
+        "role": roleObj
+      }, accessLevel, entityId);
+      expect(res)
+        .to.be.rejectedWith(`No user found matching the userId SFFSDGH`)
+        .notify(done);
+    });
+
   });
 
-  //   describe('testing user.getAll when there is no data', () => {
-
-  //     beforeEach((done) => {
-  //       db.deleteAll().then((res) => {
-  //         done();
-  //       });
-  //     });
-
-  //     it('should return empty array when limit is -1', (done) => {
-  //       try {
-  //         let res = user.getAll(-1);
-  //         expect(res)
-  //           .to.be.fulfilled.then((docs) => {
-  //             expect(docs)
-  //               .to.be.a('array');
-  //             expect(docs.length)
-  //               .to.equal(0);
-  //             expect(docs)
-  //               .to.eql([]);
-  //             done();
-  //           });
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it('should return empty array when limit is positive value ', (done) => {
-  //       try {
-  //         let res = user.getAll(2);
-  //         expect(res)
-  //           .to.be.fulfilled.then((docs) => {
-  //             expect(docs)
-  //               .to.be.a('array');
-  //             expect(docs.length)
-  //               .to.equal(0);
-  //             expect(docs)
-  //               .to.eql([]);
-  //             done();
-  //           });
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-  //   });
-
-  //   describe('testing getById', () => {
-  //     // Insert one record , get its id
-  //     // 1. Query by this id and it should return one user object
-  //     // 2. Query by an arbitrary id and it should return {}
-  //     // 3. Query with null id and it should throw IllegalArgumentException
-  //     // 4. Query with undefined and it should throw IllegalArgumentException
-  //     var id;
-  //     beforeEach((done) => {
-  //       db.deleteAll().then((res)=>{
-  //         db.save(userObject).then((res) => {
-  //           id = res._id;
-  //           done();
-  //         });
-  //       });
-  //     });
-
-  //     it('should return one user matching parameter id', (done) => {
-  //       try {
-  //         var res = user.getById(id);
-  //         expect(res).to.eventually.have.property('_id')
-  //           .to.eql(id)
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it('should return empty object i.e. {} as no user is identified by this Id ', (done) => {
-  //       try {
-  //         let badId = new mongoose.mongo.ObjectId();
-  //         var res = user.getById(badId);
-  //         expect(res).to.eventually.to.eql({})
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for undefined Id parameter ", (done) => {
-  //       try {
-  //         let undefinedId;
-  //         let res = user.getById(undefinedId);
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for null Id parameter ", (done) => {
-  //       try {
-  //         let res = user.getById(null);
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should be rejected for arbitrary object as Id parameter ", (done) => {
-  //       // an id is a 12 byte string, -1 is an invalid id value
-  //       let id = userObject;
-  //       let res = user.getById(id);
-  //       expect(res)
-  //         .to.eventually.to.be.rejectedWith("must be a single String of 12 bytes")
-  //         .notify(done);
-  //     });
-
-  //   });
-
-  //   describe("testing user.getOne",()=> {
-  //     let object1={
-  //       //add one valid user object here
-  //       tenantId: "IVL",
-  //       userName: "pavithra",
-  //       userPassword: "Pavithra@30",
-  //       branch: {
-  //         tenantId: "IVL",
-  //         code: "IBB123",
-  //         name: "Hosur",
-  //         contact: {
-  //           tenantId: "IVL",
-  //           fristName: "pavithra",
-  //           middleName: "T",
-  //           lastname: "Thimmappa",
-  //           email: "Pavithrakit1130@gmail.com",
-  //           emailVerified: true,
-  //           phoneNo: "7708387762",
-  //           mobileNo: "9999888800",
-  //           mobileVerified: false,
-  //           faxNumber: "12345678fax",
-  //           companyName: "Evolvus",
-  //           Address1: "Banglore",
-  //           Address2: "Banglore",
-  //           city: "Banglore",
-  //           state: "karnataka",
-  //           country: "India",
-  //           zipCode: "kct123"
-
-  //         }
-  //       },
-  //       contact: {
-
-  //         tenantId: "IVL",
-  //         fristName: "pavithra",
-  //         middleName: "T",
-  //         lastname: "Thimmappa",
-  //         email: "Pavithrakit1230@gmail.com",
-  //         emailVerified: true,
-  //         phoneNo: "7708387762",
-  //         mobileNo: "9999888800",
-  //         mobileVerified: false,
-  //         faxNumber: "12345678fax",
-  //         companyName: "Evolvus",
-  //         Address1: "Banglore",
-  //         Address2: "Banglore",
-  //         city: "Banglore",
-  //         state: "karnataka",
-  //         country: "India",
-  //         zipCode: "kct123"
-  //       },
-  //       createdBy: "pavithra",
-  //       updatedBy: "pavithra",
-  //       createdDate: new Date().toISOString(),
-  //       lastUpdatedDate: new Date().toISOString(),
-  //       enableFlag: 1,
-  //       deletedFlag: 0,
-  //       activationStatus: "active",
-  //       processingStatus: "unauthorized"
-  //     },object2={
-  //       //add one more valid user object here
-  //       tenantId: "IVL",
-  //       userName: "pavithra1",
-  //       userPassword: "Pavithra@30",
-  //       branch: {
-  //         tenantId: "IVL",
-  //         code: "IBB123",
-  //         name: "Hosur",
-  //         contact: {
-  //           tenantId: "IVL",
-  //           fristName: "pavithra",
-  //           middleName: "T",
-  //           lastname: "Thimmappa",
-  //           email: "Pavithrakit1330@gmail.com",
-  //           emailVerified: true,
-  //           phoneNo: "7708387762",
-  //           mobileNo: "9999888800",
-  //           mobileVerified: false,
-  //           faxNumber: "12345678fax",
-  //           companyName: "Evolvus",
-  //           Address1: "Banglore",
-  //           Address2: "Banglore",
-  //           city: "Banglore",
-  //           state: "karnataka",
-  //           country: "India",
-  //           zipCode: "kct123"
-
-  //         }
-  //       },
-  //       contact: {
-
-  //         tenantId: "IVL",
-  //         fristName: "pavithra",
-  //         middleName: "T",
-  //         lastname: "Thimmappa",
-  //         email: "Pavithrakit1430@gmail.com",
-  //         emailVerified: true,
-  //         phoneNo: "7708387762",
-  //         mobileNo: "9999888800",
-  //         mobileVerified: false,
-  //         faxNumber: "12345678fax",
-  //         companyName: "Evolvus",
-  //         Address1: "Banglore",
-  //         Address2: "Banglore",
-  //         city: "Banglore",
-  //         state: "karnataka",
-  //         country: "India",
-  //         zipCode: "kct123"
-  //       },
-  //       createdBy: "pavithra",
-  //       updatedBy: "pavithra",
-  //       createdDate: new Date().toISOString(),
-  //       lastUpdatedDate: new Date().toISOString(),
-  //       enableFlag: 1,
-  //       deletedFlag: 0,
-  //       activationStatus: "active",
-  //       processingStatus: "unauthorized"
-  //     };
-  //     beforeEach((done) => {
-  //       db.deleteAll().then((res) => {
-  //         db.save(object1).then((res) => {
-  //           db.save(object2).then((res) => {
-  //               done();
-  //           });
-  //         });
-  //       });
-  //     });
-
-  //     it("should return one user record identified by attribute",(done)=> {
-  //       try {
-  //         // take one attribute from object1 or object2 and its value
-  //         let res = user.getOne("userName","pavithra");
-  //         expect(res)
-  //           .to.eventually.be.a("object")
-  //           .to.have.property('userName')
-  //           .to.eql('pavithra')
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it('should return empty object i.e. {} as no user is identified by this attribute', (done) => {
-  //       try {
-  //         // replace validAttribute and add a bad value to it
-  //         var res = user.getOne("userName","hjfhg");
-  //         expect(res).to.eventually.to.eql({})
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for undefined Attribute parameter ", (done) => {
-  //       try {
-  //         //replace validvalue with a valid value for an attribute
-  //         let undefinedAttribute;
-  //         let res = user.getOne(undefinedAttribute,"pavithra");
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for undefined Attribute parameter ", (done) => {
-  //       try {
-  //         // replace validAttribute with a valid attribute name
-  //         let undefinedValue;
-  //         let res = user.getOne("userName",undefinedValue);
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for null attribute parameter ", (done) => {
-  //       try {
-  //         //replace validValue with a valid value for an attribute
-  //         let res = user.getOne(null,"pavithra");
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-
-  //     it("should throw IllegalArgumentException for null value parameter ", (done) => {
-  //       try {
-  //         //replace attributeValue with a valid attribute name
-  //         let res = user.getOne("userName",null);
-  //         expect(res)
-  //           .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //           .notify(done);
-  //       } catch (e) {
-  //         expect.fail(e, null, `exception: ${e}`);
-  //       }
-  //     });
-  //   });
-
-
-  //   describe("testing user.getMany",()=> {
-  //       let object1={
-  //         //add one valid user object here
-  //         tenantId: "IVL",
-  //         userName: "pavithra1",
-  //         userPassword: "Pavithra@30",
-  //         branch: {
-  //           tenantId: "IVL",
-  //           code: "IBB123",
-  //           name: "Hosur",
-  //           contact: {
-  //             tenantId: "IVL",
-  //             fristName: "pavithra",
-  //             middleName: "T",
-  //             lastname: "Thimmappa",
-  //             email: "Pavithrakit1530@gmail.com",
-  //             emailVerified: true,
-  //             phoneNo: "7708387762",
-  //             mobileNo: "9999888800",
-  //             mobileVerified: false,
-  //             faxNumber: "12345678fax",
-  //             companyName: "Evolvus",
-  //             Address1: "Banglore",
-  //             Address2: "Banglore",
-  //             city: "Banglore",
-  //             state: "karnataka",
-  //             country: "India",
-  //             zipCode: "kct123"
-
-  //           }
-  //         },
-  //         contact: {
-
-  //           tenantId: "IVL",
-  //           fristName: "pavithra",
-  //           middleName: "T",
-  //           lastname: "Thimmappa",
-  //           email: "Pavithrakit1630gmail.com",
-  //           emailVerified: true,
-  //           phoneNo: "7708387762",
-  //           mobileNo: "9999888800",
-  //           mobileVerified: false,
-  //           faxNumber: "12345678fax",
-  //           companyName: "Evolvus",
-  //           Address1: "Banglore",
-  //           Address2: "Banglore",
-  //           city: "Banglore",
-  //           state: "karnataka",
-  //           country: "India",
-  //           zipCode: "kct123"
-  //         },
-  //         createdBy: "pavithra",
-  //         updatedBy: "pavithra",
-  //         createdDate: new Date().toISOString(),
-  //         lastUpdatedDate: new Date().toISOString(),
-  //         enableFlag: 1,
-  //         deletedFlag: 0,
-  //         activationStatus: "active",
-  //         processingStatus: "unauthorized"
-  //       },object2={
-  //         //add one more valid user object here
-  //         tenantId: "IVL",
-  //         userName: "pavithra2",
-  //         userPassword: "Pavithra@30",
-  //         branch: {
-  //           tenantId: "IVL",
-  //           code: "IBB123",
-  //           name: "Hosur",
-  //           contact: {
-  //             tenantId: "IVL",
-  //             fristName: "pavithra",
-  //             middleName: "T",
-  //             lastname: "Thimmappa",
-  //             email: "Pavithrakit1730gmail.com",
-  //             emailVerified: true,
-  //             phoneNo: "77083877",
-  //             mobileNo: "9999888800",
-  //             mobileVerified: false,
-  //             faxNumber: "12345678fax",
-  //             companyName: "Evolvus",
-  //             Address1: "Banglore",
-  //             Address2: "Banglore",
-  //             city: "Banglore",
-  //             state: "karnataka",
-  //             country: "India",
-  //             zipCode: "kct123"
-  //           }
-  //         },
-  //         contact: {
-
-  //           tenantId: "IVL",
-  //           fristName: "pavithra",
-  //           middleName: "T",
-  //           lastname: "Thimmappa",
-  //           email: "Pavithrakit1830@gmail.com",
-  //           emailVerified: true,
-  //           phoneNo: "7708387762",
-  //           mobileNo: "9999888800",
-  //           mobileVerified: false,
-  //           faxNumber: "12345678fax",
-  //           companyName: "Evolvus",
-  //           Address1: "Banglore",
-  //           Address2: "Banglore",
-  //           city: "Banglore",
-  //           state: "karnataka",
-  //           country: "India",
-  //           zipCode: "kct123"
-  //         },
-  //         createdBy: "pavithra",
-  //         updatedBy: "pavithra",
-  //         createdDate: new Date().toISOString(),
-  //         lastUpdatedDate: new Date().toISOString(),
-  //         enableFlag: 1,
-  //         deletedFlag: 0,
-  //         activationStatus: "active",
-  //         processingStatus: "unauthorized"
-  //       };
-  //       beforeEach((done) => {
-  //         db.deleteAll().then((res) => {
-  //           db.save(object1).then((res) => {
-  //             db.save(object2).then((res) => {
-  //                 done();
-  //             });
-  //           });
-  //         });
-  //       });
-
-  //       it("should return array of user records identified by attribute",(done)=> {
-  //         try {
-  //           // take one attribute from object1 or object2 and its value
-  //           let res = user.getMany("userName","pavithra1");
-  //           expect(res).to.eventually.be.a("array")
-  //           //enter proper length according to input value
-  //           .to.have.length(1)
-  //           .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-
-  //       it('should return empty array i.e. [] as no user is identified by this attribute', (done) => {
-  //         try {
-  //           // replace validAttribute and add a bad value to it
-  //           var res = user.getMany("userName","uydfgvb");
-  //           expect(res).to.eventually.to.eql([])
-  //             .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-
-  //       it("should throw IllegalArgumentException for undefined Attribute parameter ", (done) => {
-  //         try {
-  //           //replace validvalue with a valid value for an attribute
-  //           let undefinedAttribute;
-  //           let res = user.getMany(undefinedAttribute,"pavithta");
-  //           expect(res)
-  //             .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //             .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-
-  //       it("should throw IllegalArgumentException for undefined Attribute parameter ", (done) => {
-  //         try {
-  //           // replace validAttribute with a valid attribute name
-  //           let undefinedValue;
-  //           let res = user.getMany("userName",undefinedValue);
-  //           expect(res)
-  //             .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //             .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-
-  //       it("should throw IllegalArgumentException for null attribute parameter ", (done) => {
-  //         try {
-  //           //replace validValue with a valid value for an attribute
-  //           let res = user.getMany(null,"pavithra");
-  //           expect(res)
-  //             .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //             .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-
-  //       it("should throw IllegalArgumentException for null value parameter ", (done) => {
-  //         try {
-  //           //replace attributeValue with a valid attribute name
-  //           let res = user.getMany("userName",null);
-  //           expect(res)
-  //             .to.eventually.to.be.rejectedWith("IllegalArgumentException")
-  //             .notify(done);
-  //         } catch (e) {
-  //           expect.fail(e, null, `exception: ${e}`);
-  //         }
-  //       });
-  //     });
-  // describe("testing user.autheticate ", () => {
-  //
+  // describe('testing user.find when there is no data', () => {
   //
   //   beforeEach((done) => {
-  //     db.deleteAll().then((res) => {
-  //       user.save(object1).then((res) => {
-  //         done();
-  //       }).catch((e) => {
-  //         done(e);
-  //       });
+  //     collection.deleteAll({
+  //       tenantId: tenantOne
+  //     }).then((res) => {
+  //       done();
   //     });
   //   });
   //
-  //   it("should authenticate user", (done) => {
-  //     let credentials = {
-  //       userName: "kavyak",
-  //       userPassword: "evolvus*123",
-  //       enabledFlag: 1,
-  //       processingStatus: "authorized",
-  //       applicationCode: "DOCK"
-  //     };
-  //     var result = user.authenticate(credentials);
-  //     expect(result).to.eventually.not.have.property('saltString').notify(done);
+  //   it('should return empty array', (done) => {
+  //     try {
+  //       let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 0);
+  //       expect(res)
+  //         .to.have.lengthOf(0)
+  //         .notify(done);
+  //     } catch (e) {
+  //       expect.fail(e, null, `exception: ${e}`);
+  //     }
   //   });
   //
-  //   it("should not authenticate user", (done) => {
-  //     let credentials = {
-  //       userName: "kavya",
-  //       userPassword: "evolvus123",
-  //       enabledFlag: 1,
-  //       processingStatus: "authorized",
-  //       applicationCode: "DOCK"
-  //     };
-  //     var result = user.authenticate(credentials);
-  //     expect(result).to.be.rejectedWith("Invalid Credentials")
-  //       .notify(done);
-  //   });
-  //
-  //   it("should be rejected with Password Error", (done) => {
-  //     let credentials = {
-  //       userName: "kavyak",
-  //       userPassword: "evolvu123",
-  //       enabledFlag: 1,
-  //       processingStatus: "authorized",
-  //       applicationCode: "DOCK"
-  //     };
-  //     var result = user.authenticate(credentials);
-  //     expect(result).to.be.rejectedWith("Password Error")
-  //       .notify(done);
-  //   });
   // });
 });

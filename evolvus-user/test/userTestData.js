@@ -1,7 +1,7 @@
 module.exports.validObject1 = {
   // valid user object
   "contact": {
-    "emailId": "evolvus@evolvus.com",
+    "emailId": "srihari@gmail.com",
     "city": "Banglore",
     "state": "karnataka",
     "country": "India"
@@ -9,52 +9,73 @@ module.exports.validObject1 = {
   "entityId": "H001B001",
   "applicationCode": "CONSOLE",
   "role": {
+    "_id": ("5b4447e5e4280016d07dca8e"),
+    "processingStatus": "PENDING_AUTHORIZATION",
+    "roleName": "ADMIN",
+    "applicationCode": "SANDSTORM",
+    "description": "This is Role Admin",
+    "activationStatus": "ACTIVE",
     "menuGroup": [{
       "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "roleManagement",
+          "title": "Role Management",
+          "menuItemOrder": 1,
+          "selectedFlag": true
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "entityManagement",
+          "title": "Entity Management",
+          "menuItemOrder": 2,
+          "selectedFlag": true
+        },
+        {
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "userManagement",
+          "title": "User Management",
+          "menuItemOrder": 2,
+          "selectedFlag": true
+        }
+      ],
+      "deletedFlag": "false",
+      "_id": ("5b3dc5c9ceb4a22b122d313c"),
       "menuGroupCode": "Administration",
       "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
+      "applicationCode": "SANDSTORM",
+      "tenantId": "T001",
+      "createdBy": "pavithra",
       "menuGroupOrder": 1,
+      "createdDate": ("2018-07-05T07:16:25.983Z"),
+      "lastUpdatedDate": ("2018-07-05T07:16:25.983Z"),
       "__v": 0
     }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Admin",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is Admin Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
     "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
+    "tenantId": "IVL",
+    "createdBy": "sriharig",
+    "entityId": "H001B001",
+    "accessLevel": "0",
+    "createdDate": ("2018-07-10T05:45:09.293Z"),
+    "lastUpdatedDate": ("2018-07-23T10:41:39.942Z"),
+    "__v": 0,
+    "txnType": [
+      "UPDATE_USER",
+      "CREATE_ROLE"
+    ],
+    "updatedBy": "sriharig",
+    "roleType": "CHECKER"
   },
-  "userId": "ABCDEF",
+  "userId": "SRIHARI",
   "tenantId": "T001",
   "userName": "sriharig",
   "userPassword": "evolvus*123",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
   "accessLevel": "0",
   "createdBy": "SYSTEM",
+  "enabledFlag": "true",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "masterTimeZone": "IST",
@@ -66,58 +87,101 @@ module.exports.validObject2 = {
   // valid user object
   "tenantId": "T001",
   "contact": {
-    "emailId": "kavya@evolvus.com",
+    "emailId": "kavya@gmail.com",
     "city": "Banglore",
     "state": "karnataka",
     "country": "India"
   },
-  "entityId": "H001B001",
+  "entityId": "H001B00159P1B",
   "applicationCode": "CONSOLE",
   "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is Admin Role",
+    "_id": ("5b4446d49da183126a2dc666"),
+    "processingStatus": "AUTHORIZED",
+    "roleName": "TESTER",
+    "applicationCode": "SANDSTORM",
+    "description": "This is Banker Role",
     "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
+    "menuGroup": [{
+        "menuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "roleManagement",
+          "title": "Role Management",
+          "menuItemOrder": 1,
+          "selectedFlag": true
+        }],
+        "deletedFlag": "false",
+        "_id": ("5b3dc5c9ceb4a22b122d313c"),
+        "menuGroupCode": "Administration",
+        "title": "ADMINISTRATION",
+        "applicationCode": "SANDSTORM",
+        "tenantId": "T001",
+        "createdBy": "pavithra",
+        "menuGroupOrder": 1,
+        "createdDate": ("2018-07-05T07:16:25.983Z"),
+        "lastUpdatedDate": ("2018-07-05T07:16:25.983Z"),
+        "__v": 0
+      },
+      {
+        "menuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "reasonCode",
+          "title": "Reason Code",
+          "menuItemOrder": 2,
+          "selectedFlag": true
+        }],
+        "deletedFlag": "false",
+        "_id": ("5b3dc5d3ceb4a22b122d313d"),
+        "menuGroupCode": "maintenance",
+        "title": "MAINTENANCE",
+        "applicationCode": "SANDSTORM",
+        "tenantId": "T001",
+        "createdBy": "pavithra",
+        "menuGroupOrder": 2,
+        "createdDate": ("2018-07-05T07:16:35.898Z"),
+        "lastUpdatedDate": ("2018-07-05T07:16:35.898Z"),
+        "__v": 0
+      },
+      {
+        "menuItems": [{
+          "menuItemType": "menu",
+          "applicationCode": "SANDSTORM",
+          "menuItemCode": "systemConfiguration",
+          "title": "System Configuration",
+          "menuItemOrder": 1,
+          "selectedFlag": true
+        }],
+        "deletedFlag": "false",
+        "_id": ("5b3dc5dcceb4a22b122d313e"),
+        "menuGroupCode": "configuration",
+        "title": "CONFIGURATION",
+        "applicationCode": "SANDSTORM",
+        "tenantId": "T001",
+        "createdBy": "pavithra",
+        "menuGroupOrder": 3,
+        "createdDate": ("2018-07-05T07:16:44.190Z"),
+        "lastUpdatedDate": ("2018-07-05T07:16:44.190Z"),
+        "__v": 0
+      }
+    ],
     "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
+    "tenantId": "IVL",
+    "createdBy": "sriharig",
+    "entityId": "H001B001",
+    "accessLevel": "0",
+    "createdDate": ("2018-07-10T05:40:36.118Z"),
+    "lastUpdatedDate": ("2018-07-18T13:04:30.036Z"),
+    "__v": 0,
+    "txnType": [],
+    "updatedBy": "sriharig"
   },
-  "userId": "ABCDEG",
+  "userId": "KAVYAKM",
   "userName": "kavyak",
   "userPassword": "evolvus*123",
-  "accessLevel": "0",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
+  "accessLevel": "1",
+  "enabledFlag": "true",
   "createdBy": "SYSTEM",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
@@ -129,7 +193,7 @@ module.exports.validObject3 = {
   // valid user object
   "tenantId": "T001",
   "contact": {
-    "emailId": "evolvus1@evolvus.com",
+    "emailId": "pavithra@gmail.com",
     "city": "Banglore",
     "state": "karnataka",
     "country": "India"
@@ -137,50 +201,53 @@ module.exports.validObject3 = {
   "entityId": "H001B001",
   "applicationCode": "PLF",
   "role": {
+    "_id": ("5b430f527b914b618083759e"),
     "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
+      "tenantId": "tid",
       "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
+      "menuGroupCode": "mgc",
+      "title": "menugroup title",
       "menuGroupOrder": 1,
-      "__v": 0
+      "createdBy": "SYSTEM",
+      "createdDate": "2018-07-09T07:31:30.774Z",
+      "menuItems": [{
+          "createdBy": "SYSTEM",
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "micc",
+          "title": "menuItem title",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "mmic",
+          "title": "menuItem title",
+          "createdBy": "SYSTEM",
+          "menuItemOrder": 1
+        }
+      ]
     }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer1",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
+    "processingStatus": "AUTHORIZED",
+    "tenantId": "IVL",
+    "roleName": "OPS",
+    "applicationCode": "DOCKET",
+    "description": "ops role",
     "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
     "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
+    "accessLevel": "0",
+    "createdBy": "IVL",
+    "entityId": "H001B001",
+    "createdDate": ("2018-07-09T07:31:30.812Z"),
+    "lastUpdatedDate": ("2018-07-09T07:31:30.812Z"),
+    "__v": 0
   },
-  "userId": "ANCDjj",
+  "userId": "PAVITHRA",
   "userName": "pavithra",
   "userPassword": "evolvus*123",
-  "accessLevel": "0",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
+  "accessLevel": "1",
+  "enabledFlag": "true",
   "createdBy": "SYSTEM",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
@@ -192,7 +259,7 @@ module.exports.validObject4 = {
   // valid user object
   "tenantId": "T001",
   "contact": {
-    "emailId": "evolvus2@evolvus.com",
+    "emailId": "kamala@gmail.com",
     "city": "Banglore",
     "state": "karnataka",
     "country": "India"
@@ -200,51 +267,51 @@ module.exports.validObject4 = {
   "entityId": "H001B001",
   "applicationCode": "CONSOLE",
   "role": {
+    "_id": ("5b3f68b21c17bc7df12740fc"),
     "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
+      "tenantId": "tid",
       "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
+      "menuGroupCode": "mgcc2",
       "menuGroupOrder": 1,
-      "__v": 0
+      "title": "menugroup title",
+      "createdBy": "SYSTEM",
+      "createdDate": "2018-07-06T13:03:46.027Z",
+      "menuItems": [{
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "micc",
+          "title": "menuItem title",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "mmic",
+          "title": "menuItem title",
+          "menuItemOrder": 1
+        }
+      ]
     }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer2",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
+    "processingStatus": "AUTHORIZED",
+    "roleName": "DEVELOPER",
+    "applicationCode": "CDA",
+    "description": "testing SAVE",
     "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
     "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
+    "accessLevel": "0",
+    "tenantId": "IVL",
+    "createdBy": "user",
+    "entityId": "H001B001",
+    "createdDate": ("2018-07-06T13:03:46.039Z"),
+    "lastUpdatedDate": ("2018-07-06T13:03:46.039Z"),
+    "__v": 0
   },
-  "userId": "ABCDdj",
+  "userId": "KAMALA",
   "userName": "kamala",
   "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "enabledFlag": "0",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
+  "accessLevel": "2",
+  "enabledFlag": "false",
   "createdBy": "SYSTEM",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
@@ -256,7 +323,7 @@ module.exports.validObject5 = {
   // valid user object
   "tenantId": "T001",
   "contact": {
-    "emailId": "evolvus3@evolvus.com",
+    "emailId": "visgnesh@gmail.com",
     "city": "Banglore",
     "state": "karnataka",
     "country": "India"
@@ -264,752 +331,60 @@ module.exports.validObject5 = {
   "entityId": "H001B001",
   "applicationCode": "PLF",
   "role": {
+    "_id": "5b3f67e71c17bc7df12740fa",
     "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
+      "tenantId": "tid",
       "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
+      "menuGroupCode": "mgcc",
       "menuGroupOrder": 1,
-      "__v": 0
+      "title": "menugroup title",
+      "createdBy": "SYSTEM",
+      "createdDate": "2018-07-06T13:00:23.161Z",
+      "menuItems": [{
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "micc",
+          "link": "l",
+          "icon": "evo_role",
+          "title": "menuItem title",
+          "menuItemOrder": 1
+        },
+        {
+          "menuItemType": "queues",
+          "applicationCode": "RTP-CONSOLE",
+          "menuItemCode": "mmic",
+          "title": "menuItem title",
+          "menuItemOrder": 1
+        }
+      ]
     }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer3",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
+    "processingStatus": "AUTHORIZED",
+    "roleName": "BANKER",
+    "applicationCode": "CDA",
+    "description": "role banker",
     "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
     "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
+    "accessLevel": "0",
+    "tenantId": "IVL",
+    "createdBy": "user",
+    "entityId": "H001B001",
+    "createdDate": ("2018-07-06T13:00:23.216Z"),
+    "lastUpdatedDate": ("2018-07-06T13:00:23.216Z"),
+    "__v": 0
   },
-  "userId": "ABCDppj",
+  "userId": "VIGNESH",
   "userName": "vignesh",
   "userPassword": "evolvus*123",
-  "accessLevel": "0",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
+  "accessLevel": "2",
   "createdBy": "SYSTEM",
-  "enabledFlag": "0",
+  "enabledFlag": "false",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "masterTimeZone": "IST",
   "masterCurrency": "INR"
 };
 
-module.exports.validObject6 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus4@evolvus.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "0",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer4",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABJKjj",
-  "userName": "megha",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject7 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus5@evolvus.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer5",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDjjpp",
-  "userName": "mahi",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject8 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus6@evolvus.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer6",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "dffgdfg",
-  "userName": "ramya",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject9 = {
-  // valid user object
-  "contact": {
-    "emailId": "evolvus@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Admin",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is Admin Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDEF",
-  "userName": "sriharig1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-
-module.exports.validObject10 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "kavya@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is Admin Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDEG",
-  "userName": "kavyak1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject11 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus1@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "PLF",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer1",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ANCDjj",
-  "userName": "pavithra1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject12 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus2@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer2",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDdj",
-  "userName": "kamala1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "enabledFlag": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject13 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus3@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "PLF",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer3",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDppj",
-  "userName": "vignesh1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "enabledFlag": "0",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject14 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus4@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "0",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer4",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABJKjj",
-  "userName": "megha1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject15 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus5@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer5",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "ABCDjjpp",
-  "userName": "mahi1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
-
-module.exports.validObject16 = {
-  // valid user object
-  "tenantId": "T001",
-  "contact": {
-    "emailId": "evolvus6@gmail.com",
-    "city": "Banglore",
-    "state": "karnataka",
-    "country": "India"
-  },
-  "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
-  "role": {
-    "menuGroup": [{
-      "menuItems": [{
-        "_id": "5b2b2b397f085a12374a476b",
-        "menuItemType": "menu",
-        "applicationCode": "FLUX-CDA",
-        "menuItemCode": "ROLE",
-        "title": "Role Management",
-        "menuItemOrder": 1,
-        "selectedFlag": "1"
-      }],
-      "enabledFlag": "1",
-      "deletedFlag": "0",
-      "selectedFlag": "0",
-      "_id": "5b2b2b397f085a12374a4769",
-      "menuGroupCode": "Administration",
-      "title": "ADMINISTRATION",
-      "applicationCode": "RTP-CONSOLE",
-      "tenantId": "IVL",
-      "createdBy": "SYSTEM",
-      "createdDate": "2018-06-26T09:14:20.332Z",
-      "menuGroupOrder": 1,
-      "__v": 0
-    }],
-    "deletedFlag": "0",
-    "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "Developer6",
-    "entityId": "H001B001",
-    "applicationCode": "RTP-CONSOLE",
-    "description": "This is developer Role",
-    "activationStatus": "ACTIVE",
-    "tenantId": "EVL",
-    "entityCode": "defaultEntity",
-    "accessLevel": "0",
-    "associatedUsers": 5,
-    "createdBy": "SYSTEM",
-    "createdDate": "2018-06-26T09:14:20.332Z",
-    "lastUpdatedDate": "2018-06-26T10:19:01.382Z",
-    "__v": 2,
-    "updatedBy": "SYSTEM"
-  },
-  "userId": "dffgdfg",
-  "userName": "ramya1",
-  "userPassword": "evolvus*123",
-  "accessLevel": "0",
-  "createdBy": "SYSTEM",
-  "createdDate": new Date().toISOString(),
-  "lastUpdatedDate": new Date().toISOString(),
-  "masterTimeZone": "IST",
-  "masterCurrency": "INR"
-};
 
 module.exports.invalidObject1 = {
   "tenantId": "T001",
@@ -1017,11 +392,69 @@ module.exports.invalidObject1 = {
   "applicationCode": "CONSOLE",
   "userName": "sriharig",
   "userPassword": "evolvus*123",
+  "saltString": "$2a$10$bVAXH8ck.PlRGRv1AEb5ye",
   "accessLevel": "0",
   "createdBy": "SYSTEM",
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
-  "saltString": "$2a$10$cHlYQpVSlID0P7ajh8bnY.",
   "masterTimeZone": "IST",
   "masterCurrency": "INR"
+};
+
+module.exports.entityObject = {
+  "tenantId": "IVL",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
+  "entityCode": "entity1",
+  "name": "headOffice",
+  "parent": "headOffice",
+  "description": "bc1 description",
+  "createdBy": "SYSTEM",
+  "createdDate": "2018-07-05T12:25:22.895Z",
+  "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
+  "accessLevel": "1",
+  "enableFlag": 1,
+  "entityId": "H001B001"
+};
+
+module.exports.roleObject = {
+  "tenantId": "IVL",
+  "entityId": "Entity2",
+  "accessLevel": "1",
+  "applicationCode": "CDA",
+  "enableFlag": "true",
+  "roleName": "Supervisor",
+  "roleType": "CHECKER",
+  "txnType": ["BANKING"],
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
+  "menuGroup": [{
+    "tenantId": "tid",
+    "applicationCode": "CDA",
+    "menuGroupCode": "mgc1",
+    "menuGroupOrder": 1,
+    "createdDate": new Date().toISOString(),
+    "createdBy": "user",
+    "title": "menugroup title",
+    "menuItems": [{
+      "menuItemType": "queues",
+      "applicationCode": "CDA",
+      "menuItemOrder": 1,
+      "menuItemCode": "mic",
+      "title": "menuItem title"
+    }, {
+      "menuItemType": "queues",
+      "applicationCode": "RTP",
+      "menuItemOrder": 2,
+      "menuItemCode": "mic",
+      "title": "menuItem title"
+    }]
+  }],
+  "processingStatus": "PENDING_AUTHORIZATION",
+  "description": "admin_One decription *",
+  "activationStatus": "ACTIVE",
+  "associatedUsers": 5,
+  "createdBy": "kamalarani",
+  "createdDate": new Date().toISOString(),
+  "lastUpdatedDate": new Date().toISOString()
 };
