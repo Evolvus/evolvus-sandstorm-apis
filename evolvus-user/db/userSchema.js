@@ -83,11 +83,13 @@ var userSchema = new mongoose.Schema({
   },
   enabledFlag: {
     type: String,
-    default: "1"
+    enum: ["true", "false"],
+    default: "true"
   },
   deletedFlag: {
     type: String,
-    default: "0"
+    enum: ["true", "false"],
+    default: "false"
   },
   accessLevel: {
     type: String,

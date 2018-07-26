@@ -128,14 +128,16 @@ var userSchema = {
     },
     "enabledFlag": {
       "type": "string",
-      "default": "1",
+      "enum": ["true", "false"],
+      "default": "true",
       "filterable": true,
       "sortable": true,
       "displayable": true
     },
     "deletedFlag": {
       "type": "string",
-      "default": "0",
+      "enum": ["true", "false"],
+      "default": "false",
       "filterable": true,
       "sortable": true,
       "displayable": true
@@ -243,7 +245,7 @@ var userSchema = {
         },
         "enableFlag": {
           "type": "string",
-          "enum": ["0", "1"],
+          "enum": ["true", "false"],
           "filterable": true, //custom attributes
           "sortable": true //custom attributes
         },
@@ -271,7 +273,7 @@ var userSchema = {
         },
         "selectedFlag": {
           "type": "string",
-          "enum": ["0", "1"],
+          "enum": ["true", "false"],
           "filterable": false, //custom attributes
           "sortable": false //custom attributes
         },
@@ -363,7 +365,7 @@ var userSchema = {
               },
               "enableFlag": {
                 "type": "string",
-                "enum": ["0", "1"],
+                "enum": ["true", "false"],
                 "filterable": false, //custom attributes
                 "sortable": false //custom attributes
               },
@@ -496,7 +498,6 @@ var userSchema = {
         },
         "companyName": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 64
         },
         "Address1": {
