@@ -114,9 +114,9 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
             };
             Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
               .then((result) => {
-                if (!result[0].length == 0) {
+                if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
-                  if (!result[1].length == 0) {
+                  if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
                       object.applicationCode = result[1][0].applicationCode;
                       bcrypt.genSalt(10, function(err, salt) {
@@ -146,6 +146,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                                 "wfInstanceStatus": sweResult.data.wfInstanceStatus,
                                 "wfInstanceId": sweResult.data.wfInstanceId
                               }).then((userObject) => {
+                                debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
                                 resolve(userObject);
                               }).catch((e) => {
                                 var reference = shortid.generate();
@@ -227,14 +228,14 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       docketObject.details = `user getAll method`;
       docketClient.postToDocket(docketObject);
       let query = _.merge(filter, {
-        "tenantId": tenantId
+        "tenantId": tenantId,
+        "accessLevel": {
+          $gte: accessLevel
+        },
+        "entityId": {
+          $regex: entityId + ".*"
+        }
       });
-      query.accessLevel = {
-        $gte: accessLevel
-      };
-      query.entityId = {
-        $regex: entityId + ".*"
-      };
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         let filteredArray = _.map(docs, function(object) {
           return _.omit(object, "userPassword", "token", "saltString");
@@ -271,14 +272,14 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
       }
       userId = userId.toUpperCase();
       var filterUser = {
-        userId: userId,
-        tenantId: tenantId
-      };
-      filterUser.entityId = {
-        $regex: entityId + ".*"
-      };
-      filterUser.accessLevel = {
-        $gte: accessLevel
+        "userId": userId,
+        "tenantId": tenantId,
+        "entityId": {
+          $regex: entityId + ".*"
+        },
+        "accessLevel": {
+          $gte: accessLevel
+        }
       };
       var result;
       var errors = [];
@@ -307,21 +308,21 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
               entityId: object.entityId
             };
             var filterRole = {
-              roleName: object.role.roleName
+              roleName: object.role.roleName.toUpperCase()
             };
             Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
               .then((result) => {
-                if (!result[0].length == 0) {
+                if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
-                  if (!result[1].length == 0) {
+                  if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
                       collection.update(filterUser, object).then((result) => {
                         if (result.nModified === 1) {
                           debug(`User updated successfully ${JSON.stringify(result)}`);
-                          resolve(`User updated successfully ${JSON.stringify(result)}`);
+                          resolve(result);
                         } else {
-                          debug(`Failed to update.`);
-                          reject(`Failed to update.`);
+                          debug(`Unable to update user ${userId}`);
+                          reject(`Unable to update user ${userId}`);
                         }
                       }).catch((e) => {
                         var reference = shortid.generate();
@@ -329,16 +330,16 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
                         reject(e);
                       });
                     } else {
-                      debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
+                      debug(`User update failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
                       reject(`Role ${object.role.roleName} must be AUTHORIZED`);
                     }
                   } else {
-                    debug(`User save failed due to the Role ${object.role.roleName} which is assigned to user not found`);
+                    debug(`User update failed due to the Role ${object.role.roleName} which is assigned to user not found`);
                     reject(`Role ${object.role.roleName} not found`);
                   }
                 } else {
-                  debug("User save failed due the selected Entity not found");
-                  reject(`User save failed due the selected Entity not found`);
+                  debug("User update failed due the selected Entity not found");
+                  reject(`User update failed due the selected Entity not found`);
                 }
               }).catch((e) => {
                 var reference = shortid.generate();
