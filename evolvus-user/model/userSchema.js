@@ -18,12 +18,10 @@ var userSchema = {
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20
-    },
-    "wfInstanceStatus": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true,
+      "sortable": false,
+      "displayable": false
     },
     "userId": {
       "type": "string",
@@ -160,12 +158,7 @@ var userSchema = {
     },
     "processingStatus": {
       "type": "string",
-      "enum": [
-        "PENDING_AUTHORIZATION",
-        "AUTHORIZED",
-        "REJECTED"
-      ],
-      "default": "PENDING_AUTHORIZATION",
+      "default": "IN_PROGRESS",
       "filterable": true,
       "sortable": true,
       "displayable": true
@@ -272,8 +265,8 @@ var userSchema = {
           "sortable": true //custom attributes
         },
         "selectedFlag": {
-          "type": "string",
-          "enum": ["true", "false"],
+          "type": "boolean",
+          "default":false,
           "filterable": false, //custom attributes
           "sortable": false //custom attributes
         },
