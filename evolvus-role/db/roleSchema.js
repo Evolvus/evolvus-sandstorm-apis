@@ -26,11 +26,6 @@ var roleSchema = new mongoose.Schema({
     minlength: 0,
     maxlength: 20
   },
-  wfInstanceStatus: {
-    type: String,
-    minlength: 3,
-    maxlength: 20
-  },
   applicationCode: {
     type: String,
     minLength: 3,

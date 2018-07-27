@@ -13,10 +13,9 @@ var contactSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20
   },
-  wfInstanceStatus: {
+  processingStatus: {
     type: String,
-    minlength: 3,
-    maxlength: 20
+    default: "IN_PROGRESS"
   },
   firstName: {
     type: String,
@@ -52,7 +51,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 15,
     validate: {
       validator: function(v) {
-        return /^$|^\d{10}$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -62,7 +61,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 15,
     validate: {
       validator: function(v) {
-        return /^$|^\d{10}$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -75,7 +74,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^$|^\d{10}$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
