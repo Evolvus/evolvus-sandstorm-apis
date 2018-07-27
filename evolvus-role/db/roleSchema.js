@@ -66,8 +66,10 @@ var roleSchema = new mongoose.Schema({
     required: true
   },
   selectedFlag: {
-    type: String,
-    enum: ["true", "false"]
+    type: Boolean,
+    default: false,
+    required: false,
+    default: false
   },
   lastUpdatedDate: {
     type: Date,

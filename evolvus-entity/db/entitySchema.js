@@ -16,11 +16,6 @@ var entitySchema = new mongoose.Schema({
     minlength: 0,
     maxlength: 20
   },
-  wfInstanceStatus: {
-    type: String,
-    minlength: 3,
-    maxlength: 20
-  },
   entityCode: {
     type: String,
     minLength: 1,
@@ -69,11 +64,11 @@ var entitySchema = new mongoose.Schema({
   selectedFlag: {
     type: String,
       enum: ["true","false"]
-      
+
   },
   processingStatus: {
     type: String,
-    default: "PENDING_AUTHORIZATION"
+    default: "IN_PROGRESS"
   },
   createdBy: {
     type: String
