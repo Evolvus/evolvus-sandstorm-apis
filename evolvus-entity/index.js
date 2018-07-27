@@ -109,7 +109,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
           var randomId = randomString.generate(5);
-          if (result[0].enableFlag == "1") {
+          if (result[0].enableFlag == "true") {
             var aces = parseInt(result[0].accessLevel) + 1;
             entityObject.accessLevel = JSON.stringify(aces);
             entityObject.entityId = result[0].entityId + randomId;
@@ -234,7 +234,7 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
 
 // tenantId should be valid
 module.exports.update = (tenantId, code, update) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)}, updateapplicationCode :${updateapplicationCode} are parameters`);
+  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)}, are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (code == null || update == null) {
