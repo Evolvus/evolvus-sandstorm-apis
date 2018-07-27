@@ -84,8 +84,8 @@ var roleSchema = {
       "sortable": true //custom attributes
     },
     "selectedFlag": {
-      "type": "string",
-      "enum": ["true", "false"],
+      "type": "boolean",
+      "default": false,
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -99,8 +99,7 @@ var roleSchema = {
     },
     "processingStatus": {
       "type": "string",
-      "enum": ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-      "default": 'PENDING_AUTHORIZATION',
+      "default": 'IN_PROGRESS',
       "displayable": true,
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
@@ -132,6 +131,12 @@ var roleSchema = {
             "type": "string",
             "minLength": 1,
             "maxLength": 64,
+            "filterable": false, //custom attributes
+            "sortable": false //custom attributes
+          },
+          "selectedFlag": {
+            "type": "boolean",
+            "default": false,
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
@@ -205,6 +210,12 @@ var roleSchema = {
                   "filterable": false, //custom attributes
                   "sortable": false //custom attributes
                 },
+                "selectedFlag": {
+                  "type": "boolean",
+                  "default": false,
+                  "filterable": false, //custom attributes
+                  "sortable": false //custom attributes
+                },
                 "applicationCode": {
                   "type": "string",
                   "minLength": 3,
@@ -242,6 +253,69 @@ var roleSchema = {
                   "maxLength": 10,
                   "filterable": false, //custom attributes
                   "sortable": false //custom attributes
+                },
+                "subMenuItems": {
+                  "type": "array",
+                  "items": {
+                    "properties": {
+                      "menuItemType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "applicationCode": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 20,
+                        "filterable": true, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "selectedFlag": {
+                        "type": "boolean",
+                        "default": false,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "menuItemCode": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "icon": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 30
+                      },
+                      "link": {
+                        "type": "string",
+                        "minLength": 0,
+                        "maxLength": 30
+                      },
+                      "title": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 20,
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "menuItemOrder": {
+                        "type": "number",
+                        "required": "true",
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      },
+                      "selectedFlag": {
+                        "type": "string",
+                        "enum": ["0", "1"],
+                        "filterable": false, //custom attributes
+                        "sortable": false //custom attributes
+                      }
+                    }
+                  }
                 }
               }
             }

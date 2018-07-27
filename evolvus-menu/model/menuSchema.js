@@ -78,8 +78,8 @@ var menuSchema = {
       "sortable": false //custom attributes
     },
     "selectedFlag": {
-      "type": "string",
-      "enum": ["0", "1"],
+      "type": "boolean",
+      "default": false,
       "filterable": false, //custom attributes
       "sortable": false //custom attributes
     },
@@ -138,8 +138,8 @@ var menuSchema = {
             "sortable": false //custom attributes
           },
           "selectedFlag": {
-            "type": "string",
-            "enum": ["0", "1"],
+            "type": "boolean",
+            "default": false,
             "filterable": false, //custom attributes
             "sortable": false //custom attributes
           },
@@ -192,8 +192,8 @@ var menuSchema = {
                   "sortable": false //custom attributes
                 },
                 "selectedFlag": {
-                  "type": "string",
-                  "enum": ["0", "1"],
+                  "type": "boolean",
+                  "default": false,
                   "filterable": false, //custom attributes
                   "sortable": false //custom attributes
                 }
