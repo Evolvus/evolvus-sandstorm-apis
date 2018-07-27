@@ -16,12 +16,16 @@ var contactSchema = {
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
-    "wfInstanceStatus": {
+    "processingStatus": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "default": "IN_PROGRESS",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "firstName": {
       "type": "string",
@@ -49,8 +53,8 @@ var contactSchema = {
       "minLength": 8,
       "maxLength": 50,
       "unique": false,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "emailVerified": {
       "type": "boolean"
