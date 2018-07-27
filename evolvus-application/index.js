@@ -68,13 +68,14 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       let object = _.merge(applicationObject, {
         "tenantId": tenantId
       });
-
       let query = _.merge({
         "applicationCode": applicationObject.applicationCode
       });
+
       debug(`calling DB find method, filter :${applicationObject.applicationCode},orderby :${JSON.stringify({})} ,skipCount :${0} ,limit :${1} are parameters`);
       collection.find(query, {}, 0, 1)
         .then((result) => {
+
           if (!_.isEmpty(result[0])) {
             throw new Error(`application ${applicationObject.applicationCode}, already exists `);
           }
@@ -108,7 +109,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
                   "applicationCode": applicationObject.applicationCode
                 };
                 collection.update(filterApplication, {
-                  "wfInstanceStatus": result.data.wfInstanceStatus,
+                  "processingStatus": result.data.wfInstanceStatus,
                   "wfInstanceId": result.data.wfInstanceId
                 }).then((result) => {
                   resolve(result);
@@ -192,7 +193,6 @@ module.exports.update = (tenantId, code, update) => {
         "tenantId": tenantId,
         "applicationCode": code
       };
-
       debug(`calling DB find method, filter :${update.applicationCode},orderby :${{}} ,skipCount :${0} ,limit :${1} are parameters`);
       collection.find(query, {}, 0, 1)
         .then((result) => {

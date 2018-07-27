@@ -19,8 +19,8 @@ chai.use(chaiAsPromised);
 const applicationTestData = require("./applicationTestData");
 const application = require("../index");
 
-const tenantOne = "IVL";
-const tenantTwo = "KOT";
+const tenantOne = "T001";
+const tenantTwo = "T002";
 describe('application model validation', () => {
   let applicationObject = {
     "tenantId": "IVL",
@@ -388,42 +388,42 @@ describe('application model validation', () => {
         .notify(done);
     });
 
-    // it("should return a Platform object", (done) => {
-    //   let res = application.find(tenantOne, {
-    //     "applicationCode": "PLF"
-    //   }, {}, 0, 1);
-    //
-    //   expect(res)
-    //     .to.have.be.fulfilled.then((app) => {
-    //       debug("result:" + JSON.stringify(app));
-    //       expect(app[0])
-    //         .to.have.property("tenantId")
-    //         .to.equal(tenantOne);
-    //       expect(app[0])
-    //         .to.have.property("applicationCode")
-    //         .to.equal("PLF");
-    //       done();
-    //     });
-    // });
+    it("should return a Platform object", (done) => {
+      let res = collection.find({
+        "applicationCode": "PLF"
+      }, {}, 0, 1);
 
-    // it("should return ASBA, the first application when sorted by applicationCode", (done) => {
-    //   let res = application.find(tenantOne, {}, {
-    //     "applicationCode": 1
-    //   }, 0, 1);
-    //
-    //   expect(res)
-    //     .to.have.be.fulfilled.then((app) => {
-    //       debug("result: " + JSON.stringify(app));
-    //       expect(app[0])
-    //         .to.have.property("tenantId")
-    //         .to.equal(tenantOne);
-    //       expect(app[0])
-    //         .to.have.property("applicationCode")
-    //         .to.equal("ASBA");
-    //       done();
-    //     });
-    // });
-    //
+      expect(res)
+        .to.have.be.fulfilled.then((app) => {
+          debug("result:" + JSON.stringify(app));
+          expect(app[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(app[0])
+            .to.have.property("applicationCode")
+            .to.equal("PLF");
+          done();
+        });
+    });
+
+    it("should return ASBA, the first application when sorted by applicationCode", (done) => {
+      let res = collection.find({}, {
+        "applicationCode": 1
+      }, 0, 1);
+
+      expect(res)
+        .to.have.be.fulfilled.then((app) => {
+          debug("result: " + JSON.stringify(app));
+          expect(app[0])
+            .to.have.property("tenantId")
+            .to.equal(tenantOne);
+          expect(app[0])
+            .to.have.property("applicationCode")
+            .to.equal("ASBA");
+          done();
+        });
+    });
+
     // it("should return Platform, the last application when sorted by applicationCode", (done) => {
     //   let res = application.find(tenantOne, {}, {
     //     "applicationCode": -1

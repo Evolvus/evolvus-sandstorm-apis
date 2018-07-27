@@ -11,13 +11,12 @@ var applicationSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
+    minlength: 0,
     maxlength: 20
   },
-  wfInstanceStatus: {
+  processingStatus: {
     type: String,
-    minlength: 3,
-    maxlength: 20
+    default: "IN_PROGRESS"
   },
   applicationCode: {
     type: String,
