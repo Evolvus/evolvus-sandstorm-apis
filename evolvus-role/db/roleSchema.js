@@ -50,15 +50,13 @@ var roleSchema = new mongoose.Schema({
     maxLength: 140
   },
   createdBy: {
-    type: String,
-    required: true
+    type: String
   },
   updatedBy: {
     type: String
   },
   createdDate: {
-    type: Date,
-    required: true
+    type: Date
   },
   selectedFlag: {
     type: Boolean,
@@ -67,8 +65,7 @@ var roleSchema = new mongoose.Schema({
     default: false
   },
   lastUpdatedDate: {
-    type: Date,
-    required: true
+    type: Date
   },
   enableFlag: {
     type: String,
@@ -81,8 +78,7 @@ var roleSchema = new mongoose.Schema({
   },
   processingStatus: {
     type: String,
-    enum: ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-    default: 'PENDING_AUTHORIZATION'
+    default: 'IN_PROGRESS'
   },
   associatedUsers: {
     type: Number,
