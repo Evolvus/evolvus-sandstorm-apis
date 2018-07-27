@@ -133,7 +133,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               "wfEntity": "USER",
                               "wfEntityAction": "CREATE",
                               "createdBy": createdBy,
-                              "query": result._id
+                              "query": result.userId
                             };
 
                             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
@@ -143,7 +143,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               };
                               debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
                               collection.update(filterUser, {
-                                "wfInstanceStatus": sweResult.data.wfInstanceStatus,
+                                "processingStatus": sweResult.data.wfInstanceStatus,
                                 "wfInstanceId": sweResult.data.wfInstanceId
                               }).then((userObject) => {
                                 debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
