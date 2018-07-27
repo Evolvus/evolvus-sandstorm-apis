@@ -17,12 +17,9 @@ var entitySchema = {
     "wfInstanceId": {
       "type": "string",
       "minLength": 0,
-      "maxLength": 20
-    },
-    "wfInstanceStatus": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true, //custom attributes
+      "sortable": false //custom attribute
     },
     "entityCode": {
       "type": "string",
@@ -78,11 +75,10 @@ var entitySchema = {
     },
     "processingStatus": {
       "type": "string",
-      "enum": ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-      "default": 'PENDING_AUTHORIZATION',
-      "displayable": true,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "default": "IN_PROGRESS",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "accessLevel": {
       "type": "string",

@@ -153,7 +153,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
                     };
                     debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
                     collection.update(filterEntity, {
-                      "wfInstanceStatus": result.data.wfInstanceStatus,
+                      "processingStatus": result.data.wfInstanceStatus,
                       "wfInstanceId": result.data.wfInstanceId
                     }).then((result) => {
                       resolve(result);
