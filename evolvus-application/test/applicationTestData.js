@@ -1,16 +1,15 @@
 module.exports.validObject1 = {
   // valid application object
-  "tenantId": "T001",
   "applicationName": "Docket Audit Server",
-  "wfInstanceId": "",
-  "wfInstanceStatus": "INITIALIZE",
-  "applicationCode": "CDA",
+  "wfInstanceId": "wfID",
+  "wfInstanceStatus": "wfStatus",
+  "applicationCode": "DOCKET",
   "entityId": "abc12",
   "accessLevel": "1",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+  "enableFlag": "0",
   "logo": "",
   "favicon": "",
   "description": "This is application object",

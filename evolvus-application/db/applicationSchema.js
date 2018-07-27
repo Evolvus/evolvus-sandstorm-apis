@@ -11,7 +11,7 @@ var applicationSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 0,
+    minlength: 3,
     maxlength: 20
   },
   wfInstanceStatus: {
@@ -21,7 +21,7 @@ var applicationSchema = new mongoose.Schema({
   },
   applicationCode: {
     type: String,
-    required: true,
+    required: false,
     minlength: 3,
     maxlength: 20
   },
@@ -37,10 +37,12 @@ var applicationSchema = new mongoose.Schema({
       message: "{PATH} can contain only alphabets and spaces"
     }
   },
-  enableFlag: {
+  enabledFlag: {
     type: String,
-    default: "1",
-    enum: ["0", "1"]
+    enum: ["true", "false"],
+    default: "true",
+    filterable: true,
+    sortable: true
   },
   description: {
     type: String,

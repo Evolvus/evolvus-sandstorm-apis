@@ -2,18 +2,18 @@ const debug = require("debug")("evolvus-application:index");
 const model = require("./model/applicationSchema");
 const dbSchema = require("./db/applicationSchema");
 const _ = require('lodash');
-const sweClient = require("@evolvus/evolvus-swe-client");
-const validate = require("jsonschema")
-  .validate;
+const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const shortid = require('shortid');
-
+const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("application", dbSchema);
 
+
+var shortid = require('shortid');
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
+
 var docketObject = {
   // required fields
   application: "PLATFORM",
@@ -64,18 +64,20 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
         throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
+
+      let object = _.merge(applicationObject, {
+        "tenantId": tenantId
+      });
+
+      let query = _.merge({
+        "applicationCode": applicationObject.applicationCode
+      });
       debug(`calling DB find method, filter :${applicationObject.applicationCode},orderby :${JSON.stringify({})} ,skipCount :${0} ,limit :${1} are parameters`);
-      collection.find({
-          "applicationCode": applicationObject.applicationCode
-        }, {}, 0, 1)
+      collection.find(query, {}, 0, 1)
         .then((result) => {
           if (!_.isEmpty(result[0])) {
             throw new Error(`application ${applicationObject.applicationCode}, already exists `);
           }
-
-          let object = _.merge(applicationObject, {
-            "tenantId": tenantId
-          });
 
           var res = validate(object, schema);
           debug("validation status: ", JSON.stringify(res));
@@ -87,7 +89,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
             }
           } else {
             // if the object is valid, save the object to the database
-
             docketObject.name = "application_save";
             docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
             docketObject.details = `application creation initiated`;
@@ -100,10 +101,9 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
                 "wfEntity": "APPLICATION",
                 "wfEntityAction": "CREATE",
                 "createdBy": createdBy,
-                "query": result._id
+                "query": result.applicationCode
               };
               sweClient.initialize(sweEventObject).then((result) => {
-                console.log("result initialized", result);
                 var filterApplication = {
                   "applicationCode": applicationObject.applicationCode
                 };
@@ -158,7 +158,11 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
+
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`application(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -176,28 +180,30 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
 
 
 
-module.exports.update = (tenantId, code, update, updateapplicationCode) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)}, updateapplicationCode :${updateapplicationCode} are parameters`);
+module.exports.update = (tenantId, code, update) => {
+  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
+
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
+      let query = {
+        "tenantId": tenantId,
+        "applicationCode": code
+      };
+
       debug(`calling DB find method, filter :${update.applicationCode},orderby :${{}} ,skipCount :${0} ,limit :${1} are parameters`);
-      collection.find({
-          "applicationCode": update.applicationCode
-        }, {}, 0, 1)
+      collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
             throw new Error(`application ${update.applicationName},  already exists `);
           }
-          if ((!_.isEmpty(result[0])) && (result[0].applicationCode != updateapplicationCode)) {
+          if ((!_.isEmpty(result[0])) && (result[0].applicationCode != code)) {
             throw new Error(`application ${update.applicationName} already exists`);
           }
           debug(`calling DB update method, filter :${code},update :${JSON.stringify(update)} are parameters`);
-          collection.update({
-            applicationCode: code
-          }, update).then((resp) => {
+          collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
           }).catch((error) => {

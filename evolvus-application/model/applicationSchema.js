@@ -15,7 +15,7 @@ var applicationSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 0,
+      "minLength": 3,
       "maxLength": 20
     },
     "wfInstanceStatus": {
@@ -45,12 +45,12 @@ var applicationSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
     },
-    "enableFlag": {
-      "type": String,
-      "enum": ["0", "1"],
-      "default": "1",
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+    "enabledFlag": {
+      "type": "string",
+      "enum": ["true", "false"],
+      "default": "true",
+      "filterable": true,
+      "sortable": true,
     },
     "logo": {
       "type": "string",
@@ -100,7 +100,7 @@ var applicationSchema = {
       "displayable": true
     }
   },
-  "required": ["tenantId", "applicationCode", "applicationName", "createdBy", "createdDate"]
+  "required": ["tenantId", "applicationName", "createdBy", "createdDate"]
 };
 
 module.exports.schema = applicationSchema;
