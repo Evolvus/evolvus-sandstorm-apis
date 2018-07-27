@@ -26,11 +26,6 @@ var roleSchema = new mongoose.Schema({
     minlength: 0,
     maxlength: 20
   },
-  wfInstanceStatus: {
-    type: String,
-    minlength: 3,
-    maxlength: 20
-  },
   applicationCode: {
     type: String,
     minLength: 3,
@@ -66,8 +61,10 @@ var roleSchema = new mongoose.Schema({
     required: true
   },
   selectedFlag: {
-    type: String,
-    enum: ["true", "false"]
+    type: Boolean,
+    default: false,
+    required: false,
+    default: false
   },
   lastUpdatedDate: {
     type: Date,

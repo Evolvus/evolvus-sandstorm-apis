@@ -18,12 +18,10 @@ var userSchema = {
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
-      "maxLength": 20
-    },
-    "wfInstanceStatus": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "maxLength": 20,
+      "filterable": true,
+      "sortable": false,
+      "displayable": false
     },
     "userId": {
       "type": "string",
@@ -36,8 +34,8 @@ var userSchema = {
     },
     "userName": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 64,
+      "minLength": 6,
+      "maxLength": 140,
       "pattern": "^[ a-zA-Z0-9!@#$&()\\-`.+,/\"]*$",
       "filterable": true,
       "sortable": true,
@@ -160,12 +158,7 @@ var userSchema = {
     },
     "processingStatus": {
       "type": "string",
-      "enum": [
-        "PENDING_AUTHORIZATION",
-        "AUTHORIZED",
-        "REJECTED"
-      ],
-      "default": "PENDING_AUTHORIZATION",
+      "default": "IN_PROGRESS",
       "filterable": true,
       "sortable": true,
       "displayable": true
@@ -198,6 +191,7 @@ var userSchema = {
       "properties": {
         "tenantId": {
           "type": "string",
+          "minLength": 1,
           "maxLength": 64,
           "filterable": true, //custom attributes
           "sortable": false //custom attribute
@@ -219,7 +213,7 @@ var userSchema = {
         },
         "wfInstanceId": {
           "type": "string",
-          "minLength": 3,
+          "minLength": 0,
           "maxLength": 20
         },
         "wfInstanceStatus": {
@@ -236,7 +230,7 @@ var userSchema = {
         },
         "roleName": {
           "type": "string",
-          "minLength": 1,
+          "minLength": 6,
           "maxLength": 100,
           "pattern": "^[a-zA-Z-0-9-_ ]+$",
           "message": "RoleName can contain only alphanumeric and two specialcharacters hyphen and underscore",
@@ -272,28 +266,30 @@ var userSchema = {
           "sortable": true //custom attributes
         },
         "selectedFlag": {
-          "type": "string",
-          "enum": ["true", "false"],
+          "type": "boolean",
+          "default": false,
           "filterable": false, //custom attributes
           "sortable": false //custom attributes
         },
         "activationStatus": {
           "type": "string",
           "enum": ["ACTIVE", "INACTIVE"],
+          "minLength": 1,
           "displayable": true,
           "filterable": true, //custom attributes
           "sortable": false //custom attributes
         },
         "processingStatus": {
           "type": "string",
-          "enum": ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-          "default": 'PENDING_AUTHORIZATION',
+          "default": 'IN_PROGRESS',
           "displayable": true,
           "filterable": true, //custom attributes
           "sortable": true //custom attributes
         },
         "associatedUsers": {
           "type": "number",
+          "minLength": 1,
+          "maxLength": 10,
           "filterable": false, //custom attributes
           "sortable": false //custom attributes
         },
@@ -320,6 +316,12 @@ var userSchema = {
                 "filterable": false, //custom attributes
                 "sortable": false //custom attributes
               },
+              "selectedFlag": {
+                "type": "boolean",
+                "default": false,
+                "filterable": false, //custom attributes
+                "sortable": false //custom attributes
+              },
               "applicationCode": {
                 "type": "string",
                 "minLength": 3,
@@ -343,6 +345,8 @@ var userSchema = {
               },
               "createdBy": {
                 "type": "string",
+                "minLength": 1,
+                "maxLength": 30,
                 "filterable": false, //custom attributes
                 "sortable": false //custom attributes
               },
@@ -371,6 +375,8 @@ var userSchema = {
               },
               "menuGroupOrder": {
                 "type": "number",
+                "minLength": 1,
+                "maxLength": 10,
                 "filterable": false, //custom attributes
                 "sortable": false //custom attributes
               },
@@ -383,6 +389,12 @@ var userSchema = {
                       "type": "string",
                       "minLength": 1,
                       "maxLength": 20,
+                      "filterable": false, //custom attributes
+                      "sortable": false //custom attributes
+                    },
+                    "selectedFlag": {
+                      "type": "boolean",
+                      "default": false,
                       "filterable": false, //custom attributes
                       "sortable": false //custom attributes
                     },
@@ -419,16 +431,78 @@ var userSchema = {
                     },
                     "menuItemOrder": {
                       "type": "number",
-                      "required": "true",
+                      "minLength": 1,
+                      "maxLength": 10,
                       "filterable": false, //custom attributes
                       "sortable": false //custom attributes
+                    },
+                    "subMenuItems": {
+                      "type": "array",
+                      "items": {
+                        "properties": {
+                          "menuItemType": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20,
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "applicationCode": {
+                            "type": "string",
+                            "minLength": 3,
+                            "maxLength": 20,
+                            "filterable": true, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "selectedFlag": {
+                            "type": "boolean",
+                            "default": false,
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "menuItemCode": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20,
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "icon": {
+                            "type": "string",
+                            "minLength": 0,
+                            "maxLength": 30
+                          },
+                          "link": {
+                            "type": "string",
+                            "minLength": 0,
+                            "maxLength": 30
+                          },
+                          "title": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 20,
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "menuItemOrder": {
+                            "type": "number",
+                            "required": "true",
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          },
+                          "selectedFlag": {
+                            "type": "string",
+                            "enum": ["0", "1"],
+                            "filterable": false, //custom attributes
+                            "sortable": false //custom attributes
+                          }
+                        }
+                      }
                     }
-                  },
-                  "required": ["menuItemType", "applicationCode", "menuItemCode", "title", "menuItemOrder"]
+                  }
                 }
               }
-            },
-            "required": ["tenantId", "applicationCode", "menuGroupCode", "menuGroupOrder", "title", "createdDate", "createdBy", "menuItems"]
+            }
           }
         },
         "description": {
@@ -439,93 +513,135 @@ var userSchema = {
           "sortable": false, //custom attributes
           "displayable": true
         }
-      },
-      "required": [
-        "tenantId",
-        "applicationCode",
-        "roleName",
-        "menuGroup",
-        "activationStatus",
-        "associatedUsers",
-        "createdBy",
-        "createdDate",
-        "lastUpdatedDate",
-        "entityId"
-      ]
+      }
     },
     "contact": {
       "type": "object",
       "properties": {
+        "tenantId": {
+          "type": "string",
+          "maxLength": 64,
+          "filterable": true, //custom attributes
+          "sortable": true //custom attribute
+        },
+        "wfInstanceId": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 20,
+          "filterable": true, //custom attributes
+          "sortable": true //custom attribute
+        },
+        "processingStatus": {
+          "type": "string",
+          "default": "IN_PROGRESS",
+          "filterable": true,
+          "sortable": true,
+          "displayable": true
+        },
         "firstName": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 50
+          "maxLength": 50,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "middleName": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 50
+          "maxLength": 50,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "lastName": {
           "type": "string",
           "minLength": 1,
-          "maxLength": 50
+          "maxLength": 50,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "emailId": {
           "type": "string",
           "minLength": 8,
-          "maxLength": 140,
-          "format": "email"
+          "maxLength": 50,
+          "unique": false,
+          "filterable": true, //custom attributes
+          "sortable": true //custom attribute
         },
         "emailVerified": {
           "type": "boolean"
         },
         "phoneNumber": {
           "type": "string",
-          "maxLength": 10
+          "minLength": 9,
+          "maxLength": 15,
+          "unique": false,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "mobileNumber": {
           "type": "string",
-          "maxLength": 10
+          "minLength": 9,
+          "maxLength": 15,
+          "unique": false,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "mobileVerified": {
           "type": "boolean"
         },
         "faxNumber": {
           "type": "string",
-          "minLength": 0,
-          "maxLength": 10
+          "minLength": 1,
+          "maxLength": 10,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "companyName": {
           "type": "string",
-          "maxLength": 64
+          "minLength": 1,
+          "maxLength": 64,
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
-        "Address1": {
+        "address1": {
           "type": "string"
         },
-        "Address2": {
+        "address2": {
           "type": "string"
         },
         "city": {
-          "type": "string"
+          "type": "string",
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "state": {
           "type": "string",
-          "maxLength": 140
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "country": {
-          "type": "string"
+          "type": "string",
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
         },
         "zipCode": {
-          "type": "string"
+          "type": "string",
+          "filterable": false, //custom attributes
+          "sortable": false //custom attribute
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time",
+          "filterable": false, //custom attributes
+          "sortable": false //custom attributes
+        },
+        "lastUpdatedDate": {
+          "type": ["string", "null"],
+          "format": "date-time",
+          "filterable": false, //custom attributes
+          "sortable": false //custom attributes
         }
-      },
-      "required": [
-        "emailId",
-        "state",
-        "city",
-        "country"
-      ]
+      }
     }
   },
   "required": [

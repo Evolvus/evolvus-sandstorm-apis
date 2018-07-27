@@ -17,13 +17,9 @@ var userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20
   },
-  wfInstanceStatus: {
-    type: String,
-    minlength: 3,
-    maxlength: 20
-  },
   userId: {
     type: String,
+    unique:true,
     required: true,
     min: 6,
     max: 35,
@@ -95,6 +91,10 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  selectedFlag:{
+    type:Boolean,
+    default:false
+  },
   activationStatus: {
     type: String,
     enum: ["ACTIVE", "INACTIVE"],
@@ -102,8 +102,7 @@ var userSchema = new mongoose.Schema({
   },
   processingStatus: {
     type: String,
-    enum: ['PENDING_AUTHORIZATION', 'AUTHORIZED', 'REJECTED'],
-    default: 'PENDING_AUTHORIZATION'
+    default: "IN_PROGRESS"
   },
   token: {
     type: String

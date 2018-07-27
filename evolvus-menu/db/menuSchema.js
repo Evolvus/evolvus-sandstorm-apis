@@ -83,6 +83,7 @@ var menuSchema = new mongoose.Schema({
       },
       selectedFlag: {
         type: Boolean,
+        default: false,
         required: false,
         default: false
       },
@@ -128,6 +129,7 @@ var menuSchema = new mongoose.Schema({
         },
         selectedFlag: {
           type: Boolean,
+          default: false,
           required: false,
           default: false
         }
@@ -158,8 +160,10 @@ var menuSchema = new mongoose.Schema({
     default: 0
   },
   selectedFlag: {
-    type: String,
-    enum: ["0", "1"]
+    type: Boolean,
+    default: false,
+    required: false,
+    default: false
   },
   menuGroupOrder: {
     type: Number,

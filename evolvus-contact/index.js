@@ -91,6 +91,7 @@ module.exports.save = (tenantId, contactObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(contactObject);
       docketObject.details = `caught Exception on contact_save ${e.message}`;
       docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -107,7 +108,10 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`contact(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
@@ -138,11 +142,13 @@ module.exports.update = (tenantId, code, update) => {
       }).catch((error) => {
         var reference = shortid.generate();
         debug(`update promise failed due to :${error},and reference id ${reference}`);
+        debug(`failed to update ${error}`);
         reject(error);
       });
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${error},and reference id ${reference}`);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
