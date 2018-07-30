@@ -120,7 +120,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
                 "roleName": roleObject.roleName
               };
               collection.update(filterRole, {
-                "wfInstanceStatus": result.data.wfInstanceStatus,
+                "processingStatus": result.data.wfInstanceStatus,
                 "wfInstanceId": result.data.wfInstanceId
               }).then((result) => {
                 console.log("result", result);
