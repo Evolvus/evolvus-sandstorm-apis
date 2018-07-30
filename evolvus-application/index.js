@@ -155,7 +155,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, ipAddress, createdBy, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId},ipAddress :${ipAddress}, createdBy :${createdBy}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
+  debug(`index find method,tenantId :${tenantId},ipAddress :${JSON.stringify(ipAddress)}, createdBy :${JSON.stringify(createdBy)}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
