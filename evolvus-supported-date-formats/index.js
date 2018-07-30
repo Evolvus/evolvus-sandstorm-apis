@@ -80,6 +80,7 @@ module.exports.save = (tenantId, supportedDateFormatsObject) => {
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`save promise failed due to :${e} and referenceId is :${reference}`);
+          debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
@@ -91,6 +92,7 @@ module.exports.save = (tenantId, supportedDateFormatsObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
       docketObject.details = `caught Exception on supportedDateFormats_save ${e.message}`;
       docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -106,13 +108,17 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   debug(`index find method. tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount},  limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`supportedDateFormats(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
         var reference = shortid.generate();
         debug(`find promise failed due to :${e} and referenceId is :${reference}`);
+        debug(`failed to find all the supportedDateFormats(s) ${e}`);
         reject(e);
       });
     } catch (e) {

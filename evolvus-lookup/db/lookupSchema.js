@@ -47,6 +47,30 @@ var lookupSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  valueFive: {
+    type: String,
+    required: false
+  },
+  valueSix: {
+    type: String,
+    required: false
+  },
+  valueSeven: {
+    type: String,
+    required: false
+  },
+  valueEight: {
+    type: String,
+    required: false
+  },
+  valueNine: {
+    type: String,
+    required: false
+  },
+  valueTen: {
+    type: String,
+    required: false
+  },
   enableFlag: {
     type: String,
     default: '1'
