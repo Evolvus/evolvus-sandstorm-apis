@@ -79,6 +79,7 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`save promise failed due to :${e} and referenceId is : ${reference}`);
+          debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
@@ -90,6 +91,7 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
       docketObject.details = `caught Exception on masterTimeZone_save ${e.message}`;
       docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -105,8 +107,11 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   debug(`index find method.tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters `);
   return new Promise((resolve, reject) => {
     try {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`masterTimeZone(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {

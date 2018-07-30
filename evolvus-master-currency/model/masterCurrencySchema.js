@@ -18,10 +18,12 @@ var masterCurrencySchema = {
       "minLength": 3,
       "maxLength": 20
     },
-    "wfInstanceStatus": {
+    "processingStatus": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "default": "IN_PROGRESS",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "currencyCode": {
       "type": "string",

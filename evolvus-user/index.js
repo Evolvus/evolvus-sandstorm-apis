@@ -107,12 +107,12 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
             reject(`UserId ${object.userId} already exists`);
           } else {
             var filterEntity = {
-              entityId: object.entityId
+              entityId: object.entityId.toUpperCase()
             };
             var filterRole = {
-              roleName: object.role.roleName
+              roleName: object.role.roleName.toUpperCase()
             };
-            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
+            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
@@ -263,7 +263,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
 
 
 // tenantId should be valid
-module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
+module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessLevel, entityId) => {
   debug(`index update method: tenantId:${tenantId},userId:${userId},object:${JSON.stringify(object)},accessLevel:${accessLevel},entityId:${entityId} are input paramaters`);
   return new Promise((resolve, reject) => {
     try {
@@ -305,12 +305,12 @@ module.exports.update = (tenantId, userId, object, accessLevel, entityId) => {
               object.role = user[0].role;
             }
             var filterEntity = {
-              entityId: object.entityId
+              entityId: object.entityId.toUpperCase()
             };
             var filterRole = {
               roleName: object.role.roleName.toUpperCase()
             };
-            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, filterRole, {}, 0, 1)])
+            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;

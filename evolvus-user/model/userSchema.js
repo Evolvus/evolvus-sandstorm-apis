@@ -43,7 +43,7 @@ var userSchema = {
     },
     "userPassword": {
       "type": "string",
-      "minLength": 1,
+      "minLength": 5,
       "maxLength": 64,
       "filterable": false,
       "sortable": false,
@@ -572,16 +572,14 @@ var userSchema = {
         },
         "phoneNumber": {
           "type": "string",
-          "minLength": 9,
-          "maxLength": 15,
+          "maxLength": 10,
           "unique": false,
           "filterable": false, //custom attributes
           "sortable": false //custom attribute
         },
         "mobileNumber": {
           "type": "string",
-          "minLength": 9,
-          "maxLength": 15,
+          "maxLength": 10,
           "unique": false,
           "filterable": false, //custom attributes
           "sortable": false //custom attribute
@@ -591,7 +589,6 @@ var userSchema = {
         },
         "faxNumber": {
           "type": "string",
-          "minLength": 1,
           "maxLength": 10,
           "filterable": false, //custom attributes
           "sortable": false //custom attribute

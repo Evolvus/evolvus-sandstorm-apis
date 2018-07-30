@@ -2,10 +2,9 @@ const debug = require("debug")("evolvus-lookup:index");
 const model = require("./model/lookupSchema");
 const dbSchema = require("./db/lookupSchema");
 const _ = require('lodash');
-const shortid = require('shortid');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-
+const shortid = require('shortid');
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("lookup", dbSchema);
 
@@ -115,6 +114,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -127,8 +127,26 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
-  debug(`index find method tenantId : ${tenantId} ,createdBy : ${createdBy},ipAddress :${ipAddress} ,filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
-  var invalidFilters = _.difference(_.keys(filter), filterAttributes);
-  return collection.find(filter, orderby, skipCount, limit);
+module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+  debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)} , skipCount :${skipCount}, limit :${limit} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
+        debug(`contact(s) stored in the database are ${docs}`);
+        resolve(docs);
+      }).catch((e) => {
+        var reference = shortid.generate();
+        debug(`findAll promise failed due to : ${e}, and referenceid is ${reference}`);
+        reject(e);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to : ${e}, and referenceid is ${reference}`);
+      reject(e);
+    }
+  });
 };

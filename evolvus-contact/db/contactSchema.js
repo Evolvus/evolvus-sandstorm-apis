@@ -48,7 +48,7 @@ var contactSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    maxLength: 15,
+    maxLength: 10,
     validate: {
       validator: function(v) {
         return /^[0-9\-\+]+$/.test(v);
@@ -58,7 +58,7 @@ var contactSchema = new mongoose.Schema({
   },
   mobileNumber: {
     type: String,
-    maxLength: 15,
+    maxLength: 10,
     validate: {
       validator: function(v) {
         return /^[0-9\-\+]+$/.test(v);
