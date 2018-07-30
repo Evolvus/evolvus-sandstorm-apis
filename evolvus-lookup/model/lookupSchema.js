@@ -20,12 +20,12 @@ var lookupSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
     },
-    "wfInstanceStatus": {
+    "processingStatus": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "default": "IN_PROGRESS",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "lookupCode": {
       "type": "string",
@@ -57,6 +57,36 @@ var lookupSchema = {
       "sortable": true //custom attribute
     },
     "valueFour": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueFive": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueSix": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueSeven": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueEight": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueNine": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "valueTen": {
       "type": "string",
       "filterable": true, //custom attributes
       "sortable": true //custom attribute

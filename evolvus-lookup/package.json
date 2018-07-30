@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-lookup",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "lookup encapsulates lookup functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {

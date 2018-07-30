@@ -5,6 +5,7 @@ const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const shortid = require('shortid');
+
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("masterCurrency", dbSchema);
 
@@ -78,6 +79,7 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`save promise failed due to :${e} and referenceId is ${reference}`);
+          debug(`failed to save with an error: ${e}`);
           reject(e);
         });
       }
@@ -89,6 +91,7 @@ module.exports.save = (tenantId, masterCurrencyObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
       docketObject.details = `caught Exception on masterCurrency_save ${e.message}`;
       docketClient.postToDocket(docketObject);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -103,9 +106,12 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   debug(`index find method.tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} , are parameters`);
   return new Promise((resolve, reject) => {
     try {
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
       debug(`calling db find method filter :${JSON.stringify(filter)},orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} ,are parameters`)
-      collection.find(filter, orderby, skipCount, limit).then((docs) => {
+      collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`masterCurrency(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {

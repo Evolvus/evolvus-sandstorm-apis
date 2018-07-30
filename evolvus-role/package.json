@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-role",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Evolvus-role encapsulates role functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -21,9 +21,9 @@
   },
   "homepage": "https://github.com/Evolvus/evolvus-role#readme",
   "dependencies": {
-    "@evolvus/evolvus-application": "^1.0.5",
+    "@evolvus/evolvus-application": "^1.0.6",
     "@evolvus/evolvus-docket-client": "^1.0.2",
-    "@evolvus/evolvus-menu": "^1.0.4",
+    "@evolvus/evolvus-menu": "^1.0.5",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
     "@evolvus/evolvus-swe-client": "^1.0.0",
     "debug": "^3.1.0",
