@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Evolvus/evolvus-sandstorm-apis#readme",
   "dependencies": {
-    "@evolvus/evolvus-contact": "^1.0.3",
+    "@evolvus/evolvus-contact": "^1.0.4",
     "@evolvus/evolvus-docket-client": "^1.0.2",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
     "@evolvus/evolvus-swe-client": "^1.0.0",
