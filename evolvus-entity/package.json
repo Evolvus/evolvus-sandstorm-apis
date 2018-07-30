@@ -1,5 +1,5 @@
 {
-  "name": "@Evolvus/evolvus-entity",
+  "name": "@evolvus/evolvus-entity",
   "version": "1.0.6",
   "description": "Application encapsulates Application functionality across all Evolvus products",
   "main": "index.js",
