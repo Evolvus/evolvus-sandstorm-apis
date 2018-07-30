@@ -35,14 +35,14 @@ var userSchema = new mongoose.Schema({
     minlength: 3,
     maxlength: 20
   },
-  contact: contact.db,
+  contact: contact.dbSchema,
   entityId: {
     type: String,
     minLength: 5,
     maxLength: 100,
     required: true
   },
-  role: role.db,
+  role: role.dbSchema,
   userName: {
     type: String,
     min: 6,
