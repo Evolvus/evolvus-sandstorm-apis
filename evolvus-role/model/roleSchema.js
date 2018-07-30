@@ -304,12 +304,6 @@ var roleSchema = {
                         "required": "true",
                         "filterable": false, //custom attributes
                         "sortable": false //custom attributes
-                      },
-                      "selectedFlag": {
-                        "type": "string",
-                        "enum": ["0", "1"],
-                        "filterable": false, //custom attributes
-                        "sortable": false //custom attributes
                       }
                     }
                   }

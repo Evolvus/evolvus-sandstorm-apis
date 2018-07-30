@@ -70,13 +70,13 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
       if (tenantId == null || roleObject == null) {
         throw new Error("IllegalArgumentException: tenantId/roleObject is null or undefined");
       }
-      let query = _.merge({
+      let query = {
         "tenantId": tenantId,
         "roleName": roleObject.roleName
-      });
+      };
       console.log("query", query);
-      console.log("typeof query",typeof query);
-      Promise.all([application.find(tenantId,createdBy, ipAddress, {
+      console.log("typeof query", typeof query);
+      Promise.all([application.find(tenantId, createdBy, ipAddress, {
         "applicationCode": roleObject.applicationCode
       }, {}, 0, 1), collection.find(query, {}, 0, 1)]).then((result) => {
         console.log("find result", result);
@@ -169,14 +169,16 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null) {
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
-      let query = _.merge(filter, tenantId);
+      let query = _.merge(filter, {
+        "tenantId": tenantId
+      });
       docketObject.name = "role_getAll";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
@@ -206,25 +208,27 @@ module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   });
 };
 
-module.exports.update = (tenantId, code, updateRoleName, update) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code},updateRoleName: ${updateRoleName}, update :${JSON.stringify(update)} are parameters`);
+module.exports.update = (tenantId, code, update) => {
+  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      let query = _.merge(tenantId, {
-        "roleName": update.roleName
-      });
+      let query = {
+        "tenantId": tenantId,
+        "roleName": code
+      };
       var filterRole = {
-        roleName: roleName
+        "tenantId": teanantId,
+        "roleName": code
       };
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
-            throw new Error(`Role ${update.roleName},  already exists `);
+            throw new Error(`Role ${code},  already exists `);
           }
-          if ((!_.isEmpty(result[0])) && (result[0].roleName != updateRoleName)) {
+          if ((!_.isEmpty(result[0])) && (result[0].roleName != code)) {
             throw new Error(`Role ${update.roleName} already exists`);
           }
           debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
@@ -236,10 +240,10 @@ module.exports.update = (tenantId, code, updateRoleName, update) => {
             debug(`update promise failed due to ${error}, and reference Id :${reference}`);
             reject(error);
           });
-        }).catch((e) => {
+        }).catch((error) => {
           var reference = shortid.generate();
           debug(`find promise failed due to ${error}, and reference Id :${reference}`);
-          reject(e);
+          reject(error);
         });
     } catch (e) {
       var reference = shortid.generate();
