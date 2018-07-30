@@ -61,8 +61,7 @@ var roleSchema = new mongoose.Schema({
   selectedFlag: {
     type: Boolean,
     default: false,
-    required: false,
-    default: false
+    required: false
   },
   lastUpdatedDate: {
     type: Date
