@@ -1,4 +1,4 @@
-const debug = require("debug")("evolvus-contact:index");
+const debug = require("debug")("evolvus-entity:index");
 const model = require("./model/entitySchema");
 const dbSchema = require("./db/entitySchema");
 const _ = require('lodash');
