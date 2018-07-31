@@ -164,7 +164,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       docketObject.name = "application_find";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = "Find all applications";
       docketObject.details = `application creation initiated`;
       docketClient.postToDocket(docketObject);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
