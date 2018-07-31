@@ -72,14 +72,12 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
       }
       let query = {
         "tenantId": tenantId,
-        "roleName": roleObject.roleName
+        "roleName": roleObject.roleName.toUpperCase()
       };
-      console.log("query", query);
-      console.log("typeof query", typeof query);
-      Promise.all([application.find(tenantId, createdBy, ipAddress, {
+      roleObject.roleName = roleObject.roleName.toUpperCase();
+      Promise.all([application.find(tenantId, {
         "applicationCode": roleObject.applicationCode
       }, {}, 0, 1), collection.find(query, {}, 0, 1)]).then((result) => {
-        console.log("find result", result);
         if (_.isEmpty(result[0])) {
           throw new Error(`No Application with ${roleObject.applicationCode} found`);
         }
@@ -106,7 +104,8 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
         } else {
           // if the object is valid, save the object to the database
           debug(`calling db save method, roleObject: ${JSON.stringify(roleObject)}`);
-          collection.save(roleObject).then((result) => {
+          object.roleName = object.roleName.toUpperCase();
+          collection.save(object).then((result) => {
             debug(`saved successfully ${result}`);
             var sweEventObject = {
               "tenantId": tenantId,
@@ -117,13 +116,12 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
             };
             sweClient.initialize(sweEventObject).then((result) => {
               var filterRole = {
-                "roleName": roleObject.roleName
+                "roleName": object.roleName.toUpperCase()
               };
               collection.update(filterRole, {
                 "processingStatus": result.data.wfInstanceStatus,
                 "wfInstanceId": result.data.wfInstanceId
               }).then((result) => {
-                console.log("result", result);
                 resolve(result);
               }).catch((e) => {
                 var reference = shortid.generate();
@@ -142,7 +140,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
           });
         }
       }).catch((e) => {
-        console.log("promise all catch", e);
         var reference = shortid.generate();
         debug(`promiseAll failed due to : ${e},and reference: ${reference}`);
         reject(e);
@@ -209,27 +206,27 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
 };
 
 module.exports.update = (tenantId, code, update) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+ debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
-    try {
+try {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
       let query = {
         "tenantId": tenantId,
-        "roleName": code
+        "roleName": code.toUpperCase()
       };
       var filterRole = {
         "tenantId": teanantId,
-        "roleName": code
+        "roleName": code.toUpperCase()
       };
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
-            throw new Error(`Role ${code},  already exists `);
+            throw new Error(`Role ${code.toUpperCase()},  already exists `);
           }
           if ((!_.isEmpty(result[0])) && (result[0].roleName != code)) {
-            throw new Error(`Role ${update.roleName} already exists`);
+            throw new Error(`Role ${update.roleName.toUpperCase()} already exists`);
           }
           debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
           collection.update(filterRole, update).then((resp) => {
