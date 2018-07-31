@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-user",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "User encapsulates User functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "@evolvus/evolvus-contact": "^1.0.4",
     "@evolvus/evolvus-docket-client": "^1.0.2",
-    "@evolvus/evolvus-entity": "^1.0.6",
+    "@evolvus/evolvus-entity": "^1.0.8",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
     "@evolvus/evolvus-role": "^1.1.0",
     "@evolvus/evolvus-swe-client": "^1.0.2",
