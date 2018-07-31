@@ -144,13 +144,12 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
                     "wfEntity": "ENTITY",
                     "wfEntityAction": "CREATE",
                     "createdBy": createdBy,
-                    "query": {
-                      "_id": result._id
-                    }
+                    "query": result._id
                   };
                   debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                   sweClient.initialize(sweEventObject).then((result) => {
                     var filterEntity = {
+                      "tenantId": tenantId,
                       "entityCode": entityObject.entityCode
                     };
                     debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
@@ -254,106 +253,101 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
 
 // tenantId should be valid
 module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
-    debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)}, are parameters`);
-    return new Promise((resolve, reject) => {
-      try {
-        if (code == null || update == null) {
-          throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
-        }
-        docketObject.name = "entity_update";
-        docketObject.keyDataAsJSON = JSON.stringify(update);
-        docketObject.details = `entity updation initiated`;
-        docketClient.postToDocket(docketObject);
-        let query = {
+  debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)}, are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (code == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+      docketObject.name = "entity_update";
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `entity updation initiated`;
+      docketClient.postToDocket(docketObject);
+      let query = {
+        "tenantId": tenantId,
+        "entityCode": code
+      };
+      collection.update(query, update).then((resp) => {
+        debug("updated successfully", result);
+        var sweEventObject = {
           "tenantId": tenantId,
-          "entityCode": code
+          "wfEntity": "ENTITY",
+          "wfEntityAction": "UPDATE",
+          "createdBy": createdBy,
+          "query": result._id
         };
-        collection.update(query, update).then((resp) => {
-          debug("updated successfully", result);
-          var sweEventObject = {
-            "tenantId": tenantId,
-            "wfEntity": "ENTITY",
-            "wfEntityAction": "UPDATE",
-            "createdBy": createdBy,
-            "query": {
-              "_id": result._id
-            }
-          };
-          debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
-          sweClient.initialize(sweEventObject).then((result) => {
-            var filterEntity = {
-              "entityCode": entityObject.entityCode
-            };
-            debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
-            collection.update(filterEntity, {
-              "processingStatus": result.data.wfInstanceStatus,
-              "wfInstanceId": result.data.wfInstanceId
-            }).then((result) => {
-              resolve(result);
-            }).catch((e) => {
-              var reference = shortid.generate();
-              debug(`update promise failed due to :${e} and referenceId :${reference}`);
-              reject(e);
-            });
+        debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+        sweClient.initialize(sweEventObject).then((result) => {
+          debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
+          collection.update(query, {
+            "processingStatus": result.data.wfInstanceStatus,
+            "wfInstanceId": result.data.wfInstanceId
+          }).then((result) => {
+            resolve(result);
           }).catch((e) => {
             var reference = shortid.generate();
-            debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+            debug(`update promise failed due to :${e} and referenceId :${reference}`);
             reject(e);
           });
-
         }).catch((e) => {
           var reference = shortid.generate();
-          debug(`collection update failed due to :${e} and referenceId :${reference}`);
+          debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
           reject(e);
         });
-      } catch (e) {
-        var reference = shortid.generate();
-        debug(`try catch failed due to :${e} and referenceId :${reference}`);
-        docketObject.name = "Entity_ExceptionOnUpdate";
-        docketObject.ipAddress = ipAddress;
-        docketObject.createdBy = createdBy;
-        docketObject.keyDataAsJSON = JSON.stringify(update);
-        docketObject.details = `caught Exception on user_save ${e.message}`;
-        docketClient.postToDocket(docketObject);
-        reject(e);
-      }
-    });
-  }
 
-    module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
-      debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
-      return new Promise((resolve, reject) => {
-        try {
-          if (tenantId == null || id == null || update == null) {
-            throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
-          }
-          docketObject.name = "entity_updateWorkFlow";
-          docketObject.keyDataAsJSON = JSON.stringify(update);
-          docketObject.details = `entity workFlowUpdation initiated`;
-          docketClient.postToDocket(docketObject);
-          var filterEntity = {
-            "tenantId": tenantId,
-            "_id": id
-          };
-          debug(`calling db update method, filterEntity: ${JSON.stringify(filterEntity)},update: ${JSON.stringify(update)}`);
-          collection.update(filterEntity, update).then((resp) => {
-            debug("updated successfully", resp);
-            resolve(resp);
-          }).catch((e) => {
-            var reference = shortid.generate();
-            debug(`update promise failed due to ${error}, and reference Id :${reference}`);
-            reject(error);
-          });
-        } catch (e) {
-          var reference = shortid.generate();
-          debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
-          docketObject.name = "Entity_ExceptionOnUpdate";
-          docketObject.ipAddress = ipAddress;
-          docketObject.createdBy = createdBy;
-          docketObject.keyDataAsJSON = JSON.stringify(update);
-          docketObject.details = `caught Exception on user_save ${e.message}`;
-          docketClient.postToDocket(docketObject);
-          reject(e);
-        }
+      }).catch((e) => {
+        var reference = shortid.generate();
+        debug(`collection update failed due to :${e} and referenceId :${reference}`);
+        reject(e);
       });
-    };
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
+      docketObject.name = "Entity_ExceptionOnUpdate";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `caught Exception on user_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
+      reject(e);
+    }
+  });
+}
+
+module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+      docketObject.name = "entity_updateWorkFlow";
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `entity workFlowUpdation initiated`;
+      docketClient.postToDocket(docketObject);
+      var filterEntity = {
+        "tenantId": tenantId,
+        "_id": id
+      };
+      debug(`calling db update method, filterEntity: ${JSON.stringify(filterEntity)},update: ${JSON.stringify(update)}`);
+      collection.update(filterEntity, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((e) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
+      docketObject.name = "Entity_ExceptionOnUpdate";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `caught Exception on user_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
+      reject(e);
+    }
+  });
+};
