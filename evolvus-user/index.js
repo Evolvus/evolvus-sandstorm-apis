@@ -364,116 +364,62 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
   });
 };
 
-
-// Get the entity idenfied by the id parameter
-module.exports.getById = (id) => {
+module.exports.updateWorkflow = (tenantId, id, update) => {
+  debug(`index update method: tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
-      if (typeof(id) == "undefined" || id == null) {
-        throw new Error("IllegalArgumentException: id is null or undefined");
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      docketObject.name = "user_getById";
-      docketObject.keyDataAsJSON = `userObject id is ${id}`;
-      docketObject.details = `user getById initiated`;
-      docketClient.postToDocket(docketObject);
-
-      collection.findById(id)
-        .then((res) => {
-          if (res) {
-            debug(`User found by id ${id} is ${res}`);
-            resolve(res);
-          } else {
-            // return empty object in place of null
-            debug(`No user found by this id ${id}`);
-            resolve({});
-          }
-        }).catch((e) => {
-          debug(`Failed to find user ${e}`);
-          reject(e);
-        });
-
-    } catch (e) {
-      docketObject.name = "user_ExceptionOngetById";
-      docketObject.keyDataAsJSON = `userObject id is ${id}`;
-      docketObject.details = `caught Exception on user_getById ${e.message}`;
-      docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
-      reject(e);
-    }
-  });
-};
-
-module.exports.getOne = (attribute, value) => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (attribute == null || value == null || typeof attribute === 'undefined' || typeof value === 'undefined') {
-        throw new Error("IllegalArgumentException: attribute/value is null or undefined");
-      }
-      docketObject.name = "user_getOne";
-      docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
-      docketObject.details = `user getOne initiated`;
-      docketClient.postToDocket(docketObject);
-      var query = {};
-      query[attribute] = value;
-      collection.findOne(query).then((data) => {
-        if (data) {
-          debug(`User found ${data}`);
-          resolve(data);
-        } else {
-          // return empty object in place of null
-          debug(`No user found by this ${attribute} ${value}`);
-          resolve({});
-        }
-      }).catch((e) => {
-        debug(`Failed to find ${e}`);
+      var filterUser = {
+        "tenantId": tenantId,
+        "_id": id
+      };
+      debug(`calling db update method, filterUser: ${JSON.stringify(filterUser)},update: ${JSON.stringify(update)}`);
+      collection.update(filterUser, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
       });
     } catch (e) {
-      docketObject.name = "user_ExceptionOngetOne";
-      docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
-      docketObject.details = `caught Exception on user_getOne ${e.message}`;
-      docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
 };
 
-module.exports.getMany = (attribute, value) => {
+module.exports.updateWorkflow = (tenantId, id, update) => {
+  debug(`index update method: tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
-      if (attribute == null || value == null || typeof attribute === 'undefined' || typeof value === 'undefined') {
-        throw new Error("IllegalArgumentException: attribute/value is null or undefined");
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-
-      docketObject.name = "user_getMany";
-      docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
-      docketObject.details = `user getMany initiated`;
-      docketClient.postToDocket(docketObject);
-      var query = {};
-      query[attribute] = value;
-      collection.findMany(query).then((data) => {
-        if (data) {
-          debug(`User found ${data}`);
-          resolve(data);
-        } else {
-          // return empty object in place of null
-          debug(`No user found by this ${attribute} ${value}`);
-          resolve([]);
-        }
-      }).catch((e) => {
-        debug(`Failed to find ${e}`);
-        reject(e);
+      var filterUser = {
+        "tenantId": tenantId,
+        "_id": id
+      };
+      debug(`calling db update method, filterUser: ${JSON.stringify(filterUser)},update: ${JSON.stringify(update)}`);
+      collection.update(filterUser, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
       });
     } catch (e) {
-      docketObject.name = "user_ExceptionOngetMany";
-      docketObject.keyDataAsJSON = `userObject ${attribute} with value ${value}`;
-      docketObject.details = `caught Exception on user_getMany ${e.message}`;
-      docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
+      var reference = shortid.generate();
+      debug(`try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
 };
+
 
 //Authenticate User credentials {userId,userPassword,application}
 module.exports.authenticate = (credentials) => {
