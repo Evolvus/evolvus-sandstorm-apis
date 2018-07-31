@@ -103,9 +103,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
                 "wfEntity": "APPLICATION",
                 "wfEntityAction": "CREATE",
                 "createdBy": createdBy,
-                "query": {
-                  "_id": result._id
-                }
+                "query": result._id
               };
               sweClient.initialize(sweEventObject).then((result) => {
                 var filterApplication = {
@@ -226,9 +224,7 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
               "wfEntity": "APPLICATION",
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
-              "query": {
-                "_id": result[0]._id
-              }
+              "query": result[0]._id
             };
             sweClient.initialize(sweEventObject).then((result) => {
               collection.update(query, {
