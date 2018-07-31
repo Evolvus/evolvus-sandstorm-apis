@@ -112,7 +112,9 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
               "wfEntity": "ROLE",
               "wfEntityAction": "CREATE",
               "createdBy": createdBy,
-              "query": result.roleName
+              "query": {
+                "_id": result._id
+              }
             };
             sweClient.initialize(sweEventObject).then((result) => {
               var filterRole = {
@@ -167,7 +169,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
+  debug(`index find method,tenantId :${tenantId},createdBy:${createdBy},ipAddress: ${ipAddress}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null) {
@@ -205,10 +207,10 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
   });
 };
 
-module.exports.update = (tenantId, code, update) => {
- debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy: ${createdBy},ipAddress: ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
-try {
+    try {
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
@@ -228,10 +230,41 @@ try {
           if ((!_.isEmpty(result[0])) && (result[0].roleName != code)) {
             throw new Error(`Role ${update.roleName.toUpperCase()} already exists`);
           }
+          docketObject.name = "role_update";
+          docketObject.ipAddress = ipAddress;
+          docketObject.createdBy = createdBy;
+          docketObject.keyDataAsJSON = JSON.stringify(update);
+          docketObject.details = `role updation initiated`;
+          docketClient.postToDocket(docketObject);
           debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
           collection.update(filterRole, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
+            var sweEventObject = {
+              "tenantId": tenantId,
+              "wfEntity": "ROLE",
+              "wfEntityAction": "UPDATE",
+              "createdBy": createdBy,
+              "query": {
+                "_id": result._id
+              }
+            };
+            sweClient.initialize(sweEventObject).then((result) => {
+              collection.update(filterRole, {
+                "processingStatus": result.data.wfInstanceStatus,
+                "wfInstanceId": result.data.wfInstanceId
+              }).then((result) => {
+                resolve(result);
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`initialize update promise failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
           }).catch((error) => {
             var reference = shortid.generate();
             debug(`update promise failed due to ${error}, and reference Id :${reference}`);
@@ -245,6 +278,52 @@ try {
     } catch (e) {
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
+      docketObject.name = "role_ExceptionOnUpdate";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `caught Exception on role_update ${e.message}`;
+      docketClient.postToDocket(docketObject);
+      reject(e);
+    }
+  });
+};
+
+module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy: ${createdBy},ipAddress: ${ipAddress}, id :${id}, update :${JSON.stringify(update)} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+      var filterRole = {
+        "tenantId": tenantId,
+        "id": id
+      };
+      docketObject.name = "role_updateWorkflow";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `role workflow updation initiated`;
+      docketClient.postToDocket(docketObject);
+      debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
+      collection.update(filterRole, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
+      docketObject.name = "role_ExceptionOnUpdateWorkflow";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(update);
+      docketObject.details = `caught Exception on role_updateWorkflow ${e.message}`;
+      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });
