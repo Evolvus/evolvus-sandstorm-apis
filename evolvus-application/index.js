@@ -69,6 +69,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
         "tenantId": tenantId
       });
       let query = _.merge({
+        "tenantId": tenantId,
         "applicationCode": applicationObject.applicationCode
       });
 
@@ -106,6 +107,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
               };
               sweClient.initialize(sweEventObject).then((result) => {
                 var filterApplication = {
+                  "tenantId": tenantId,
                   "applicationCode": applicationObject.applicationCode
                 };
                 collection.update(filterApplication, {
@@ -155,14 +157,13 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, ipAddress, createdBy, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId},ipAddress :${JSON.stringify(ipAddress)}, createdBy :${JSON.stringify(createdBy)}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
+  debug(`index find method,tenantId :${tenantId},ipAddress :${JSON.stringify(ipAddress)},createdBy :${JSON.stringify(createdBy)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`application(s) stored in the database are ${docs}`);
         resolve(docs);
@@ -185,7 +186,6 @@ module.exports.update = (tenantId, code, update) => {
   debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
-
       if (tenantId == null || code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
@@ -193,6 +193,7 @@ module.exports.update = (tenantId, code, update) => {
         "tenantId": tenantId,
         "applicationCode": code
       };
+
       debug(`calling DB find method, filter :${update.applicationCode},orderby :${{}} ,skipCount :${0} ,limit :${1} are parameters`);
       collection.find(query, {}, 0, 1)
         .then((result) => {
@@ -219,6 +220,35 @@ module.exports.update = (tenantId, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
+      reject(e);
+    }
+  });
+};
+
+
+module.exports.updateWorkflow = (tenantId, id, update) => {
+  debug(`index update method,tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+      var filterRole = {
+        "tenantId": tenantId,
+        "_id": id
+      };
+      debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
+      collection.update(filterRole, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });
