@@ -269,7 +269,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           "entityCode": code
         };
         collection.update(query, update).then((resp) => {
-          debug("updated successfully", resp);
+          debug("updated successfully", result);
           var sweEventObject = {
             "tenantId": tenantId,
             "wfEntity": "ENTITY",
@@ -318,6 +318,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         reject(e);
       }
     });
+  }
 
     module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
       debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
