@@ -112,7 +112,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
             var filterRole = {
               roleName: object.role.roleName.toUpperCase()
             };
-            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
+            Promise.all([entity.find(tenantId,createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
@@ -133,7 +133,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               "wfEntity": "USER",
                               "wfEntityAction": "CREATE",
                               "createdBy": createdBy,
-                              "query": result.userId
+                              "query": result._id
                             };
 
                             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
@@ -310,7 +310,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
             var filterRole = {
               roleName: object.role.roleName.toUpperCase()
             };
-            Promise.all([entity.find(tenantId, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
+            Promise.all([entity.find(tenantId, createdBy, ipAddress,object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
@@ -324,9 +324,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                           "wfEntity": "USER",
                           "wfEntityAction": "UPDATE",
                           "createdBy": createdBy,
-                          "query": {
-                            "_id": user._id
-                          }
+                          "query":user[0]._id
                         };
 
                         debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);

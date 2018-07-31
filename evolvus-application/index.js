@@ -103,7 +103,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
                 "wfEntity": "APPLICATION",
                 "wfEntityAction": "CREATE",
                 "createdBy": createdBy,
-                "query": result.applicationCode
+                "query": result._id
               };
               sweClient.initialize(sweEventObject).then((result) => {
                 var filterApplication = {
@@ -144,7 +144,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
       docketObject.details = `caught Exception on application_save ${e.message}`;
       docketClient.postToDocket(docketObject);
-      debug(`caught exception ${e}`);
       reject(e);
     }
   });
@@ -156,14 +155,19 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, ipAddress, createdBy, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId},ipAddress :${JSON.stringify(ipAddress)},createdBy :${JSON.stringify(createdBy)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
+module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
+  debug(`index find method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)},ipAddress :${JSON.stringify(ipAddress)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
+      docketObject.name = "application_find";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.details = `application creation initiated`;
+      docketClient.postToDocket(docketObject);
+      debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`application(s) stored in the database are ${docs}`);
         resolve(docs);
@@ -174,6 +178,10 @@ module.exports.find = (tenantId, ipAddress, createdBy, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
+      docketObject.name = "application_ExceptionOnFind";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.details = `caught Exception on application_Find${e.message}`;
+      docketClient.postToDocket(docketObject);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -182,7 +190,7 @@ module.exports.find = (tenantId, ipAddress, createdBy, filter, orderby, skipCoun
 
 
 
-module.exports.update = (tenantId, code, update) => {
+module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
   debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
@@ -203,10 +211,37 @@ module.exports.update = (tenantId, code, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].applicationCode != code)) {
             throw new Error(`application ${update.applicationName} already exists`);
           }
+          docketObject.name = "application_update";
+          docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+          docketObject.details = `application creation initiated`;
+          docketClient.postToDocket(docketObject);
           debug(`calling DB update method, filter :${code},update :${JSON.stringify(update)} are parameters`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
+            var sweEventObject = {
+              "tenantId": tenantId,
+              "wfEntity": "APPLICATION",
+              "wfEntityAction": "UPDATE",
+              "createdBy": createdBy,
+              "query": result[0]._id
+            };
+            sweClient.initialize(sweEventObject).then((result) => {
+              collection.update(query, {
+                "processingStatus": result.data.wfInstanceStatus,
+                "wfInstanceId": result.data.wfInstanceId
+              }).then((result) => {
+                resolve(result);
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
           }).catch((error) => {
             var reference = shortid.generate();
             debug(`update promise failed due to ${error}, and reference Id :${reference}`);
@@ -219,6 +254,10 @@ module.exports.update = (tenantId, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
+      docketObject.name = "application_ExceptionOnUpdate";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.details = `caught Exception on application_Update${e.message}`;
+      docketClient.postToDocket(docketObject);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -237,6 +276,10 @@ module.exports.updateWorkflow = (tenantId, id, update) => {
         "tenantId": tenantId,
         "_id": id
       };
+      docketObject.name = "application_UpdateWorkFlow";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.details = `application creation initiated`;
+      docketClient.postToDocket(docketObject);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
       collection.update(filterRole, update).then((resp) => {
         debug("updated successfully", resp);
@@ -247,6 +290,10 @@ module.exports.updateWorkflow = (tenantId, id, update) => {
         reject(error);
       });
     } catch (e) {
+      docketObject.name = "application_ExceptionOnUpdateWorkFlow";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.details = `caught Exception on application_UpdateWorkFlow ${e.message}`;
+      docketClient.postToDocket(docketObject);
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
