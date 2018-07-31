@@ -66,8 +66,8 @@ module.exports.validate = (tenantId, entityObject) => {
 // ipAddress is needed for docket, must be passed
 //
 // object has all the attributes except tenantId, who columns
-module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
-  debug(`index save method,tenantId :${tenantId}, createdBy :${createdBy},entityId :${entityId},accessLevel :${accessLevel}, object :${JSON.stringify(object)} are parameters`);
+module.exports.save = (tenantId, createdBy,ipAddress, entityId, accessLevel, object) => {
+  debug(`index save method,tenantId :${tenantId}, createdBy : ${createdBy}, ipAddress : ${ipAddress},entityId :${entityId},accessLevel :${accessLevel}, object :${JSON.stringify(object)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (typeof object === 'undefined' || object == null) {
@@ -96,7 +96,7 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
         if (res.errors[0].name == "type") {
           reject(`${res.errors[0].stack} `);
         } else {
-          reject(res.errors[0].schema.message);
+          reject(res.errors[0].stack);
         }
       } else {
         debug("validation status: ", JSON.stringify(res));
@@ -192,6 +192,12 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
+      docketObject.name = "Entity_ExceptionOnSave";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = JSON.stringify(entityObject);
+      docketObject.details = `caught Exception on user_save ${e.message}`;
+      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });
@@ -201,10 +207,16 @@ module.exports.save = (tenantId, createdBy, entityId, accessLevel, object) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId},entityId :${entityId},accessLevel :${accessLevel},  filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
+module.exports.find = (tenantId, createdBy,ipAddress,entityId, accessLevel, filter, orderby, skipCount, limit) => {
+  debug(`index find method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress},entityId :${entityId},accessLevel :${accessLevel},  filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
+      docketObject.name = "Entity_getAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
+      docketObject.details = `Entity getAll method`;
+      docketClient.postToDocket(docketObject);
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
@@ -227,35 +239,68 @@ module.exports.find = (tenantId, entityId, accessLevel, filter, orderby, skipCou
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
+      docketObject.name = "Entity_ExceptionOngetAll";
+      docketObject.ipAddress = ipAddress;
+      docketObject.createdBy = createdBy;
+      docketObject.keyDataAsJSON = "EntityObject";
+      docketObject.details = `caught Exception on user_getAll ${e.message}`;
+      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });
 };
 
 // tenantId should be valid
-module.exports.update = (tenantId, code, update) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)}, are parameters`);
-  return new Promise((resolve, reject) => {
-    try {
-      if (code == null || update == null) {
-        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
-      }
-      let query = {
-        "tenantId": tenantId,
-        "entityCode": code
-      };
-      collection.update(query, update).then((resp) => {
-        debug("updated successfully", resp);
-        resolve(resp);
-      }).catch((error) => {
+module.exports.update = (tenantId,createdBy,ipAddress, code, update) => {
+    debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)}, are parameters`);
+    return new Promise((resolve, reject) => {
+      try {
+        if (code == null || update == null) {
+          throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+        }
+        let query = {
+          "tenantId": tenantId,
+          "entityCode": code
+        };
+        collection.update(query, update).then((resp) => {
+          debug("updated successfully", resp);
+          resolve(resp);
+        }).catch((error) => {
+          var reference = shortid.generate();
+          debug(`collection update failed due to :${e} and referenceId :${reference}`);
+          reject(error);
+        });
+      } catch (e) {
         var reference = shortid.generate();
-        debug(`collection update failed due to :${e} and referenceId :${reference}`);
-        reject(error);
+        debug(`try catch failed due to :${e} and referenceId :${reference}`);
+        reject(e);
+      }
+    });
+
+    module.exports.updateWorkflow = (tenantId,createdBy,ipAddress, id, update) => {
+      debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+      return new Promise((resolve, reject) => {
+        try {
+          if (tenantId == null || id == null || update == null) {
+            throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+          }
+          var filterEntity = {
+            "tenantId": tenantId,
+            "_id": id
+          };
+          debug(`calling db update method, filterEntity: ${JSON.stringify(filterEntity)},update: ${JSON.stringify(update)}`);
+          collection.update(filterEntity, update).then((resp) => {
+            debug("updated successfully", resp);
+            resolve(resp);
+          }).catch((e) => {
+            var reference = shortid.generate();
+            debug(`update promise failed due to ${e}, and reference Id :${reference}`);
+            reject(error);
+          });
+        } catch (e) {
+          var reference = shortid.generate();
+          debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
+          reject(e);
+        }
       });
-    } catch (e) {
-      var reference = shortid.generate();
-      debug(`try catch failed due to :${e} and referenceId :${reference}`);
-      reject(e);
-    }
-  });
-};
+    };
