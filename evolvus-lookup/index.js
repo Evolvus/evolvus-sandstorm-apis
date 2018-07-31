@@ -127,7 +127,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 // ipAddress should ipAddress
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
-module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
+module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)} , skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
