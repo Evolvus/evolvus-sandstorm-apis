@@ -316,14 +316,41 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
+                      console.log("OBJECT", object);
                       collection.update(filterUser, object).then((result) => {
-                        if (result.nModified === 1) {
-                          debug(`User updated successfully ${JSON.stringify(result)}`);
-                          resolve(result);
-                        } else {
-                          debug(`Unable to update user ${userId}`);
-                          reject(`Unable to update user ${userId}`);
-                        }
+                        debug(`User updated successfully ${JSON.stringify(result)}`);
+                        var sweEventObject = {
+                          "tenantId": tenantId,
+                          "wfEntity": "USER",
+                          "wfEntityAction": "UPDATE",
+                          "createdBy": createdBy,
+                          "query": {
+                            "_id": user._id
+                          }
+                        };
+
+                        debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+                        sweClient.initialize(sweEventObject).then((sweResult) => {
+                          var filterUser = {
+                            "userId": result.userId
+                          };
+                          debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
+                          collection.update(filterUser, {
+                            "processingStatus": sweResult.data.wfInstanceStatus,
+                            "wfInstanceId": sweResult.data.wfInstanceId
+                          }).then((userObject) => {
+                            debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
+                            resolve(userObject);
+                          }).catch((e) => {
+                            var reference = shortid.generate();
+                            debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                            reject(e);
+                          });
+                        }).catch((e) => {
+                          var reference = shortid.generate();
+                          debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
+                          reject(e);
+                        });
                       }).catch((e) => {
                         var reference = shortid.generate();
                         debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
@@ -364,33 +391,6 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
   });
 };
 
-module.exports.updateWorkflow = (tenantId, id, update) => {
-  debug(`index update method: tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
-  return new Promise((resolve, reject) => {
-    try {
-      if (tenantId == null || id == null || update == null) {
-        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
-      }
-      var filterUser = {
-        "tenantId": tenantId,
-        "_id": id
-      };
-      debug(`calling db update method, filterUser: ${JSON.stringify(filterUser)},update: ${JSON.stringify(update)}`);
-      collection.update(filterUser, update).then((resp) => {
-        debug("updated successfully", resp);
-        resolve(resp);
-      }).catch((error) => {
-        var reference = shortid.generate();
-        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
-        reject(error);
-      });
-    } catch (e) {
-      var reference = shortid.generate();
-      debug(`try_catch failure due to :${e} and referenceId :${reference}`);
-      reject(e);
-    }
-  });
-};
 
 module.exports.updateWorkflow = (tenantId, id, update) => {
   debug(`index update method: tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
