@@ -269,7 +269,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           "entityCode": code
         };
         collection.update(query, update).then((resp) => {
-          debug("updated successfully", resp);
+          debug("updated successfully", result);
           var sweEventObject = {
             "tenantId": tenantId,
             "wfEntity": "ENTITY",
