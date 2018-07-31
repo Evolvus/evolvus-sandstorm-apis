@@ -179,7 +179,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       docketObject.name = "application_ExceptionOnFind";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = "application_Find";
       docketObject.details = `caught Exception on application_Find${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
@@ -212,7 +212,7 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
             throw new Error(`application ${update.applicationName} already exists`);
           }
           docketObject.name = "application_update";
-          docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+          docketObject.keyDataAsJSON = JSON.stringify(update);
           docketObject.details = `application creation initiated`;
           docketClient.postToDocket(docketObject);
           debug(`calling DB update method, filter :${code},update :${JSON.stringify(update)} are parameters`);
@@ -255,7 +255,7 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       docketObject.name = "application_ExceptionOnUpdate";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = JSON.stringify(update);
       docketObject.details = `caught Exception on application_Update${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
@@ -265,8 +265,8 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
 };
 
 
-module.exports.updateWorkflow = (tenantId, id, update) => {
-  debug(`index update method,tenantId :${tenantId}, id :${id}, update :${JSON.stringify(update)} are parameters`);
+module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy:${createdBy},ipAddress:${ipAddress}, id :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || id == null || update == null) {
@@ -277,7 +277,7 @@ module.exports.updateWorkflow = (tenantId, id, update) => {
         "_id": id
       };
       docketObject.name = "application_UpdateWorkFlow";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = JSON.stringify(update);
       docketObject.details = `application creation initiated`;
       docketClient.postToDocket(docketObject);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
@@ -291,7 +291,7 @@ module.exports.updateWorkflow = (tenantId, id, update) => {
       });
     } catch (e) {
       docketObject.name = "application_ExceptionOnUpdateWorkFlow";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = JSON.stringify(update);
       docketObject.details = `caught Exception on application_UpdateWorkFlow ${e.message}`;
       docketClient.postToDocket(docketObject);
       var reference = shortid.generate();
