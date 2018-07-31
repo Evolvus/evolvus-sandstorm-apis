@@ -75,7 +75,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
         "roleName": roleObject.roleName.toUpperCase()
       };
       roleObject.roleName = roleObject.roleName.toUpperCase();
-      Promise.all([application.find(tenantId, {
+      Promise.all([application.find(tenantId, createdBy, ipAddress, {
         "applicationCode": roleObject.applicationCode
       }, {}, 0, 1), collection.find(query, {}, 0, 1)]).then((result) => {
         if (_.isEmpty(result[0])) {
@@ -112,9 +112,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
               "wfEntity": "ROLE",
               "wfEntityAction": "CREATE",
               "createdBy": createdBy,
-              "query": {
-                "_id": result._id
-              }
+              "query": result._id
             };
             sweClient.initialize(sweEventObject).then((result) => {
               var filterRole = {
@@ -245,9 +243,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
               "wfEntity": "ROLE",
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
-              "query": {
-                "_id": result[0]._id
-              }
+              "query": result[0]._id
             };
             sweClient.initialize(sweEventObject).then((result) => {
               collection.update(filterRole, {

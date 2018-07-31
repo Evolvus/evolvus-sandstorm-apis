@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Evolvus/evolvus-role#readme",
   "dependencies": {
-    "@evolvus/evolvus-application": "^1.0.6",
+    "@evolvus/evolvus-application": "^1.0.9",
     "@evolvus/evolvus-docket-client": "^1.0.2",
     "@evolvus/evolvus-menu": "^1.0.5",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
