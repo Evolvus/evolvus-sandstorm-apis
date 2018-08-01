@@ -11,13 +11,12 @@ var lookupSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
+    minlength: 1,
     maxlength: 20
   },
-  wfInstanceStatus: {
+  processingStatus: {
     type: String,
-    minlength: 3,
-    maxlength: 20
+    default: "IN_PROGRESS"
   },
   lookupCode: {
     type: String,
@@ -73,7 +72,8 @@ var lookupSchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    default: '1'
+    enum: ["true", "false"],
+    default: "true"
   },
   createdBy: {
     type: String,

@@ -15,7 +15,6 @@ var lookupSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
       "maxLength": 20,
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
@@ -93,9 +92,11 @@ var lookupSchema = {
     },
     "enableFlag": {
       "type": "string",
-      "default": "1",
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "enum": ["true", "false"],
+      "default": "true",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "createdBy": {
       "type": "string",
