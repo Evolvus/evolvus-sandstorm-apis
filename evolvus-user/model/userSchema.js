@@ -15,6 +15,10 @@ var userSchema = {
       "sortable": false,
       "displayable": false
     },
+    "_id":{
+      "filterable": true,
+      "sortable": false,
+    },
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
