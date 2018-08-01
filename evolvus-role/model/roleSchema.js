@@ -14,6 +14,10 @@ var roleSchema = {
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
     },
+    "_id": {
+      "filterable": true, //custom attributes
+      "sortable": false //custom attribute
+    },
     "roleType": {
       "type": "string",
       "minLength": 5,

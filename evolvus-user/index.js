@@ -332,7 +332,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                         sweClient.initialize(sweEventObject).then((sweResult) => {
                           var filterUser = {
                             "tenantId": tenantId,
-                            "userId": result.userId
+                            "userId": user[0].userId
                           };
                           debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
                           collection.update(filterUser, {
