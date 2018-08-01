@@ -14,6 +14,10 @@ var entitySchema = {
       "filterable": true, //custom attributes
       "sortable": false //custom attribute
     },
+    "_id": {
+      "filterable": true, //custom attributes
+      "sortable": false //custom attribute
+    },
     "wfInstanceId": {
       "type": "string",
       "minLength": 0,
