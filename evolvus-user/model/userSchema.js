@@ -15,7 +15,7 @@ var userSchema = {
       "sortable": false,
       "displayable": false
     },
-    "_id":{
+    "_id": {
       "filterable": true,
       "sortable": false,
     },
@@ -491,12 +491,6 @@ var userSchema = {
                           "menuItemOrder": {
                             "type": "number",
                             "required": "true",
-                            "filterable": false, //custom attributes
-                            "sortable": false //custom attributes
-                          },
-                          "selectedFlag": {
-                            "type": "string",
-                            "enum": ["0", "1"],
                             "filterable": false, //custom attributes
                             "sortable": false //custom attributes
                           }
