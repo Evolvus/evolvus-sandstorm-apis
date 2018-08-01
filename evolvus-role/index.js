@@ -116,7 +116,8 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
             };
             sweClient.initialize(sweEventObject).then((result) => {
               var filterRole = {
-                "roleName": object.roleName.toUpperCase()
+                "tenantId": tenantId,
+                "roleName": object.roleName
               };
               collection.update(filterRole, {
                 "processingStatus": result.data.wfInstanceStatus,
@@ -217,7 +218,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         "roleName": code.toUpperCase()
       };
       var filterRole = {
-        "tenantId": teanantId,
+        "tenantId": tenantId,
         "roleName": code.toUpperCase()
       };
       collection.find(query, {}, 0, 1)
@@ -294,7 +295,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       }
       var filterRole = {
         "tenantId": tenantId,
-        "id": id
+        "_id": id
       };
       docketObject.name = "role_updateWorkflow";
       docketObject.ipAddress = ipAddress;
