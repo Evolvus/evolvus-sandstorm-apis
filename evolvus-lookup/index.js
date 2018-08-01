@@ -5,9 +5,9 @@ const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const shortid = require('shortid');
+const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("lookup", dbSchema);
-
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -99,7 +99,33 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
         debug("calling db save method and parameter is object ", object);
         collection.save(object).then((result) => {
           debug(`saved successfully ${result}`);
-          resolve(result);
+          var sweEventObject = {
+            "tenantId": tenantId,
+            "wfEntity": "LOOKUP",
+            "wfEntityAction": "CREATE",
+            "createdBy": createdBy,
+            "query": result.lookupCode
+          };
+          sweClient.initialize(sweEventObject).then((result) => {
+            console.log(result, "result");
+            var filterLookup = {
+              "lookupCode": lookupObject.lookupCode
+            };
+            collection.update(filterLookup, {
+              "processingStatus": result.data.wfInstanceStatus,
+              "wfInstanceId": result.data.wfInstanceId
+            }).then((result) => {
+              resolve(result);
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
+          }).catch((e) => {
+            var reference = shortid.generate();
+            debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+            reject(e);
+          });
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
@@ -128,7 +154,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 // filter should only have fields which are marked as filterable in the model Schema
 // orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
-  debug(`index find method,tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)} , skipCount :${skipCount}, limit :${limit} are parameters`);
+  debug(`index find method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)},ipAddress :${JSON.stringify(ipAddress)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       var invalidFilters = _.difference(_.keys(filter), filterAttributes);
@@ -136,16 +162,86 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       collection.find(query, orderby, skipCount, limit).then((docs) => {
-        debug(`contact(s) stored in the database are ${docs}`);
+        debug(`lookup(s) stored in the database are ${docs}`);
         resolve(docs);
       }).catch((e) => {
         var reference = shortid.generate();
-        debug(`findAll promise failed due to : ${e}, and referenceid is ${reference}`);
+        debug(`failed to find all the lookup(s) ${e} and reference id : ${reference}`);
         reject(e);
       });
     } catch (e) {
       var reference = shortid.generate();
-      debug(`try catch failed due to : ${e}, and referenceid is ${reference}`);
+      debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
+  debug(`index update method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${JSON.stringify(createdBy)},code :${code}, update :${JSON.stringify(update)} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || code == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
+      }
+
+      let query = {
+        "tenantId": tenantId,
+        "lookupCode": code
+      };
+      debug(`calling db find method, query :${JSON.stringify(query)},orderby :${orderby},skipCount :${skipCount},limit :${limit} are parameters`);
+      collection.find(query, {}, 0, 1)
+        .then((result) => {
+          if (_.isEmpty(result[0])) {
+            throw new Error(`Unable to Update lookup already exists `);
+          }
+          debug(`calling db update method,code :${code},update :${update} parameter`);
+          collection.update(query, update).then((resp) => {
+            debug("updated successfully", resp);
+            resolve(resp);
+          }).catch((error) => {
+            var reference = shortid.generate();
+            debug(`update promise failed due to :${error},and reference id ${reference}`);
+            debug(`failed to update ${error}`);
+            reject(error);
+          });
+        }).catch((error) => {
+          var reference = shortid.generate();
+          debug(`find promise failed due to ${error} and referenceId :${reference}`);
+          reject(error);
+        });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${error},and reference id ${reference}`);
+      debug(`caught exception ${e}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => {
+  debug(`index updateWorkflow method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${JSON.stringify(createdBy)},code :${code}, update :${JSON.stringify(update)} are parameters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || id == null || update == null) {
+        throw new Error("IllegalArgumentException:tenantId/id/update is null or undefined");
+      }
+      var filterRole = {
+        "tenantId": tenantId,
+        "_id": id
+      };
+      debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
+      collection.update(filterRole, update).then((resp) => {
+        debug("updated successfully", resp);
+        resolve(resp);
+      }).catch((error) => {
+        var reference = shortid.generate();
+        debug(`update promise failed due to ${error}, and reference Id :${reference}`);
+        reject(error);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
   });

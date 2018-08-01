@@ -104,6 +104,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
                 "wfEntityAction": "CREATE",
                 "createdBy": createdBy,
                 "query": result._id
+
               };
               sweClient.initialize(sweEventObject).then((result) => {
                 var filterApplication = {
@@ -164,7 +165,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       docketObject.name = "application_find";
-      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
+      docketObject.keyDataAsJSON = "application_find";
       docketObject.details = `application creation initiated`;
       docketClient.postToDocket(docketObject);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
@@ -179,7 +180,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       docketObject.name = "application_ExceptionOnFind";
-      docketObject.keyDataAsJSON = "application_Find";
+      docketObject.keyDataAsJSON = JSON.stringify(applicationObject);
       docketObject.details = `caught Exception on application_Find${e.message}`;
       docketClient.postToDocket(docketObject);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
@@ -191,7 +192,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
 
 
 module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
-  debug(`index update method,tenantId :${tenantId}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+  debug(`index update method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${JSON.stringify(createdBy)}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
@@ -265,8 +266,8 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
 };
 
 
-module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
-  debug(`index update method,tenantId :${tenantId},createdBy:${createdBy},ipAddress:${ipAddress}, id :${id}, update :${JSON.stringify(update)} are parameters`);
+module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => {
+  debug(`index update method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${createdBy}, id :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || id == null || update == null) {
