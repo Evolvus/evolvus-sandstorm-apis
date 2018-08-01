@@ -13,6 +13,10 @@ var applicationSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
     },
+    "_id": {
+      "filterable": true, //custom attributes
+      "sortable": false
+    },
     "processingStatus": {
       "type": "string",
       "default": "IN_PROGRESS",
