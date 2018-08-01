@@ -135,8 +135,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
               },
               "entityCode": entityObject.entityCode
             };
-            throw new Error(`Entity code ${entityObject.entityCode} already exists`);
-            throw new Error(`Entity name ${entityObject.name} already exists`);
             debug(`calling db find query2 :${JSON.stringify(query2)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             debug(`calling db find query3 :${JSON.stringify(query3)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
