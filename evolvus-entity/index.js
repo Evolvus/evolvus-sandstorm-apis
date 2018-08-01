@@ -115,21 +115,37 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
             entityObject.entityId = result[0].entityId + randomId;
             entityObject.name = entityObject.name.toUpperCase();
             entityObject.entityCode = entityObject.entityCode.toUpperCase();
-            let query2 = _.merge(query, {
+            let query2 = {
+              "tenantId": tenantId,
+              "entityId": {
+                $regex: entityId + ".*"
+              },
+              "accessLevel": {
+                $gte: accessLevel
+              },
               "name": entityObject.name,
-            });
-            let query3 = _.merge(query, {
+            };
+            let query3 = {
+              "tenantId": tenantId,
+              "entityId": {
+                $regex: entityId + ".*"
+              },
+              "accessLevel": {
+                $gte: accessLevel
+              },
               "entityCode": entityObject.entityCode
-            });
+            };
+            throw new Error(`Entity code ${entityObject.entityCode} already exists`);
+            throw new Error(`Entity name ${entityObject.name} already exists`);
             debug(`calling db find query2 :${JSON.stringify(query2)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             debug(`calling db find query3 :${JSON.stringify(query3)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
             Promise.all([collection.find(query2, {}, 0, 1), collection.find(query3, {}, 0, 1)])
               .then((result) => {
                 if (!_.isEmpty(result[0][0])) {
-                  throw new Error(`Entity ${entityObject.name} already exists`);
+                  throw new Error(`Entity Name ${entityObject.name} already exists`);
                 }
                 if (!_.isEmpty(result[1][0])) {
-                  throw new Error(`Entity ${entityObject.entityCode} already exists`);
+                  throw new Error(`Entity Code ${entityObject.entityCode} already exists`);
                 }
                 // if the object is valid, save the object to the database
                 docketObject.name = "entity_save";
@@ -267,39 +283,51 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         "tenantId": tenantId,
         "entityCode": code
       };
-      collection.update(query, update).then((resp) => {
-        debug("updated successfully", result);
-        var sweEventObject = {
-          "tenantId": tenantId,
-          "wfEntity": "ENTITY",
-          "wfEntityAction": "UPDATE",
-          "createdBy": createdBy,
-          "query": result._id
-        };
-        debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
-        sweClient.initialize(sweEventObject).then((result) => {
-          debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
-          collection.update(query, {
-            "processingStatus": result.data.wfInstanceStatus,
-            "wfInstanceId": result.data.wfInstanceId
-          }).then((result) => {
-            resolve(result);
+      collection.find(query, {}, 0, 1).then((result) => {
+        if (result.length != 0) {
+          collection.update(query, update).then((resp) => {
+            debug("updated successfully", resp);
+            var sweEventObject = {
+              "tenantId": tenantId,
+              "wfEntity": "ENTITY",
+              "wfEntityAction": "UPDATE",
+              "createdBy": createdBy,
+              "query": result[0]._id
+            };
+            debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+            sweClient.initialize(sweEventObject).then((result) => {
+              debug(`calling db update query :${JSON.stringify(query)} is a parameter`);
+              collection.update(query, {
+                "processingStatus": result.data.wfInstanceStatus,
+                "wfInstanceId": result.data.wfInstanceId
+              }).then((result) => {
+                resolve(result);
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`update promise failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
+
           }).catch((e) => {
             var reference = shortid.generate();
-            debug(`update promise failed due to :${e} and referenceId :${reference}`);
+            debug(`collection update failed due to :${e} and referenceId :${reference}`);
             reject(e);
           });
-        }).catch((e) => {
-          var reference = shortid.generate();
-          debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
-          reject(e);
-        });
-
+        } else {
+          debug("No entity found matching the entityCode " + code);
+          reject("No entity found matching the entityCode " + code);
+        }
       }).catch((e) => {
         var reference = shortid.generate();
-        debug(`collection update failed due to :${e} and referenceId :${reference}`);
+        debug(`collection find failed due to :${e} and referenceId :${reference}`);
         reject(e);
       });
+
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
@@ -312,10 +340,10 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
       reject(e);
     }
   });
-}
+};
 
 module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
-  debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
+  debug(`index update method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress}, id :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || id == null || update == null) {
