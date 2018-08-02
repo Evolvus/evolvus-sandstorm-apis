@@ -149,7 +149,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                                 "wfInstanceId": sweResult.data.wfInstanceId
                               }).then((userObject) => {
                                 debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
-                                resolve(userObject);
+                                resolve(savedObject);
                               }).catch((e) => {
                                 var reference = shortid.generate();
                                 debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
@@ -430,11 +430,11 @@ module.exports.authenticate = (credentials) => {
       if (credentials == null || typeof credentials === 'undefined') {
         throw new Error("IllegalArgumentException:Input credentials is null or undefined");
       }
-      if (credentials.userId != null) {
-        credentials.userId = credentials.userId.toUpperCase();
+      if (credentials.userName != null) {
+        credentials.userName = credentials.userName.toUpperCase();
       }
       let query = {
-        "userId": credentials.userId,
+        "userId": credentials.userName,
         "enabledFlag": "true",
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
