@@ -118,6 +118,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       bcrypt.genSalt(10, function(err, salt) {
                         bcrypt.hash(object.userPassword, salt, function(err, hash) {
@@ -239,7 +240,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       });
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         let filteredArray = _.map(docs, function(object) {
-          return _.omit(object, "userPassword", "token", "saltString");
+          return _.omit(object.toJSON(), "userPassword", "token", "saltString");
         });
         debug(`User(s) stored in the database are ${filteredArray}`);
         resolve(filteredArray);
@@ -434,7 +435,7 @@ module.exports.authenticate = (credentials) => {
       }
       let query = {
         "userId": credentials.userId,
-        "enabledFlag": 1,
+        "enabledFlag": "true",
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
