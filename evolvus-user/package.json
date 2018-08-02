@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-user",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "User encapsulates User functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
