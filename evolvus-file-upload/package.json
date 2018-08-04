@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-file-upload",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "fileUpload encapsulates fileUpload functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
