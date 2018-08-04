@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-file-upload",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "fileUpload encapsulates fileUpload functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "mongoose": "^5.2.2",
     "moongoose": "0.0.5",
     "shortid": "^2.2.12",
+    "standard-version": "^4.4.0",
     "validator": "^9.4.1"
   },
   "devDependencies": {
