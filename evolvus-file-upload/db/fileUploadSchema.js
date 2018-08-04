@@ -39,11 +39,11 @@ var fileUploadSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  totalProcessedUserCount: {
+  totalProcessedCount: {
     type: String,
     required: false
   },
-  totalFailedUserCount: {
+  totalFailedCount: {
     type: String,
     required: false
   },
@@ -84,6 +84,13 @@ var fileUploadSchema = new mongoose.Schema({
     type: Date,
     required: false
   }
+});
+
+fileUploadSchema.index({
+  tenantId: 1,
+  fileName: 1
+}, {
+  unique: true
 });
 
 module.exports = fileUploadSchema;

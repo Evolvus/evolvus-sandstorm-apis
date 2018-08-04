@@ -52,12 +52,12 @@ var fileUploadSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
     },
-    "totalProcessedUserCount": {
+    "totalProcessedCount": {
       "type": "string",
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
     },
-    "totalFailedUserCount": {
+    "totalFailedCount": {
       "type": "string",
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
