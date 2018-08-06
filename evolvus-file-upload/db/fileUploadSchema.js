@@ -7,6 +7,14 @@ var fileUploadSchema = new mongoose.Schema({
     type: String,
     required: false
   },
+  entityId: {
+    type: String,
+    required: false
+  },
+  accessLevel: {
+    type: String,
+    required: false
+  },
   wfInstanceId: {
     type: String,
     required: false

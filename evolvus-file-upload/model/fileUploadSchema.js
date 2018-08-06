@@ -12,6 +12,17 @@ var fileUploadSchema = {
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
     },
+    "entityId": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+
+    "accessLevel": {
+      "type": "string",
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
     "wfInstanceId": {
       "type": "string",
       "filterable": true, //custom attributes
