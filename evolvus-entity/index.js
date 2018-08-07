@@ -8,7 +8,7 @@ const randomString = require("randomstring");
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require("shortid");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
-const collection = new Dao("entity", dbSchema);
+const collection = new Dao("entitycol", dbSchema);
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
@@ -103,9 +103,12 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
         let query1 = _.merge(query, {
           "name": entityObject.parent
         });
+
         debug(`calling db find query1 :${JSON.stringify(query1)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
         collection.find(query1, {}, 0, 1).then((result) => {
+
           if (_.isEmpty(result)) {
+
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
           var randomId = randomString.generate(5);
@@ -225,7 +228,10 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
 module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress},entityId :${entityId},accessLevel :${accessLevel},  filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
-    try {
+      try {
+        if (tenantId == null) {
+          throw new Error("IllegalArgumentException: tenantId is null or undefined");
+        }
       docketObject.name = "Entity_getAll";
       docketObject.ipAddress = ipAddress;
       docketObject.createdBy = createdBy;
@@ -235,14 +241,14 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      query.accessLevel = {
-        $gte: accessLevel
-      };
-      query.entityId = {
-        $regex: entityId + ".*"
-      };
-
-      var invalidFilters = _.difference(_.keys(filter), filterAttributes);
+      accessLevel=_.get(filter,"accessLevel",accessLevel);
+        query.accessLevel = {
+          $gte: accessLevel
+        };
+      entityId=_.get(filter,"entityId",entityId);
+        query.entityId = {
+          $regex: entityId + ".*"
+        };
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`entity(s) stored in the database are ${docs}`);
         resolve(docs);

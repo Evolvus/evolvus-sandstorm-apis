@@ -86,7 +86,6 @@ var entitySchema = {
     },
     "accessLevel": {
       "type": "string",
-      "type": "string",
       "minLength": 1,
       "maxLength": 10,
       "filterable": true, //custom attributes
