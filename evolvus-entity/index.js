@@ -4,35 +4,27 @@ const dbSchema = require("./db/entitySchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
+const audit = require("@evolvus/evolvus-docket-client").audit;
 const randomString = require("randomstring");
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require("shortid");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("entitycol", dbSchema);
+
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-var docketObject = {
-  // required fields
-  contact: "PLATFORM",
-  source: "contact",
-  name: "",
-  createdBy: "",
-  ipAddress: "",
-  status: "SUCCESS", //by default
-  eventDateTime: Date.now(),
-  keyDataAsJSON: "",
-  details: "",
-  //non required fields
-  level: ""
-};
+audit.application = "SANDSTORM_CONSOLE";
+audit.source = "ENTITY";
+
 module.exports = {
   model,
   dbSchema,
   filterAttributes,
   sortAttributes
 };
+
 module.exports.validate = (tenantId, entityObject) => {
   debug(`index validate method.entityObject :${JSON.stringify(entityObject)} is a parameter`);
   return new Promise((resolve, reject) => {
@@ -73,6 +65,14 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
       if (typeof object === 'undefined' || object == null) {
         throw new Error("IllegalArgumentException: object is null or undefined");
       }
+      audit.name = "ENTITY_SAVE INITIALIZED";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(object);
+      audit.details = `entity save is initiated`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       let entityObject = _.merge(object, {
         "tenantId": tenantId
       });
@@ -149,10 +149,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
                   throw new Error(`Entity Code ${entityObject.entityCode} already exists`);
                 }
                 // if the object is valid, save the object to the database
-                docketObject.name = "entity_save";
-                docketObject.keyDataAsJSON = JSON.stringify(entityObject);
-                docketObject.details = `entity creation initiated`;
-                docketClient.postToDocket(docketObject);
                 debug(`calling db save entityObject :${JSON.stringify(entityObject)} is a parameter`);
                 collection.save(entityObject).then((result) => {
                   debug(`saved successfully ${result}`);
@@ -210,12 +206,14 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
-      docketObject.name = "Entity_ExceptionOnSave";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(entityObject);
-      docketObject.details = `caught Exception on user_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_EXCEPTION_ON_SAVE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(object);
+      audit.details = `caught Exception on entity_save ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       reject(e);
     }
   });
@@ -228,27 +226,29 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
 module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId},createdBy : ${createdBy}, ipAddress : ${ipAddress},entityId :${entityId},accessLevel :${accessLevel},  filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
-      try {
-        if (tenantId == null) {
-          throw new Error("IllegalArgumentException: tenantId is null or undefined");
-        }
-      docketObject.name = "Entity_getAll";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
-      docketObject.details = `Entity getAll method`;
-      docketClient.postToDocket(docketObject);
+    try {
+      if (tenantId == null) {
+        throw new Error("IllegalArgumentException: tenantId is null or undefined");
+      }
+      audit.name = "ENTITY_FIND INITIALIZED";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
+      audit.details = `entity getAll method`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      accessLevel=_.get(filter,"accessLevel",accessLevel);
-        query.accessLevel = {
-          $gte: accessLevel
-        };
-      entityId=_.get(filter,"entityId",entityId);
-        query.entityId = {
-          $regex: entityId + ".*"
-        };
+      accessLevel = _.get(filter, "accessLevel", accessLevel);
+      query.accessLevel = {
+        $gte: accessLevel
+      };
+      entityId = _.get(filter, "entityId", entityId);
+      query.entityId = {
+        $regex: entityId + ".*"
+      };
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`entity(s) stored in the database are ${docs}`);
         resolve(docs);
@@ -260,12 +260,14 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
-      docketObject.name = "Entity_ExceptionOngetAll";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = "EntityObject";
-      docketObject.details = `caught Exception on user_getAll ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_EXCEPTION_ON_FIND";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
+      audit.details = `caught Exception on Entity_getAll ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       reject(e);
     }
   });
@@ -279,10 +281,14 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
       if (code == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      docketObject.name = "entity_update";
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `entity updation initiated`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_UPDATE INITIALIZED";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update entity with  ${JSON.stringify(update)}`;
+      audit.details = `entity update method`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       let query = {
         "tenantId": tenantId,
         "entityCode": code
@@ -335,12 +341,14 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
-      docketObject.name = "Entity_ExceptionOnUpdate";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `caught Exception on user_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_EXCEPTION_ON_UPDATE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update entity with object ${JSON.stringify(update)}`;
+      audit.details = `caught Exception on entity update ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       reject(e);
     }
   });
@@ -353,10 +361,14 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       if (tenantId == null || id == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
-      docketObject.name = "entity_updateWorkFlow";
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `entity workFlowUpdation initiated`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_WORKFLOW_UPDATE INITIALIZED";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update entity with  ${JSON.stringify(update)}`;
+      audit.details = `entity update method`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       var filterEntity = {
         "tenantId": tenantId,
         "_id": id
@@ -373,12 +385,14 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
     } catch (e) {
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
-      docketObject.name = "Entity_ExceptionOnUpdate";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `caught Exception on user_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ENTITY_EXCEPTION_ON_WORKFLOWUPDATE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update entity with object ${JSON.stringify(update)}`;
+      audit.details = `caught Exception on entity_update ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       reject(e);
     }
   });
