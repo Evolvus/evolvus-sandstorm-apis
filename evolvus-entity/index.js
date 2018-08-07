@@ -9,7 +9,7 @@ const randomString = require("randomstring");
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require("shortid");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
-const collection = new Dao("entitycol", dbSchema);
+const collection = new Dao("entity", dbSchema);
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
