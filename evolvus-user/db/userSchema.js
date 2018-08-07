@@ -19,7 +19,7 @@ var userSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
-    unique:true,
+    unique: true,
     required: true,
     min: 6,
     max: 35,
@@ -91,14 +91,14 @@ var userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  selectedFlag:{
-    type:Boolean,
-    default:false
+  selectedFlag: {
+    type: Boolean,
+    default: false
   },
   activationStatus: {
     type: String,
     enum: ["ACTIVE", "INACTIVE"],
-    default: "ACTIVE"
+    default: "INACTIVE"
   },
   processingStatus: {
     type: String,

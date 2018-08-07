@@ -156,6 +156,7 @@ var userSchema = {
         "ACTIVE",
         "INACTIVE"
       ],
+      "default": "INACTIVE",
       "filterable": true,
       "sortable": false,
       "displayable": true
