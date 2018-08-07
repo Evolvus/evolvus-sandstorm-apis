@@ -51,7 +51,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -61,7 +61,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -74,7 +74,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }

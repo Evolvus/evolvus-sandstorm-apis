@@ -118,6 +118,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       bcrypt.genSalt(10, function(err, salt) {
                         bcrypt.hash(object.userPassword, salt, function(err, hash) {
@@ -148,7 +149,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                                 "wfInstanceId": sweResult.data.wfInstanceId
                               }).then((userObject) => {
                                 debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
-                                resolve(userObject);
+                                resolve(savedObject);
                               }).catch((e) => {
                                 var reference = shortid.generate();
                                 debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
@@ -239,7 +240,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       });
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         let filteredArray = _.map(docs, function(object) {
-          return _.omit(object, "userPassword", "token", "saltString");
+          return _.omit(object.toJSON(), "userPassword", "token", "saltString");
         });
         debug(`User(s) stored in the database are ${filteredArray}`);
         resolve(filteredArray);
@@ -429,12 +430,12 @@ module.exports.authenticate = (credentials) => {
       if (credentials == null || typeof credentials === 'undefined') {
         throw new Error("IllegalArgumentException:Input credentials is null or undefined");
       }
-      if (credentials.userId != null) {
-        credentials.userId = credentials.userId.toUpperCase();
+      if (credentials.userName != null) {
+        credentials.userName = credentials.userName.toUpperCase();
       }
       let query = {
-        "userId": credentials.userId,
-        "enabledFlag": 1,
+        "userId": credentials.userName,
+        "enabledFlag": "true",
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
