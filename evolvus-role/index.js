@@ -5,6 +5,7 @@ const dbSchema = require("./db/roleSchema");
 const shortid = require("shortid");
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
+const audit = require("@evolvus/evolvus-docket-client").audit;
 const application = require("@evolvus/evolvus-application");
 const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
@@ -14,20 +15,9 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-var docketObject = {
-  // required fields
-  role: "PLATFORM",
-  source: "role",
-  name: "",
-  createdBy: "",
-  ipAddress: "",
-  status: "SUCCESS", //by default
-  eventDateTime: Date.now(),
-  keyDataAsJSON: "",
-  details: "",
-  //non required fields
-  level: ""
-};
+audit.application = "SANDSTORM_CONSOLE";
+audit.source = "ROLE";
+
 module.exports = {
   model,
   dbSchema,
@@ -84,12 +74,14 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
         if (!_.isEmpty(result[1])) {
           throw new Error(`RoleName ${roleObject.roleName} already exists`);
         }
-        docketObject.name = "role_save";
-        docketObject.ipAddress = ipAddress;
-        docketObject.createdBy = createdBy;
-        docketObject.keyDataAsJSON = JSON.stringify(roleObject);
-        docketObject.details = `role creation initiated`;
-        docketClient.postToDocket(docketObject);
+        audit.name = "ROLE_SAVE";
+        audit.ipAddress = ipAddress;
+        audit.createdBy = createdBy;
+        audit.keyDataAsJSON = JSON.stringify(roleObject);
+        audit.eventDateTime = Date.now();
+        audit.status = "SUCCESS";
+        audit.details = `role creation initiated`;
+        docketClient.postToDocket(audit);
         let object = _.merge(roleObject, {
           "tenantId": tenantId
         });
@@ -149,12 +141,14 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} and referenceId :${reference}`);
-      docketObject.name = "role_ExceptionOnSave";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(roleObject);
-      docketObject.details = `caught Exception on role_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ROLE_EXCEPTIONONSAVE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(roleObject);
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on role_save ${e.message}`;
+      docketClient.postToDocket(audit);
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -177,12 +171,14 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      docketObject.name = "role_getAll";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
-      docketObject.details = `role getAll method`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ROLE_GETALL";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `getAll with limit ${limit}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      audit.details = `role getAll method`;
+      docketClient.postToDocket(audit);
       debug(`calling db find method, filter: ${JSON.stringify(filter)},orderby: ${orderby}, skipCount: ${skipCount},limit: ${limit}`);
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`role(s) stored in the database are ${docs}`);
@@ -195,12 +191,14 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       debug(`index find method, try_catch failure due to :${e} and referenceId :${reference}`);
-      docketObject.name = "role_ExceptionOngetAll";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = "roleObject";
-      docketObject.details = `caught Exception on role_getAll ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ROLE_EXCEPTIONONGETALL";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `getAll with limit ${limit}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on role_getAll ${e.message}`;
+      docketClient.postToDocket(audit);
       reject(e);
     }
   });
@@ -224,33 +222,36 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
-            throw new Error(`Role ${code.toUpperCase()},  already exists `);
+            throw new Error(`Role ${code.toUpperCase()}, not found `);
           }
-          if ((!_.isEmpty(result[0])) && (result[0].roleName != code)) {
+          if ((!_.isEmpty(result[0])) && (result[0].roleName != code.toUpperCase())) {
             throw new Error(`Role ${update.roleName.toUpperCase()} already exists`);
           }
-          docketObject.name = "role_update";
-          docketObject.ipAddress = ipAddress;
-          docketObject.createdBy = createdBy;
-          docketObject.keyDataAsJSON = JSON.stringify(update);
-          docketObject.details = `role updation initiated`;
-          docketClient.postToDocket(docketObject);
+          audit.name = "ROLE_UPDATE";
+          audit.ipAddress = ipAddress;
+          audit.createdBy = createdBy;
+          audit.keyDataAsJSON = JSON.stringify(update);
+          audit.eventDateTime = Date.now();
+          audit.status = "SUCCESS";
+          audit.details = `role updation initiated`;
+          docketClient.postToDocket(audit);
           debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
           collection.update(filterRole, update).then((resp) => {
             debug("updated successfully", resp);
-            resolve(resp);
             var sweEventObject = {
               "tenantId": tenantId,
               "wfEntity": "ROLE",
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
-              "query": result[0]._id
+              "query": result[0]._id,
+              "object": result
             };
             sweClient.initialize(sweEventObject).then((result) => {
               collection.update(filterRole, {
                 "processingStatus": result.data.wfInstanceStatus,
                 "wfInstanceId": result.data.wfInstanceId
               }).then((result) => {
+                debug("updated successfully", result);
                 resolve(result);
               }).catch((e) => {
                 var reference = shortid.generate();
@@ -274,13 +275,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
+      audit.name = "ROLE_EXCEPTIONONUPDATE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on role_update ${e.message}`;
+      docketClient.postToDocket(audit);
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
-      docketObject.name = "role_ExceptionOnUpdate";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `caught Exception on role_update ${e.message}`;
-      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });
@@ -297,12 +300,14 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      docketObject.name = "role_updateWorkflow";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `role workflow updation initiated`;
-      docketClient.postToDocket(docketObject);
+      audit.name = "ROLE_UPDATEWORKFLOW";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      audit.details = `role workflow updation initiated`;
+      docketClient.postToDocket(audit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
       collection.update(filterRole, update).then((resp) => {
         debug("updated successfully", resp);
@@ -314,13 +319,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       });
     } catch (e) {
       var reference = shortid.generate();
+      audit.name = "ROLE_EXCEPTIONON_UPDATEWORKFLOW";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on role_updateWorkflow ${e.message}`;
+      docketClient.postToDocket(audit);
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
-      docketObject.name = "role_ExceptionOnUpdateWorkflow";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = JSON.stringify(update);
-      docketObject.details = `caught Exception on role_updateWorkflow ${e.message}`;
-      docketClient.postToDocket(docketObject);
       reject(e);
     }
   });

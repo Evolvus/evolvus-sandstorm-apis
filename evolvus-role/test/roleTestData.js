@@ -1,11 +1,10 @@
 module.exports.validObject1 = {
   // valid role object
-  "tenantId": "T001",
+  "tenantId": "IVL",
   "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "CDA",
+  "applicationCode": "DOCKET",
   "wfInstanceId": "",
-  "wfInstanceStatus": "INITIALIZE",
   "enableFlag": "true",
   "roleName": "admin_One",
   "roleType": "CHECKER",
@@ -43,9 +42,9 @@ module.exports.validObject1 = {
 module.exports.validObject2 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
-  "accessLevel": "1",
-  "applicationCode": "CDA",
+  "entityId": "H001B001",
+  "accessLevel": "2",
+  "applicationCode": "DOCKETDOCKET",
   "enableFlag": "true",
   "roleName": "admin_Two",
   "roleType": "CHECKER",
@@ -54,7 +53,7 @@ module.exports.validObject2 = {
   "wfInstanceStatus": "wfStatus",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc1",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -62,13 +61,13 @@ module.exports.validObject2 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemOrder": 1,
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemOrder": 2,
       "menuItemCode": "mic",
       "title": "menuItem title"
@@ -85,18 +84,18 @@ module.exports.validObject2 = {
 module.exports.validObject3 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "enableFlag": "true",
-  "accessLevel": "1",
+  "accessLevel": "2",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
-  "applicationCode": "FLUX",
+  "applicationCode": "DOCKET",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
   "roleName": "admin_Three",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -104,12 +103,12 @@ module.exports.validObject3 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
@@ -125,10 +124,10 @@ module.exports.validObject3 = {
 module.exports.validObject4 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "enableFlag": "true",
-  "applicationCode": "ASBA",
+  "enableFlag": "false",
+  "applicationCode": "DOCKET",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
   "wfInstanceId": "wfID",
@@ -136,7 +135,7 @@ module.exports.validObject4 = {
   "roleName": "admin_Four",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -144,12 +143,12 @@ module.exports.validObject4 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
@@ -165,18 +164,18 @@ module.exports.validObject4 = {
 module.exports.validObject5 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "CDA-CONSOLE",
+  "applicationCode": "DOCKET",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
   "roleName": "admin_Five",
-  "enableFlag": "true",
+  "enableFlag": "false",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -184,12 +183,12 @@ module.exports.validObject5 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
@@ -205,9 +204,9 @@ module.exports.validObject5 = {
 module.exports.validObject6 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "RTP-CONSOLE",
+  "applicationCode": "DOCKET",
   "roleName": "admin_SIX",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
@@ -216,7 +215,7 @@ module.exports.validObject6 = {
   "enableFlag": "true",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -224,12 +223,12 @@ module.exports.validObject6 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
@@ -245,9 +244,9 @@ module.exports.validObject6 = {
 module.exports.validObject7 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "FLUX-CONSOLE",
+  "applicationCode": "DOCKET",
   "roleName": "admin_Seven",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
@@ -256,7 +255,7 @@ module.exports.validObject7 = {
   "enableFlag": "true",
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc1",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -264,12 +263,12 @@ module.exports.validObject7 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
@@ -285,9 +284,9 @@ module.exports.validObject7 = {
 module.exports.validObject8 = {
   // valid role object
   "tenantId": "IVL",
-  "entityId": "Entity2",
+  "entityId": "H001B001",
   "accessLevel": "1",
-  "applicationCode": "FLUX-CONSOLE",
+  "applicationCode": "DOCKET",
   "roleName": "admin_Eight",
   "roleType": "CHECKER",
   "txnType": "[BANKING]",
@@ -296,7 +295,7 @@ module.exports.validObject8 = {
   "enableFlag": 0,
   "menuGroup": [{
     "tenantId": "tid",
-    "applicationCode": "CDA",
+    "applicationCode": "DOCKET",
     "menuGroupCode": "mgc",
     "menuGroupOrder": 1,
     "createdDate": new Date().toISOString(),
@@ -304,12 +303,12 @@ module.exports.validObject8 = {
     "title": "menugroup title",
     "menuItems": [{
       "menuItemType": "queues",
-      "applicationCode": "CDA",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }, {
       "menuItemType": "queues",
-      "applicationCode": "RTP",
+      "applicationCode": "DOCKET",
       "menuItemCode": "mic",
       "title": "menuItem title"
     }]
