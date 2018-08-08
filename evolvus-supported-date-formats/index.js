@@ -13,19 +13,18 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 var docketObject = {
-  // required fields
+
   supportedDateFormats: "PLATFORM",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+  wfInstanceStatus: "wfStatus",
+  wfInstanceId: "wfID",
   source: "supportedDateFormats",
   name: "",
   createdBy: "",
   ipAddress: "",
-  status: "SUCCESS", //by default
+  status: "SUCCESS",
   eventDateTime: Date.now(),
   keyDataAsJSON: "",
   details: "",
-  //non required fields
   level: ""
 };
 
@@ -67,8 +66,6 @@ module.exports.save = (tenantId, supportedDateFormatsObject) => {
       if (!res.valid) {
         reject(res.errors);
       } else {
-        // if the object is valid, save the object to the database
-
         docketObject.name = "supportedDateFormats_save";
         docketObject.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
         docketObject.details = `supportedDateFormats creation initiated`;
@@ -84,7 +81,7 @@ module.exports.save = (tenantId, supportedDateFormatsObject) => {
           reject(e);
         });
       }
-      // Other validations here
+
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId is :${reference}`);
@@ -99,11 +96,7 @@ module.exports.save = (tenantId, supportedDateFormatsObject) => {
 };
 
 
-// tenantId should be valid
-// createdBy should be requested user, not database object user, used for auditObject
-// ipAddress should ipAddress
-// filter should only have fields which are marked as filterable in the model Schema
-// orderby should only have fields which are marked as sortable in the model Schema
+
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   debug(`index find method. tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount},  limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {

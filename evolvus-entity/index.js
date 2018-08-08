@@ -9,7 +9,7 @@ const randomString = require("randomstring");
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require("shortid");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
-const collection = new Dao("entitycol", dbSchema);
+const collection = new Dao("entity", dbSchema);
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -241,11 +241,11 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      accessLevel = _.get(filter, "accessLevel", accessLevel);
+      // accessLevel = _.get(filter, "accessLevel", accessLevel);
       query.accessLevel = {
         $gte: accessLevel
       };
-      entityId = _.get(filter, "entityId", entityId);
+      // entityId = _.get(filter, "entityId", entityId);
       query.entityId = {
         $regex: entityId + ".*"
       };

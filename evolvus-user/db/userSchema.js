@@ -14,7 +14,6 @@ var userSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
     maxlength: 20
   },
   userId: {
@@ -47,12 +46,6 @@ var userSchema = new mongoose.Schema({
     type: String,
     min: 6,
     max: 140,
-    validate: {
-      validator: function(v) {
-        return /^[a-zA-Z0-9 !@#$&()\\-`.+,/\"]*$/.test(v);
-      },
-      message: "{PATH} can contain only alphanumeric and specialcharacters"
-    },
     required: true
   },
   userPassword: {

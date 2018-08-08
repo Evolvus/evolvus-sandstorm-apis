@@ -14,17 +14,15 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortAttributes;
 
 var docketObject = {
-  // required fields
   application: "PLATFORM",
   source: "application",
   name: "",
   createdBy: "",
   ipAddress: "",
-  status: "SUCCESS", //by default
+  status: "SUCCESS",
   eventDateTime: Date.now(),
   keyDataAsJSON: "",
   details: "",
-  //non required fields
   level: ""
 };
 module.exports = {
@@ -58,13 +56,6 @@ module.exports.validate = (lookupObject) => {
 };
 
 
-// tenantId cannot be null or undefined, InvalidArgumentError
-// check if tenantId is valid from tenant table (todo)
-//
-// createdBy can be "System" - it cannot be validated against users
-// ipAddress is needed for docket, must be passed
-//
-// object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
   debug(`index save method .tenantId :${tenantId}, createdBy:${createdBy}, ipAddress:${ipAddress}, lookupObject:${JSON.stringify(lookupObject)} ,are parameters)`);
   return new Promise((resolve, reject) => {
@@ -90,7 +81,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
           reject(res.errors[0].schema.message);
         }
       } else {
-        // if the object is valid, save the object to the database
+
         docketObject.name = "lookup_save";
         docketObject.keyDataAsJSON = JSON.stringify(lookupObject);
         docketObject.details = `lookup creation initiated`;
@@ -148,11 +139,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 
 
 
-// tenantId should be valid
-// createdBy should be requested user, not database object user, used for auditObject
-// ipAddress should ipAddress
-// filter should only have fields which are marked as filterable in the model Schema
-// orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)},ipAddress :${JSON.stringify(ipAddress)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {

@@ -3,7 +3,7 @@ const validator = require("validator");
 
 
 var supportedDateFormatsSchema = new mongoose.Schema({
-  // Add all attributes below tenantId
+
   tenantId: {
     type: String,
     required: true,
