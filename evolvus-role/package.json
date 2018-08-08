@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-role",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "Evolvus-role encapsulates role functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
