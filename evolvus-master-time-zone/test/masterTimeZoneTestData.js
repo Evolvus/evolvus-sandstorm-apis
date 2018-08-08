@@ -1,5 +1,5 @@
 module.exports.validObject1 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -16,7 +16,7 @@ module.exports.validObject1 = {
 };
 
 module.exports.validObject2 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -33,7 +33,7 @@ module.exports.validObject2 = {
 };
 
 module.exports.validObject3 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -50,7 +50,7 @@ module.exports.validObject3 = {
 };
 
 module.exports.validObject4 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -67,7 +67,7 @@ module.exports.validObject4 = {
 };
 
 module.exports.validObject5 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -84,7 +84,7 @@ module.exports.validObject5 = {
 };
 
 module.exports.validObject6 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -101,7 +101,7 @@ module.exports.validObject6 = {
 };
 
 module.exports.validObject7 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -118,7 +118,7 @@ module.exports.validObject7 = {
 };
 
 module.exports.validObject8 = {
-  // valid masterTimeZone object
+
   "tenantId": "IVL",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -135,7 +135,7 @@ module.exports.validObject8 = {
 };
 
 module.exports.invalidObject1 = {
-  // invalid masterTimeZone object
+
   "tenantId": "IVL",
   "zoneName": "ASIA",
   "offsetValue": "offone"

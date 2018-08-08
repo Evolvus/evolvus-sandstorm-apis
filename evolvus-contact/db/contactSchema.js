@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 var contactSchema = new mongoose.Schema({
-  // Add all attributes below tenantId
   tenantId: {
     type: String,
     minLength: 1,

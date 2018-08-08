@@ -1,7 +1,5 @@
 const _ = require('lodash');
-/*
- ** JSON Schema representation of the supportedDateFormats model
- */
+
 var supportedDateFormatsSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "supportedDateFormatsModel",
@@ -11,8 +9,8 @@ var supportedDateFormatsSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "filterable": true,
+      "sortable": true
     },
     "wfInstanceId": {
       "type": "string",
@@ -28,61 +26,61 @@ var supportedDateFormatsSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
 
     },
     "timeFormat": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
 
     },
     "description": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "lastUpdatedDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "createdBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "updatedBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "objVersion": {
       "type": "number",
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     },
     "enableFlag": {
       "type": "string",
       "default": "1",
       "enum": ["0", "1"],
-      "filterable": false, //custom attributes
+      "filterable": false,
       "sortable": false
     }
   },

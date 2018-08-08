@@ -93,56 +93,56 @@ describe('user model validation', () => {
     });
   });
 
-  // describe("testing user.save method", () => {
-  //
-  //   beforeEach(function(done) {
-  //     this.timeout(10000);
-  //     collection.deleteAll({
-  //         tenantId: tenantOne
-  //       })
-  //       .then((data) => {
-  //         return collection.deleteAll({
-  //           tenantId: tenantTwo
-  //         });
-  //       })
-  //       .then((data) => {
-  //         done();
-  //       });
-  //   });
-  //
-  //   it('should save a valid user object to database', (done) => {
-  //     try {
-  //       // Promise.all([entity.save(tenantOne, "Kavya", "H001B001", "1", userTestData.entityObject), role.save(tenantOne, "Kavya", "1", "H001B001", userTestData.roleObject)]).then((res) => {
-  //       //   var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
-  //       //   //replace anyAttribute with one of the valid attribute of a user Object
-  //       //   expect(result)
-  //       //     .to.eventually.have.property("_id")
-  //       //     .notify(done);
-  //       // }).then((e) => {
-  //       //   done(e);
-  //       // });
-  //       var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
-  //       //replace anyAttribute with one of the valid attribute of a user Object
-  //       expect(result)
-  //         .to.be.eventually.have.property("nModified")
-  //         .to.eql(1)
-  //         .notify(done);
-  //     } catch (e) {
-  //       expect.fail(e, null, `saving user object should not throw exception: ${e}`);
-  //     }
-  //   }, 10000);
-  //
-  //   it('should not save a invalid user object to database', (done) => {
-  //     try {
-  //       var result = user.save(tenantOne, "192.168.1.115", "Kavya", userTestData.invalidObject1);
-  //       expect(result)
-  //         .to.be.rejected
-  //         .notify(done);
-  //     } catch (e) {
-  //       expect.fail(e, null, `exception: ${e}`);
-  //     }
-  //   });
-  // });
+  describe("testing user.save method", () => {
+  
+    beforeEach(function(done) {
+      this.timeout(10000);
+      collection.deleteAll({
+          tenantId: tenantOne
+        })
+        .then((data) => {
+          return collection.deleteAll({
+            tenantId: tenantTwo
+          });
+        })
+        .then((data) => {
+          done();
+        });
+    });
+  
+    it('should save a valid user object to database', (done) => {
+      try {
+        // Promise.all([entity.save(tenantOne, "Kavya", "H001B001", "1", userTestData.entityObject), role.save(tenantOne, "Kavya", "1", "H001B001", userTestData.roleObject)]).then((res) => {
+        //   var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
+        //   //replace anyAttribute with one of the valid attribute of a user Object
+        //   expect(result)
+        //     .to.eventually.have.property("_id")
+        //     .notify(done);
+        // }).then((e) => {
+        //   done(e);
+        // });
+        var result = user.save(tenantOne, "192.168.1.115", "Kavya", "0", userTestData.validObject1);
+        //replace anyAttribute with one of the valid attribute of a user Object
+        expect(result)
+          .to.be.eventually.have.property("nModified")
+          .to.eql(1)
+          .notify(done);
+      } catch (e) {
+        expect.fail(e, null, `saving user object should not throw exception: ${e}`);
+      }
+    }, 10000);
+  
+    it('should not save a invalid user object to database', (done) => {
+      try {
+        var result = user.save(tenantOne, "192.168.1.115", "Kavya", userTestData.invalidObject1);
+        expect(result)
+          .to.be.rejected
+          .notify(done);
+      } catch (e) {
+        expect.fail(e, null, `exception: ${e}`);
+      }
+    });
+  });
 
   describe('testing user.find', () => {
     let object1 = userTestData.validObject1,
@@ -578,27 +578,4 @@ describe('user model validation', () => {
     });
 
   });
-
-  // describe('testing user.find when there is no data', () => {
-  //
-  //   beforeEach((done) => {
-  //     collection.deleteAll({
-  //       tenantId: tenantOne
-  //     }).then((res) => {
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('should return empty array', (done) => {
-  //     try {
-  //       let res = user.find(tenantOne, entityId, accessLevel, "kavya", "192.168.1.115", {}, {}, 0, 0);
-  //       expect(res)
-  //         .to.have.lengthOf(0)
-  //         .notify(done);
-  //     } catch (e) {
-  //       expect.fail(e, null, `exception: ${e}`);
-  //     }
-  //   });
-  //
-  // });
 });

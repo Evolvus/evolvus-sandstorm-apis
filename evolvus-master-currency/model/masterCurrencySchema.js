@@ -10,8 +10,8 @@ var masterCurrencySchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "filterable": true,
+      "sortable": true
     },
     "wfInstanceId": {
       "type": "string",
@@ -30,69 +30,69 @@ var masterCurrencySchema = {
       "minLength": 1,
       "maxLength": 5,
       "unique": true,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "currencyName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
 
     },
     "decimalDigit": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "delimiter": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "lastUpdatedDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "createdBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "updatedBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "objVersion": {
       "type": "number",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "enableFlag": {
       "type": "string",
       "default": "1",
       "enum": ["0", "1"],
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
     },
     "currencyLocale": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attribute
+      "filterable": false,
+      "sortable": false
 
     }
   },

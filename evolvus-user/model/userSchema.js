@@ -21,7 +21,6 @@ var userSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
       "maxLength": 20,
       "filterable": true,
       "sortable": false,
@@ -40,7 +39,6 @@ var userSchema = {
       "type": "string",
       "minLength": 6,
       "maxLength": 140,
-      "pattern": "^[ a-zA-Z0-9!@#$&()\\-`.+,/\"]*$",
       "filterable": true,
       "sortable": true,
       "displayable": true
@@ -219,11 +217,6 @@ var userSchema = {
         "wfInstanceId": {
           "type": "string",
           "minLength": 0,
-          "maxLength": 20
-        },
-        "wfInstanceStatus": {
-          "type": "string",
-          "minLength": 3,
           "maxLength": 20
         },
         "applicationCode": {

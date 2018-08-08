@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 var masterTimeZoneSchema = new mongoose.Schema({
-  // Add all attributes below tenantId
+
   tenantId: {
     type: String,
     required: true,
