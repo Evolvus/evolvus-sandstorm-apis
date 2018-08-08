@@ -229,7 +229,6 @@ describe('role model validation', () => {
     });
 
     it("should throw IllegalArgumentException for undefined code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
       let undefinedCode;
       let res = role.update("T001", "user", "192.168.1.122", undefinedCode, null);
       expect(res)
@@ -246,7 +245,6 @@ describe('role model validation', () => {
     });
 
     it("should throw IllegalArgumentException for null tenantId parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
       let res = role.update(null, "user", "192.168.1.122", "ADMINN", {
         "enableFlag": true,
         "roleName": "ADMINN",
@@ -258,7 +256,6 @@ describe('role model validation', () => {
     });
 
     it("should throw IllegalArgumentException for null code parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
       let res = role.update("T001", "user", "192.168.1.122", null, {
         "enableFlag": true,
         "roleName": "ADMINN",
@@ -270,7 +267,6 @@ describe('role model validation', () => {
     });
 
     it("should throw IllegalArgumentException for null update parameter ", (done) => {
-      // an id is a 12 byte string, -1 is an invalid id value+
       let res = role.update("T001", "user", "192.168.1.122", "ADMINN", null);
       expect(res)
         .to.eventually.to.be.rejectedWith("IllegalArgumentException")
