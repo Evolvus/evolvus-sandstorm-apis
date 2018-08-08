@@ -1,0 +1,26 @@
+module.exports=[
+/* 1 */{
+    "tenantId" : "T001",
+    "firstName" : "vigneshvaran",
+    "middleName" : "varan",
+    "lastName" : "p",
+    "emailId" : "vignesh@gmail.com",
+    "emailVerified" : true,
+    "phoneNumber" : "1111456893",
+    "mobileNumber" : "222222345678",
+    "mobileVerified" : true,
+    "faxNumber" : "02223344555",
+    "companyName" : "Evolvus",
+    "address1" : "chennai",
+    "address2" : "chennai",
+    "city" : "Bangalore",
+    "state" : "karnataka",
+    "country" : "china",
+    "zipCode" : "778899",
+    "createdDate" : new Date(),
+    "lastUpdatedDate" : new Date(),
+    "__v" : 0,
+    "wfInstanceId" : "",
+    "wfInstanceStatus" : ""
+}
+]

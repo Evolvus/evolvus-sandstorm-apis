@@ -1,0 +1,17 @@
+module.exports = [{
+  /* 1 */
+  "enableFlag": "true",
+  "processingStatus": "AUTHORIZED",
+  "name": "Head Office $tenantId",
+  "entityCode": "HO$tenantId",
+  "description": "Head office branch of $tenantId",
+  "parent": "HEADOFFICE",
+  "tenantId": "$tenantId",
+  "accessLevel": "0",
+  "createdBy": "System",
+  "createdDate": new Date(),
+  "lastUpdatedDate": new Date(),
+  "entityId": "$entityId",
+  "wfInstanceId" : "",
+  "wfInstanceStatus" : ""
+}]
