@@ -14,12 +14,7 @@ var menuSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20
-    },
-    "wfInstanceStatus": {
-      "type": "string",
-      "minLength": 3,
+      "minLength": 0,
       "maxLength": 20
     },
     "applicationCode": {
