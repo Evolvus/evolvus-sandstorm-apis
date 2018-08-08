@@ -1,7 +1,5 @@
 const _ = require('lodash');
-/*
- ** JSON Schema representation of the masterTimeZone model
- */
+
 var masterTimeZoneSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "masterTimeZoneModel",
@@ -10,8 +8,8 @@ var masterTimeZoneSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "filterable": true,
+      "sortable": true
     },
     "wfInstanceId": {
       "type": "string",
@@ -27,40 +25,40 @@ var masterTimeZoneSchema = {
       "type": "string",
       "minLength": 3,
       "maxLength": 20,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "zoneName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "offsetValue": {
       "type": "string"
     },
     "createdBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "updatedBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "updatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "offSet": {
       "type": "string"

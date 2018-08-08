@@ -131,7 +131,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
           debug(`find promise failed due to ${error} and referenceId :${reference}`);
           reject(error);
         });
-      // Other validations here
+
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
@@ -149,11 +149,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
 };
 
 
-// tenantId should be valid
-// createdBy should be requested user, not database object user, used for auditObject
-// ipAddress should ipAddress
-// filter should only have fields which are marked as filterable in the model Schema
-// orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)},ipAddress :${JSON.stringify(ipAddress)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {

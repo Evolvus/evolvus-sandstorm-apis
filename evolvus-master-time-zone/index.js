@@ -14,17 +14,16 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 var docketObject = {
-  // required fields
+
   masterTimeZone: "PLATFORM",
   source: "masterTimeZone",
   name: "",
   createdBy: "",
   ipAddress: "",
-  status: "SUCCESS", //by default
+  status: "SUCCESS",
   eventDateTime: Date.now(),
   keyDataAsJSON: "",
   details: "",
-  //non required fields
   level: ""
 };
 
@@ -67,7 +66,6 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
       if (!res.valid) {
         reject(res.errors);
       } else {
-        // if the object is valid, save the object to the database
 
         docketObject.name = "masterTimeZone_save";
         docketObject.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
@@ -83,7 +81,6 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
           reject(e);
         });
       }
-      // Other validations here
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId is : ${reference}`);
@@ -98,11 +95,7 @@ module.exports.save = (tenantId, masterTimeZoneObject) => {
 };
 
 
-// tenantId should be valid
-// createdBy should be requested user, not database object user, used for auditObject
-// ipAddress should ipAddress
-// filter should only have fields which are marked as filterable in the model Schema
-// orderby should only have fields which are marked as sortable in the model Schema
+
 module.exports.find = (tenantId, filter, orderby, skipCount, limit) => {
   debug(`index find method.tenantId :${tenantId}, filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters `);
   return new Promise((resolve, reject) => {

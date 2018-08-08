@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-application",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Application encapsulates Application functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {

@@ -1,7 +1,5 @@
 const _ = require('lodash');
-/*
- ** JSON Schema representation of the application model
- */
+
 var applicationSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "applicationModel",
@@ -10,11 +8,11 @@ var applicationSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attribute
+      "filterable": true,
+      "sortable": true
     },
     "_id": {
-      "filterable": true, //custom attributes
+      "filterable": true,
       "sortable": false
     },
     "processingStatus": {
@@ -28,30 +26,30 @@ var applicationSchema = {
       "type": "string",
       "minLength": 0,
       "maxLength": 20,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "applicationCode": {
       "type": "string",
       "minLength": 3,
       "maxLength": 20,
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "applicationName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": true, //custom attributes
-      "sortable": true, //custom attributes
+      "filterable": true,
+      "sortable": true,
       "pattern": '^[A-Za-z ]*$',
       "message": "applicationName can contain only alphabets and spaces"
 
     },
     "accessLevel": {
       "type": "string",
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "enabledFlag": {
       "type": "string",
@@ -62,49 +60,49 @@ var applicationSchema = {
     },
     "logo": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "entityId": {
       "type": "string",
       "minLength": 5,
       "maxLength": 100,
-      "filterable": true, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": true,
+      "sortable": false
     },
     "favicon": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": false //custom attributes
+      "filterable": false,
+      "sortable": false
     },
     "createdBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": false,
+      "sortable": true
     },
     "updatedBy": {
       "type": "string",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": false,
+      "sortable": true
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": true, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": true,
+      "sortable": true
     },
     "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
-      "filterable": false, //custom attributes
-      "sortable": true //custom attributes
+      "filterable": false,
+      "sortable": true
     },
     "description": {
       "type": "string",
       "minLength": 0,
       "maxLength": 255,
-      "filterable": false, //custom attributes
-      "sortable": false, //custom attributes
+      "filterable": false,
+      "sortable": false,
       "displayable": true
     }
   },
