@@ -21,7 +21,6 @@ var userSchema = {
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
       "maxLength": 20,
       "filterable": true,
       "sortable": false,

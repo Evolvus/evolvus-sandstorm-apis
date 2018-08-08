@@ -14,7 +14,6 @@ var userSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
     maxlength: 20
   },
   userId: {
