@@ -106,9 +106,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
 
         debug(`calling db find query1 :${JSON.stringify(query1)}, orderby:${{}},skipCount:${0},limit:${1} are parameters`);
         collection.find(query1, {}, 0, 1).then((result) => {
-
           if (_.isEmpty(result)) {
-
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
           var randomId = randomString.generate(5);
@@ -181,7 +179,6 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
                     debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
                     reject(e);
                   });
-
                 }).catch((e) => {
                   var reference = shortid.generate();
                   debug(`collection entity save promise failed due to :${e} and referenceId :${reference}`);
@@ -192,11 +189,9 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
                 debug(`collection find promiseAll failed due to :${e} and referenceId :${reference}`);
                 reject(e);
               });
-
           } else {
             throw new Error(`ParentEntity is disabled`);
           }
-
         }).catch((e) => {
           var reference = shortid.generate();
           debug(`collection find promise failed due to :${e} and referenceId :${reference}`);
@@ -241,11 +236,11 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      // accessLevel = _.get(filter, "accessLevel", accessLevel);
+      accessLevel = _.get(filter, "accessLevel", accessLevel);
       query.accessLevel = {
         $gte: accessLevel
       };
-      // entityId = _.get(filter, "entityId", entityId);
+      entityId = _.get(filter, "entityId", entityId);
       query.entityId = {
         $regex: entityId + ".*"
       };
@@ -322,7 +317,6 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
               debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
               reject(e);
             });
-
           }).catch((e) => {
             var reference = shortid.generate();
             debug(`collection update failed due to :${e} and referenceId :${reference}`);
@@ -337,7 +331,6 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         debug(`collection find failed due to :${e} and referenceId :${reference}`);
         reject(e);
       });
-
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);

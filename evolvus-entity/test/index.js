@@ -3,7 +3,7 @@ const chai = require("chai");
 const dbSchema = require("../db/entitySchema");
 const mongoose = require("mongoose");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
-const collection = new Dao("entitycol", dbSchema);
+const collection = new Dao("entity", dbSchema);
 
 
 var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";

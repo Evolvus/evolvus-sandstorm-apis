@@ -1,18 +1,3 @@
-// module.exports.validObject1 = {
-//   // valid entity object
-//   "tenantId": "T001",
-//   "wfInstanceId": "wfID",
-//   "entityCode": "entity1",
-//   "name": "headOffice",
-//   "parent": "headOffice",
-//   "description": "bc1 description",
-//   "createdBy": "SYSTEM",
-//   "createdDate": "2018-07-05T12:25:22.895Z",
-//   "lastUpdatedDate": "2018-07-05T12:25:22.895Z",
-//   "accessLevel": "1",
-//   "enableFlag": "1",
-//   "entityId": "abc12"
-// };
 
 module.exports.validObject1 = {
   // valid entity object
