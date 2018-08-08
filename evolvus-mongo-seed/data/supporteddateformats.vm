@@ -9,8 +9,8 @@ module.exports = [{
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 1,
-  "tenantId": "T001",
+  "tenantId": "$tenantId",
   "processingStatus": "AUTHORIZED",
-  "wfInstanceId" : "",
-  "wfInstanceStatus" : ""
+  "wfInstanceId" : ""
+
 }]

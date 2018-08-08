@@ -1,11 +1,25 @@
-For every new tenant say CORPT001,
+Using evolvus-mongo-seed, we can create objects for every module for that particular tenantId.
 
-1.insert 1 tenant record
-2.insert 1 entity - HO tenanId
-3.insert 1 application - for that tenanId.
-4.insert 1 mastercurrencies - for that tenantId.
-5.insert 1 mastertimezone -  for that tenanId.
-6.insert 1 master supported dateformat- for that tenantId.
-7.insert all application,console/operation menus for that tenantId.
-8.insert all roles console/application for that tenanId.
-9.insert 2 users -maker/checker for that tenanId.
+1.data => data folder like templates,which contains all the default module objects like applications, menus, etc.,
+
+2.context.js => Here we have to configure which tenantId and that tenantId value.Not only tenantId.whatever attribute and value  you can
+
+3.dbconfig.js => Here your database configuration.which port and which collection,these are all you have to configure here.
+${dir} this mention output folder file.
+
+4.fileConfig.js =>Here,there are three attribute .
+
+1.template:mentionn your template file,
+2.context:mention your context file,
+3.output:mention your output folder
+
+Note: template file must be .vm format
+
+api/mongoseed/tenantId=T001 this is api for mongoseed
+
+after mongoseed/ you have to set your attributename and value.Then it will change in wherever make it $tenantId it will repalce with T001
+
+
+
+    
+

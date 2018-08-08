@@ -20,7 +20,7 @@ module.exports=[
     "createdDate" : new Date(),
     "lastUpdatedDate" : new Date(),
     "__v" : 0,
-    "wfInstanceId" : "",
-    "wfInstanceStatus" : ""
+    "wfInstanceId" : ""
+   
 }
 ]

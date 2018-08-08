@@ -1,7 +1,7 @@
 module.exports = [{
   /* 1 */
   "enableFlag": "true",
-  "tenantId": "T001",
+  "tenantId": "$tenantId",
   "zoneCode": "IST",
   "zoneName": "ASIA",
   "offsetValue": "+05.30",
@@ -12,6 +12,6 @@ module.exports = [{
   "offSet": "UTC+05:30",
   "objVersion": 1234,
   "processingStatus": "AUTHORIZED",
-  "wfInstanceId" : "",
-  "wfInstanceStatus" : ""
+  "wfInstanceId" : ""
+ 
 }]

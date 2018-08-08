@@ -44,8 +44,8 @@ module.exports = [{
     "entityId": "$entityId",
     "createdDate": new Date(),
     "lastUpdatedDate": new Date(),
-    "wfInstanceId" : "",
-    "wfInstanceStatus" : ""
+    "wfInstanceId" : ""
+   
 
   },
   {
@@ -207,9 +207,8 @@ module.exports = [{
     "lastUpdatedDate": new Date(),
         "__v": 0,
     "updatedBy": "kavyakm",
-    "wfInstanceId" : "",
-    "wfInstanceStatus" : ""
-  },
+    "wfInstanceId" : ""
+    },
   {
     /* 3 */
     "txnType": [
@@ -346,7 +345,6 @@ module.exports = [{
     "lastUpdatedDate": new Date(),
     "__v": 0,
     "wfInstanceId" : "",
-    "wfInstanceStatus" : "",
     "updatedBy": "kavyakm"
   },
   {
@@ -515,7 +513,6 @@ module.exports = [{
     "lastUpdatedDate": new Date(),
     "__v": 0,
     "wfInstanceId" : "",
-    "wfInstanceStatus" : "",
-    "updatedBy": "CDACHECKER"
+     "updatedBy": "CDACHECKER"
   }
 ]

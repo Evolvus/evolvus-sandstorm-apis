@@ -2,7 +2,7 @@ module.exports = [{
   /* 1 */
   "enableFlag": "true",
   "processingStatus": "AUTHORIZED",
-  "name": "Head Office $tenantId",
+  "name": "HeadOffice$tenantId",
   "entityCode": "HO$tenantId",
   "description": "Head office branch of $tenantId",
   "parent": "HEADOFFICE",
@@ -12,6 +12,6 @@ module.exports = [{
   "createdDate": new Date(),
   "lastUpdatedDate": new Date(),
   "entityId": "$entityId",
-  "wfInstanceId" : "",
-  "wfInstanceStatus" : ""
+  "wfInstanceId" : ""
+
 }]

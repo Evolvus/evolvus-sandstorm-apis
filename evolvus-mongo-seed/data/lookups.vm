@@ -1001,36 +1001,6 @@ module.exports = [
 {
 
     "enabled" : "1",
-    "lookupCode" : "ROLE_ROLETYPE",
-    "value" : "CHECKER",
-    "createdBy" : "SYSTEM",
-    "createdDate" : new Date(),
-    "lastUpdatedDate" : new Date(),
-    "tenantId" : "$tenantId",
-    "__v" : 0,
-    "wfInstanceId" : "work",
-    "wfInstanceStatus" : "work"
-},
-
-/* 64 */
-{
-
-    "enabled" : "1",
-    "lookupCode" : "ROLE_ROLETYPE",
-    "value" : "MAKER",
-    "createdBy" : "SYSTEM",
-    "createdDate" : new Date(),
-    "lastUpdatedDate" : new Date(),
-    "tenantId" : "$tenantId",
-    "__v" : 0,
-    "wfInstanceId" : "work",
-    "wfInstanceStatus" : "work"
-},
-
-/* 65 */
-{
-
-    "enabled" : "1",
     "lookupCode" : "ROLE_TXNTYPE",
     "value" : "UPDATE_USER",
     "createdBy" : "SYSTEM",
@@ -1041,9 +1011,9 @@ module.exports = [
     "wfInstanceId" : "work",
     "wfInstanceStatus" : "work"
 },
-/* 66 */
+/* 64 */
 {
-  
+
    "enabled" : "true",
    "lookupCode" : "FILE_UPLOAD_CONSOLE",
    "value" : "USER_IMPORT",
@@ -1058,5 +1028,4 @@ module.exports = [
    "wfInstanceId" : "work",
    "wfInstanceStatus" : "work"
 }
-
 ]

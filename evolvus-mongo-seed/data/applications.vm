@@ -13,8 +13,8 @@ module.exports = [{
     "createdDate": new Date(),
     "lastUpdatedDate": new Date(),
     "processingStatus": "AUTHORIZED",
-    "wfInstanceId" : "",
-    "wfInstanceStatus" : ""
+    "wfInstanceId" : "ddss",
+    "wfInstanceStatus" : "APPROVED"
   },
   /* 2 */
   {
@@ -32,7 +32,7 @@ module.exports = [{
     "createdDate": new Date(),
     "lastUpdatedDate": new Date(),
     "updatedBy": "sriharig",
-    "wfInstanceId" : "",
-    "wfInstanceStatus" : ""
+    "wfInstanceId" : ""
+   
   }
 ]

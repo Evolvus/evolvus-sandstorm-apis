@@ -1,7 +1,7 @@
 module.exports = [{
   /* 1 */
   "enableFlag": "true",
-  "tenantId": "T001",
+  "tenantId": "$tenantId",
   "currencyCode": "INR",
   "currencyName": "Indian Rupee",
   "decimalDigit": "2",
@@ -13,6 +13,6 @@ module.exports = [{
   "objVersion": 1289,
   "currencyLocale": "local",
   "processingStatus": "AUTHORIZED",
-  "wfInstanceId" : "",
-  "wfInstanceStatus" : ""
+  "wfInstanceId" : ""
+ 
 }]
