@@ -322,7 +322,6 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
-                      console.log("OBJECT", object);
                       collection.update(filterUser, object).then((result) => {
                         debug(`User updated successfully ${JSON.stringify(result)}`);
                         var sweEventObject = {
