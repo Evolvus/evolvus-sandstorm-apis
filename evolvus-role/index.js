@@ -244,7 +244,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
               "query": result[0]._id,
-              "object": result
+              "object": result[0]
             };
             sweClient.initialize(sweEventObject).then((result) => {
               collection.update(filterRole, {
