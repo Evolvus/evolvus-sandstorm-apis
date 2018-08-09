@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-mongo-seed",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Module to insert seed script sandstorm application.",
   "main": "server.js",
   "scripts": {
