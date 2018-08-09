@@ -295,7 +295,8 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
               "wfEntity": "ENTITY",
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
-              "query": result[0]._id
+              "query": result[0]._id,
+              "object": result[0]
             };
             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
             sweClient.initialize(sweEventObject).then((result) => {
