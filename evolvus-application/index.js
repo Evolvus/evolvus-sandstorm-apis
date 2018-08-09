@@ -230,7 +230,8 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
               "wfEntity": "APPLICATION",
               "wfEntityAction": "UPDATE",
               "createdBy": createdBy,
-              "query": result[0]._id
+              "query": result[0]._id,
+              "object": result[0]
             };
             sweClient.initialize(sweEventObject).then((result) => {
               collection.update(query, {
