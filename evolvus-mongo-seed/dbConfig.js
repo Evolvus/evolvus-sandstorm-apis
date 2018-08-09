@@ -1,7 +1,7 @@
 const path = require('path');
 
 const dir = process.env.SCRIPT_HOME || '/home/vigneshp/Documents/SA/Script';
-console.log('inputPath:', dir);
+
 module.exports.config = {
   database: {
     protocol: 'mongodb',

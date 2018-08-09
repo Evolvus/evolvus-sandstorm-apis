@@ -18,6 +18,12 @@ module.exports = (router) => {
         entityId: req.query.entityId || 'H001B001'
       };
 
+      configuration.database.name = req.query.dbname;
+      configuration.database.port = req.query.port;
+      configuration.database.host = req.query.host;
+      configuration.database.username = req.query.username;
+      configuration.database.userpassword = req.query.password;
+
       create(fileConfig, ctx, () => {
 
         seedDatabase(configuration).then(() => {
