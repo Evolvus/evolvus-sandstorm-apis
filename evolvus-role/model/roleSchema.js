@@ -93,6 +93,7 @@ var roleSchema = {
     "activationStatus": {
       "type": "string",
       "enum": ["ACTIVE", "INACTIVE"],
+      "default": "INACTIVE",
       "minLength": 1,
       "displayable": true,
       "filterable": true, //custom attributes

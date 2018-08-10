@@ -73,6 +73,7 @@ var roleSchema = new mongoose.Schema({
   activationStatus: {
     type: String,
     enum: ["ACTIVE", "INACTIVE"],
+    default: "INACTIVE",
     required: true
   },
   processingStatus: {
