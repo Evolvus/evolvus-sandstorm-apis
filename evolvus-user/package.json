@@ -32,8 +32,6 @@
     "grunt-cli": "^1.2.0",
     "jsonschema": "^1.2.4",
     "mongoose": "^5.2.5",
-    "mongoose-unique-validator": "^2.0.0",
-    "password-validator": "^4.1.1",
     "shortid": "^2.2.12",
     "validator": "^9.4.1"
   },
