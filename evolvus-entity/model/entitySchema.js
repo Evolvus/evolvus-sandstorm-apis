@@ -27,8 +27,8 @@ var entitySchema = {
     },
     "entityCode": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20,
+      "minLength": 6,
+      "maxLength": 35,
       "filterable": true, //custom attributes
       "sortable": true, //custom attributes
       "pattern": "^[a-zA-Z-0-9-_ ]+$",
@@ -36,8 +36,8 @@ var entitySchema = {
     },
     "name": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 100,
+      "minLength": 6,
+      "maxLength": 35,
       "pattern": "^[a-zA-Z\-0-9]+$",
       "message": "name can contain only alphabets and numbers",
       "filterable": true, //custom attributes
@@ -48,6 +48,15 @@ var entitySchema = {
       "enum": ["true", "false"],
       "filterable": true, //custom attributes
       "sortable": true //custom attributes
+    },
+    "activationStatus": {
+      "type": "string",
+      "enum": ["ACTIVE", "INACTIVE"],
+      "default": "INACTIVE",
+      "minLength": 1,
+      "displayable": true,
+      "filterable": true, //custom attributes
+      "sortable": false //custom attributes
     },
     "createdBy": {
       "type": "string",
@@ -93,8 +102,8 @@ var entitySchema = {
     },
     "parent": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 25,
+      "minLength": 6,
+      "maxLength": 35,
       "pattern": "^[a-zA-Z\-0-9 ]+$",
       "message": "parent can contain only alphabets and numbers",
       "filterable": true, //custom attributes
@@ -102,8 +111,8 @@ var entitySchema = {
     },
     "entityId": {
       "type": "string",
-      "minLength": 5,
-      "maxLength": 100,
+      "minLength": 6,
+      "maxLength": 35,
       "filterable": true, //custom attributes
       "sortable": false //custom attributes
     },

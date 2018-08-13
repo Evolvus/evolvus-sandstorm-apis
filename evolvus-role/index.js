@@ -300,6 +300,11 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
+      if (update.processingStatus === "AUTHORIZED") {
+        update.activationStatus = "ACTIVE";
+      } else {
+        update.activationStatus = "INACTIVE";
+      }
       audit.name = "ROLE_UPDATEWORKFLOW";
       audit.ipAddress = ipAddress;
       audit.createdBy = createdBy;

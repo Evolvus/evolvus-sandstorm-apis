@@ -18,8 +18,8 @@ var entitySchema = new mongoose.Schema({
   },
   entityCode: {
     type: String,
-    minLength: 1,
-    maxLength: 50,
+    minLength: 6,
+    maxLength: 35,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z-0-9-_ ]+$/.test(v);
@@ -29,13 +29,13 @@ var entitySchema = new mongoose.Schema({
   },
   entityId: {
     type: String,
-    minLength: 5,
-    maxLength: 100
+    minLength: 6,
+    maxLength: 35
   },
   name: {
     type: String,
-    minLength: 1,
-    maxLength: 50,
+    minLength: 6,
+    maxLength: 35,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z\-0-9]+$/.test(v);
@@ -48,8 +48,8 @@ var entitySchema = new mongoose.Schema({
   },
   description: {
     type: String,
-    minLength: 1,
-    maxLength: 255,
+    minLength: 6,
+    maxLength: 140,
     validate: {
       validator: function(v) {
         return /^[ A-Za-z0-9_@.,;:/&!^*(){}[\]?$%#&=+-]*$/.test(v);
@@ -59,11 +59,17 @@ var entitySchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    enum: ["true","false"]
+    enum: ["true", "false"]
+  },
+  activationStatus: {
+    type: String,
+    enum: ["ACTIVE", "INACTIVE"],
+    default: "INACTIVE",
+    required: true
   },
   selectedFlag: {
     type: String,
-      enum: ["true","false"]
+    enum: ["true", "false"]
 
   },
   processingStatus: {
@@ -81,8 +87,8 @@ var entitySchema = new mongoose.Schema({
   },
   parent: {
     type: String,
-    minLength: 1,
-    maxLength: 25,
+    minLength: 6,
+    maxLength: 35,
     validate: {
       validator: function(v) {
         return /^[a-zA-Z\-0-9 ]+$/.test(v);
