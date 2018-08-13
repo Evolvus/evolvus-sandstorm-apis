@@ -12,6 +12,7 @@ module.exports = [{
   "createdDate": new Date(),
   "lastUpdatedDate": new Date(),
   "entityId": "$entityId",
-  "wfInstanceId" : ""
+  "wfInstanceId" : "",
+  "activationStatus":"ACTIVE"
 
 }]
