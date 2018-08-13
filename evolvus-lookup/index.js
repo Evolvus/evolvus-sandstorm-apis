@@ -5,6 +5,7 @@ const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const shortid = require('shortid');
+const audit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("lookup", dbSchema);
@@ -13,18 +14,9 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortAttributes;
 
-var docketObject = {
-  application: "PLATFORM",
-  source: "application",
-  name: "",
-  createdBy: "",
-  ipAddress: "",
-  status: "SUCCESS",
-  eventDateTime: Date.now(),
-  keyDataAsJSON: "",
-  details: "",
-  level: ""
-};
+audit.application = "SANDSTORM_CONSOLE";
+audit.source = "LOOKUP";
+
 module.exports = {
   dbSchema,
   model,
@@ -56,6 +48,13 @@ module.exports.validate = (lookupObject) => {
 };
 
 
+// tenantId cannot be null or undefined, InvalidArgumentError
+// check if tenantId is valid from tenant table (todo)
+//
+// createdBy can be "System" - it cannot be validated against users
+// ipAddress is needed for docket, must be passed
+//
+// object has all the attributes except tenantId, who columns
 module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
   debug(`index save method .tenantId :${tenantId}, createdBy:${createdBy}, ipAddress:${ipAddress}, lookupObject:${JSON.stringify(lookupObject)} ,are parameters)`);
   return new Promise((resolve, reject) => {
@@ -81,12 +80,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
           reject(res.errors[0].schema.message);
         }
       } else {
-
-        docketObject.name = "lookup_save";
-        docketObject.keyDataAsJSON = JSON.stringify(lookupObject);
-        docketObject.details = `lookup creation initiated`;
-        docketClient.postToDocket(docketObject);
-
+        // if the object is valid, save the object to the database
+            audit.name = "LOOKUP_SAVE";
+            audit.ipAddress = ipAddress;
+            audit.createdBy = createdBy;
+            audit.keyDataAsJSON = JSON.stringify(lookupObject);
+            audit.details = `lookup creation initiated`;
+            audit.eventDateTime = Date.now();
+            audit.status = "SUCCESS";
+            docketClient.postToDocket(audit);
         debug("calling db save method and parameter is object ", object);
         collection.save(object).then((result) => {
           debug(`saved successfully ${result}`);
@@ -95,15 +97,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
             "wfEntity": "LOOKUP",
             "wfEntityAction": "CREATE",
             "createdBy": createdBy,
-            "query": result.lookupCode
+            "query": result._id
           };
           sweClient.initialize(sweEventObject).then((result) => {
-            console.log(result, "result");
+            
             var filterLookup = {
               "lookupCode": lookupObject.lookupCode
             };
             collection.update(filterLookup, {
-              "processingStatus": result.data.wfInstanceStatus,
+              "processingStatus": result.data.wfEvent,
               "wfInstanceId": result.data.wfInstanceId
             }).then((result) => {
               resolve(result);
@@ -130,6 +132,14 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 
     } catch (e) {
       var reference = shortid.generate();
+      audit.name = "LOOKUP_EXCEPTIONONSAVE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(lookupObject);
+      audit.details = `caught Exception on lookup_save ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       debug(`try catch failed due to ${e} and reference id ${reference}`);
       debug(`caught exception ${e}`);
       reject(e);
@@ -139,6 +149,11 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 
 
 
+// tenantId should be valid
+// createdBy should be requested user, not database object user, used for auditObject
+// ipAddress should ipAddress
+// filter should only have fields which are marked as filterable in the model Schema
+// orderby should only have fields which are marked as sortable in the model Schema
 module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCount, limit) => {
   debug(`index find method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)},ipAddress :${JSON.stringify(ipAddress)},filter :${JSON.stringify(filter)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit} are parameters`);
   return new Promise((resolve, reject) => {
@@ -147,6 +162,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
+      audit.name = "LOOKUP_FIND";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = "lookup_find";
+      audit.details = `lookup find initiated`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
+      debug(`calling db find method.query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}, are parameters`);
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`lookup(s) stored in the database are ${docs}`);
         resolve(docs);
@@ -157,14 +181,22 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
+      audit.name = "LOOKUP_EXCEPTIONONFIND";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = "lookup_find";
+      audit.details = `caught Exception on lookup_Find${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
   });
 };
 
-module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
-  debug(`index update method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${JSON.stringify(createdBy)},code :${code}, update :${JSON.stringify(update)} are parameters`);
+module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)}, ipAddress :${ipAddress}, code :${code}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || code == null || update == null) {
@@ -175,16 +207,48 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
         "tenantId": tenantId,
         "lookupCode": code
       };
-      debug(`calling db find method, query :${JSON.stringify(query)},orderby :${orderby},skipCount :${skipCount},limit :${limit} are parameters`);
+      debug(`calling db find method, query :${JSON.stringify(query)},orderby :${{}},skipCount :${0},limit :${1} are parameters`);
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
             throw new Error(`Unable to Update lookup already exists `);
           }
+          audit.name = "LOOKUP_UPDATE";
+          audit.ipAddress = ipAddress;
+          audit.createdBy = createdBy;
+          audit.keyDataAsJSON = JSON.stringify(update);
+          audit.details = `lookup updation initiated`;
+          audit.eventDateTime = Date.now();
+          audit.status = "SUCCESS";
+          docketClient.postToDocket(audit);
           debug(`calling db update method,code :${code},update :${update} parameter`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
             resolve(resp);
+            var sweEventObject = {
+              "tenantId": tenantId,
+              "wfEntity": "LOOKUP",
+              "wfEntityAction": "UPDATE",
+              "createdBy": createdBy,
+              "query": result[0]._id,
+              "object": result[0]
+            };
+            sweClient.initialize(sweEventObject).then((result) => {
+                collection.update(query, {
+                "processingStatus": result.data.wfEvent,
+                "wfInstanceId": result.data.wfInstanceId
+              }).then((result) => {
+                resolve(result);
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
+                reject(e);
+              });
+            }).catch((e) => {
+              var reference = shortid.generate();
+              debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+              reject(e);
+            });
           }).catch((error) => {
             var reference = shortid.generate();
             debug(`update promise failed due to :${error},and reference id ${reference}`);
@@ -198,15 +262,23 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      debug(`try catch failed due to :${error},and reference id ${reference}`);
+      audit.name = "LOOKUP_EXCEPTIONONUPDATE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on lookup_Update${e.message}`;
+      docketClient.postToDocket(audit);
+      debug(`try catch failed due to :${e},and reference id ${reference}`);
       debug(`caught exception ${e}`);
       reject(e);
     }
   });
 };
 
-module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => {
-  debug(`index updateWorkflow method,tenantId :${tenantId}, ipAddress :${ipAddress}, createdBy :${JSON.stringify(createdBy)},code :${code}, update :${JSON.stringify(update)} are parameters`);
+module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => {
+  debug(`index update method,tenantId :${tenantId},createdBy :${JSON.stringify(createdBy)}, ipAddress :${ipAddress}, code :${id}, update :${JSON.stringify(update)} are parameters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || id == null || update == null) {
@@ -216,6 +288,14 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
+      audit.name = "LOOKUP_UPDATEWORKFLOW";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.details = `lookup workflow updation initiated`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
       collection.update(filterRole, update).then((resp) => {
         debug("updated successfully", resp);
@@ -227,6 +307,14 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
       });
     } catch (e) {
       var reference = shortid.generate();
+      audit.name = "LOOKUP_EXCEPTIONONUPDATEWORKFLOW";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(update);
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      audit.details = `caught Exception on lookup_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(audit);
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }

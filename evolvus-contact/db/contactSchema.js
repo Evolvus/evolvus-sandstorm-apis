@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 var contactSchema = new mongoose.Schema({
+  // Add all attributes below tenantId
   tenantId: {
     type: String,
     minLength: 1,
@@ -33,7 +34,6 @@ var contactSchema = new mongoose.Schema({
   },
   emailId: {
     type: String,
-    required: true,
     minLength: 8,
     maxLength: 50,
     validate: {
@@ -47,20 +47,20 @@ var contactSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    maxLength: 10,
+    maxLength: 15,
     validate: {
       validator: function(v) {
-        return /^(\s*|\d+)$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
   },
   mobileNumber: {
     type: String,
-    maxLength: 10,
+    maxLength: 15,
     validate: {
       validator: function(v) {
-        return /^(\s*|\d+)$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -73,7 +73,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^(\s*|\d+)$/.test(v);
+        return /^[0-9\-\+]+$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -91,15 +91,22 @@ var contactSchema = new mongoose.Schema({
   },
   city: {
     type: String,
-    required: true
+    required: false,
+    minLength: 1,
+    maxLength: 20
   },
   state: {
+
     type: String,
-    required: true
+    required: false,
+    minLength: 1,
+    maxLength: 20
   },
   country: {
     type: String,
-    required: true
+    required: false,
+    minLength: 1,
+    maxLength: 20
   },
   zipCode: {
     type: String

@@ -3,7 +3,12 @@ const chai = require("chai");
 const mongoose = require("mongoose");
 
 var MONGO_DB_URL = process.env.MONGO_DB_URL || "mongodb://10.10.69.204:27017/TestPlatform_Dev";
-
+/*
+ ** chaiAsPromised is needed to test promises
+ ** it adds the "eventually" property
+ **
+ ** chai and others do not support async / await
+ */
 const chaiAsPromised = require("chai-as-promised");
 
 const expect = chai.expect;
@@ -30,14 +35,15 @@ describe('supportedDateFormats model validation', () => {
   };
 
   let invalidObject = {
-
+    //add invalid supportedDateFormats Object here
+    "tenantId": "IVL",
     "timeFormat": "Srihari",
   };
 
-  let undefinedObject;
-  let nullObject = null;
+  let undefinedObject; // object that is not defined
+  let nullObject = null; // object that is null
 
-
+  // before we start the tests, connect to the database
   before((done) => {
     mongoose.connect(MONGO_DB_URL);
     let connection = mongoose.connection;
@@ -54,7 +60,8 @@ describe('supportedDateFormats model validation', () => {
         expect(res)
           .to.eventually.equal(true)
           .notify(done);
-
+        // if notify is not done the test will fail
+        // with timeout
       } catch (e) {
         expect.fail(e, null, `valid supportedDateFormats object should not throw exception: ${e}`);
       }

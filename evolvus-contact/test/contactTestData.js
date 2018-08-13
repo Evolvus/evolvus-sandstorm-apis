@@ -1,5 +1,5 @@
 module.exports.validObject1 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -26,7 +26,7 @@ module.exports.validObject1 = {
 };
 
 module.exports.validObject2 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -53,7 +53,7 @@ module.exports.validObject2 = {
 };
 
 module.exports.validObject3 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -80,7 +80,7 @@ module.exports.validObject3 = {
 };
 
 module.exports.validObject4 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -107,7 +107,7 @@ module.exports.validObject4 = {
 };
 
 module.exports.validObject5 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -134,7 +134,7 @@ module.exports.validObject5 = {
 };
 
 module.exports.validObject6 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -161,7 +161,7 @@ module.exports.validObject6 = {
 };
 
 module.exports.validObject7 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -188,7 +188,7 @@ module.exports.validObject7 = {
 };
 
 module.exports.validObject8 = {
-
+  // valid contact object
   "tenantId": "IVL",
   "wfInstanceId": "wfID",
   "wfInstanceStatus": "wfStatus",
@@ -215,7 +215,7 @@ module.exports.validObject8 = {
 };
 
 module.exports.invalidObject1 = {
-
+  // invalid contact object
   "firstName": "yuvan",
   "phoneNumber": "78",
   "mobileNumber": "12",
