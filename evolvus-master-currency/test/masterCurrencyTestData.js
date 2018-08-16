@@ -1,8 +1,6 @@
 module.exports.validObject1 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "DZD",
   "currencyName": "Algerian dinar",
@@ -13,15 +11,13 @@ module.exports.validObject1 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject2 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "KWD",
   "currencyName": "Kuwaiti dinar",
@@ -32,15 +28,13 @@ module.exports.validObject2 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject3 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "EUR",
   "currencyName": "European euror",
@@ -51,15 +45,13 @@ module.exports.validObject3 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject4 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "CAD",
   "currencyName": "Canadian dollar",
@@ -70,15 +62,13 @@ module.exports.validObject4 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "0",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject5 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "COP",
   "currencyName": "Colombian peso",
@@ -89,15 +79,12 @@ module.exports.validObject5 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "0",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject6 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+  "tenantId": "T001", 
   "entityCode": "entity1",
   "currencyCode": "EUR",
   "currencyName": "European euro",
@@ -108,15 +95,13 @@ module.exports.validObject6 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject7 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001", 
   "entityCode": "entity1",
   "currencyCode": "IRR",
   "currencyName": "Iranian rial",
@@ -127,15 +112,13 @@ module.exports.validObject7 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.validObject8 = {
-  // valid masterCurrency object
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
-  "wfInstanceId": "wfID",
+
+  "tenantId": "T001",
   "entityCode": "entity1",
   "currencyCode": "INR",
   "currencyName": "Indian rupee",
@@ -146,13 +129,13 @@ module.exports.validObject8 = {
   "createdDate": new Date().toISOString(),
   "lastUpdatedDate": new Date().toISOString(),
   "objVersion": 123,
-  "enableFlag": "1",
-  "currencyLocale": "local",
+  "enableFlag": "false",
+  "currencyLocale": "local"
 };
 
 module.exports.invalidObject1 = {
-  // invalid masterCurrency object
-  "tenantId": "IVL",
+
+  "tenantId": "T001",
   "currencyName": "Algerian dinar",
-  "decimalDigit": "",
+  "decimalDigit": ""
 };

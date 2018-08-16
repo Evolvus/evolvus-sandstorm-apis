@@ -23,6 +23,7 @@
   "dependencies": {
     "@evolvus/evolvus-docket-client": "^1.0.3",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
+    "@evolvus/evolvus-swe-client": "^1.0.2",
     "debug": "^3.1.0",
     "express": "^4.16.3",
     "jsonschema": "^1.2.4",

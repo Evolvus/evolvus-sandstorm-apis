@@ -1,5 +1,5 @@
 module.exports.validObject1 = {
-
+  // valid application object
   "applicationName": "Docket Audit Server",
   "wfInstanceId": "wfID",
   "applicationCode": "DOCKET",
@@ -8,7 +8,7 @@ module.exports.validObject1 = {
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "0",
+  "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -17,14 +17,14 @@ module.exports.validObject1 = {
 };
 
 module.exports.validObject2 = {
-
+  // valid application object
   "applicationName": "Corporate Direct Access",
   "wfInstanceId": "wfID",
   "applicationCode": "CDA",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+    "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -33,14 +33,14 @@ module.exports.validObject2 = {
 };
 
 module.exports.validObject3 = {
-
+  // valid application object
   "applicationName": "Flux PayDirect",
   "wfInstanceId": "wfID",
   "applicationCode": "FPD",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+    "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -49,14 +49,14 @@ module.exports.validObject3 = {
 };
 
 module.exports.validObject4 = {
-
+  // valid application object
   "applicationName": "Platform",
   "wfInstanceId": "wfID",
   "applicationCode": "PLF",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+    "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -65,14 +65,14 @@ module.exports.validObject4 = {
 };
 
 module.exports.validObject5 = {
-
+  // valid application object
   "applicationName": "Console",
   "wfInstanceId": "wfID",
   "applicationCode": "CON",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+    "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -81,14 +81,14 @@ module.exports.validObject5 = {
 };
 
 module.exports.validObject6 = {
-
+  // valid application object
   "applicationName": "ASBA",
   "wfInstanceId": "wfID",
   "applicationCode": "ASBA",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "1",
+    "enabledFlag": "true",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -97,14 +97,14 @@ module.exports.validObject6 = {
 };
 
 module.exports.validObject7 = {
-
+  // valid application object
   "applicationName": "Indus Fast Collect",
   "wfInstanceId": "wfID",
   "applicationCode": "IFC",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "0",
+    "enabledFlag": "false",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -113,14 +113,14 @@ module.exports.validObject7 = {
 };
 
 module.exports.validObject8 = {
-
+  // valid application object
   "applicationName": "Combat AntiMoney Laundry",
   "wfInstanceId": "wfID",
   "applicationCode": "CAM",
   "createdBy": "Srihari",
   "createdDate": new Date()
     .toISOString(),
-  "enableFlag": "0",
+    "enabledFlag": "false",
   "logo": "",
   "favicon": "",
   "description": "This is application object",
@@ -129,10 +129,6 @@ module.exports.validObject8 = {
 };
 
 module.exports.invalidObject1 = {
-
-  applicationName: "Docket",
-  createdBy: "Kavya",
-  createdDate: new Date()
-    .toISOString(),
-  enableFlag: false
+  // invalid application object
+  applicationName: ""
 };
