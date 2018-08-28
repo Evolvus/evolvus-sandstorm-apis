@@ -1,5 +1,5 @@
 module.exports.validObject1 = {
-
+"tenantId":"T001",
   "formatCode": "DD/MM/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -12,12 +12,12 @@ module.exports.validObject1 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 1,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject2 = {
-
-  "formatCode": "DD/MM/YYYY",
+  "tenantId":"T001",
+  "formatCode": "MM/DD/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
@@ -29,12 +29,12 @@ module.exports.validObject2 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 2,
-  "enableFlag": "0"
+  "enableFlag": "false"
 };
 
 module.exports.validObject3 = {
-
-  "formatCode": "DD/MM/YYYY",
+  "tenantId":"T001",
+  "formatCode": "YYYY/MM/DD",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
@@ -46,12 +46,12 @@ module.exports.validObject3 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 3,
-  "enableFlag": "0"
+  "enableFlag": "false"
 };
 
 module.exports.validObject4 = {
-
-  "formatCode": "DD/MM/YYYY",
+  "tenantId":"T001",
+  "formatCode": "DD/YYYY/MM",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "timeFormat": "hh:mm:ss",
@@ -63,11 +63,11 @@ module.exports.validObject4 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 4,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject5 = {
-
+  "tenantId":"T001",
   "formatCode": "DD/MM/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -80,11 +80,11 @@ module.exports.validObject5 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 5,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject6 = {
-
+  "tenantId":"T001",
   "formatCode": "DD/MM/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -97,11 +97,11 @@ module.exports.validObject6 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 6,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject7 = {
-
+  "tenantId":"T001",
   "formatCode": "DD/MM/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -114,11 +114,11 @@ module.exports.validObject7 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 7,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject8 = {
-
+  "tenantId":"T001",
   "formatCode": "DD/MM/YYYY",
   "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
@@ -131,7 +131,7 @@ module.exports.validObject8 = {
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
   "objVersion": 8,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.invalidObject1 = {

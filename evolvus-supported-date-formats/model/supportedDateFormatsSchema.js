@@ -1,5 +1,7 @@
 const _ = require('lodash');
-
+/*
+ ** JSON Schema representation of the supportedDateFormats model
+ */
 var supportedDateFormatsSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "supportedDateFormatsModel",
@@ -9,80 +11,82 @@ var supportedDateFormatsSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
+      "minLength": 0,
       "maxLength": 20
     },
-    "wfInstanceStatus": {
+    "processingStatus": {
       "type": "string",
-      "minLength": 3,
-      "maxLength": 20
+      "default": "IN_PROGRESS",
+      "filterable": true,
+      "sortable": true,
+      "displayable": true
     },
     "formatCode": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     },
     "timeFormat": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     },
     "description": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "lastUpdatedDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "createdBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "updatedBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "objVersion": {
       "type": "number",
-      "filterable": false,
+      "filterable": false, //custom attributes
       "sortable": false
     },
     "enableFlag": {
       "type": "string",
-      "default": "1",
-      "enum": ["0", "1"],
-      "filterable": false,
-      "sortable": false
-    }
+      "enum": ["true", "false"],
+      "default": "true",
+      "filterable": true,
+      "sortable": true,
+    },
   },
   "required": ["tenantId", "formatCode"]
 };

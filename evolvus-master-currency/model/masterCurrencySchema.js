@@ -10,12 +10,12 @@ var masterCurrencySchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "wfInstanceId": {
       "type": "string",
-      "minLength": 3,
+      "minLength": 0,
       "maxLength": 20
     },
     "processingStatus": {
@@ -30,69 +30,69 @@ var masterCurrencySchema = {
       "minLength": 1,
       "maxLength": 5,
       "unique": true,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "currencyName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     },
     "decimalDigit": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "delimiter": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "lastUpdatedDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "createdBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "updatedBy": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "objVersion": {
       "type": "number",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "enableFlag": {
       "type": "string",
-      "default": "1",
-      "enum": ["0", "1"],
-      "filterable": false,
-      "sortable": false
+      "enum": ["true", "false"],
+      "default": "true",
+      "filterable": true,
+      "sortable": true,
     },
     "currencyLocale": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
 
     }
   },

@@ -1,5 +1,7 @@
 const _ = require('lodash');
-
+/*
+ ** JSON Schema representation of the lookup model
+ */
 var lookupSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "lookupModel",
@@ -8,14 +10,19 @@ var lookupSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "_id": {
+      "filterable": true, //custom attributes
+      "sortable": false
     },
     "wfInstanceId": {
       "type": "string",
+      "minLength": 0,
       "maxLength": 20,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "processingStatus": {
       "type": "string",
@@ -28,65 +35,65 @@ var lookupSchema = {
       "type": "string",
       "minLength": 3,
       "maxLength": 50,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attributes
     },
     "value": {
       "type": "string",
       "minLength": 1,
       "maxLength": 100,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueOne": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueTwo": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueThree": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueFour": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueFive": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueSix": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueSeven": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueEight": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueNine": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "valueTen": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "enableFlag": {
       "type": "string",
@@ -98,25 +105,25 @@ var lookupSchema = {
     },
     "createdBy": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "updatedBy": {
       "type": "string",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attributes
     },
     "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     }
   },
   "required": ["tenantId", "lookupCode", "value", "createdBy", "createdDate"]

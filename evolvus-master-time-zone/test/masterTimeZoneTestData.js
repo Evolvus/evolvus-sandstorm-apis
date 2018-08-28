@@ -1,7 +1,6 @@
 module.exports.validObject1 = {
 
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
+  "tenantId": "IVL", 
   "wfInstanceId": "wfID",
   "zoneCode": "IST",
   "zoneName": "ASIA",
@@ -12,13 +11,12 @@ module.exports.validObject1 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+05:30",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject2 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "CET",
   "zoneName": "Algeria",
@@ -29,13 +27,12 @@ module.exports.validObject2 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+01:00",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject3 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "JST",
   "zoneName": "Japan",
@@ -46,13 +43,12 @@ module.exports.validObject3 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+09:00",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject4 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "ART",
   "zoneName": "Argentina",
@@ -63,13 +59,12 @@ module.exports.validObject4 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC−03:00",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject5 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "BDT",
   "zoneName": "Bangladesh",
@@ -80,13 +75,12 @@ module.exports.validObject5 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+06:00",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject6 = {
 
-  "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
+  "tenantId": "IVL", 
   "wfInstanceId": "wfID",
   "zoneCode": "EAT",
   "zoneName": "Ethiopia",
@@ -97,16 +91,15 @@ module.exports.validObject6 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+03:00",
   "objVersion": 123,
-  "enableFlag": "1"
+  "enableFlag": "false"
 };
 
 module.exports.validObject7 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "CET",
-  "zoneName": "Germany",
+    "zoneName": "Germany",
   "offsetValue": "+01:00",
   "createdBy": "SYSTEM",
   "updatedBy": "SYSTEM",
@@ -114,13 +107,12 @@ module.exports.validObject7 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+01:00",
   "objVersion": 123,
-  "enableFlag": "0"
+  "enableFlag": "false"
 };
 
 module.exports.validObject8 = {
 
   "tenantId": "IVL",
-  "wfInstanceStatus": "wfStatus",
   "wfInstanceId": "wfID",
   "zoneCode": "IST",
   "zoneName": "Israel",
@@ -131,7 +123,7 @@ module.exports.validObject8 = {
   "lastUpdatedDate": new Date().toISOString(),
   "offSet": "UTC+02:00",
   "objVersion": 123,
-  "enableFlag": "0"
+  "enableFlag": "false"
 };
 
 module.exports.invalidObject1 = {

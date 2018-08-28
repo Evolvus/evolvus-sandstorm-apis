@@ -1,6 +1,6 @@
 {
   "name": "@evolvus/evolvus-contact",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Application encapsulates Application functionality across all Evolvus products",
   "main": "index.js",
   "scripts": {
@@ -21,8 +21,9 @@
   },
   "homepage": "https://github.com/Evolvus/evolvus-sandstorm-apis#readme",
   "dependencies": {
-    "@evolvus/evolvus-docket-client": "^1.0.2",
+    "@evolvus/evolvus-docket-client": "^1.0.3",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
+    "@evolvus/evolvus-swe-client": "^1.0.2",
     "chai-http": "^4.0.0",
     "debug": "^3.1.0",
     "express": "^4.16.3",

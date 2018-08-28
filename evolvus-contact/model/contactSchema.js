@@ -1,5 +1,7 @@
 const _ = require('lodash');
-
+/*
+ ** JSON Schema representation of the contact model
+ */
 var contactSchema = {
   "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "contactModel",
@@ -8,15 +10,19 @@ var contactSchema = {
     "tenantId": {
       "type": "string",
       "maxLength": 64,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
+    },
+    "_id": {
+      "filterable": true, //custom attributes
+      "sortable": false
     },
     "wfInstanceId": {
       "type": "string",
       "minLength": 3,
       "maxLength": 20,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "processingStatus": {
       "type": "string",
@@ -29,30 +35,30 @@ var contactSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "middleName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "lastName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 50,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "emailId": {
       "type": "string",
       "minLength": 8,
       "maxLength": 50,
       "unique": false,
-      "filterable": true,
-      "sortable": true
+      "filterable": true, //custom attributes
+      "sortable": true //custom attribute
     },
     "emailVerified": {
       "type": "boolean"
@@ -62,16 +68,16 @@ var contactSchema = {
       "minLength": 9,
       "maxLength": 15,
       "unique": false,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "mobileNumber": {
       "type": "string",
       "minLength": 9,
       "maxLength": 15,
       "unique": false,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "mobileVerified": {
       "type": "boolean"
@@ -80,15 +86,15 @@ var contactSchema = {
       "type": "string",
       "minLength": 1,
       "maxLength": 10,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "companyName": {
       "type": "string",
       "minLength": 1,
       "maxLength": 64,
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "address1": {
       "type": "string"
@@ -98,38 +104,44 @@ var contactSchema = {
     },
     "city": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false, //custom attribute
+      "minLength": 5,
+      "maxLength": 20
     },
     "state": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false, //custom attribute
+      "minLength": 5,
+      "maxLength": 20
     },
     "country": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false, //custom attribute
+      "minLength": 5,
+      "maxLength": 20
     },
     "zipCode": {
       "type": "string",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attribute
     },
     "createdDate": {
       "type": "string",
       "format": "date-time",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attributes
     },
     "lastUpdatedDate": {
       "type": ["string", "null"],
       "format": "date-time",
-      "filterable": false,
-      "sortable": false
+      "filterable": false, //custom attributes
+      "sortable": false //custom attributes
     }
-  },
-  "required": ["emailId", "city", "state", "country"]
+  }
+
 };
 
 module.exports.schema = contactSchema;

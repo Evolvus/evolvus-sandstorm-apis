@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 var masterTimeZoneSchema = new mongoose.Schema({
-
+  // Add all attributes below tenantId
   tenantId: {
     type: String,
     required: true,
@@ -11,13 +11,12 @@ var masterTimeZoneSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 3,
+    minlength: 0,
     maxlength: 20
   },
-  wfInstanceStatus: {
+  processingStatus: {
     type: String,
-    minlength: 3,
-    maxlength: 20
+    default: "IN_PROGRESS"
   },
   zoneCode: {
     type: String,
@@ -60,8 +59,10 @@ var masterTimeZoneSchema = new mongoose.Schema({
   },
   enableFlag: {
     type: String,
-    default: "1",
-    enum: ["0", "1"]
+    enum: ["true", "false"],
+    default: "true",
+    filterable: true,
+    sortable: true
   }
 
 });

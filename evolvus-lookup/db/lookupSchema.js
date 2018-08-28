@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 var lookupSchema = new mongoose.Schema({
-
+  // Add all attributes below tenantId
   tenantId: {
     type: String,
     required: true,
@@ -11,7 +11,7 @@ var lookupSchema = new mongoose.Schema({
   },
   wfInstanceId: {
     type: String,
-    minlength: 1,
+    minlength: 0,
     maxlength: 20
   },
   processingStatus: {
