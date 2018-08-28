@@ -12,6 +12,11 @@ var userSchema = new mongoose.Schema({
     min: 1,
     max: 64
   },
+  tenantName: {
+    type: String,
+    min: 1,
+    max: 64
+  },
   wfInstanceId: {
     type: String,
     maxlength: 20

@@ -15,6 +15,14 @@ var userSchema = {
       "sortable": false,
       "displayable": false
     },
+    "tenantName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "filterable": true,
+      "sortable": false,
+      "displayable": false
+    },
     "_id": {
       "filterable": true,
       "sortable": false,
