@@ -539,3 +539,263 @@ module.exports.updateToken = (id, token) => {
     }
   });
 };
+
+module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObject) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || userObject == null) {
+        throw new Error("IllegalArgumentException: tenantId/userObject is null or undefined");
+      }
+      if (userObject.userName == null) {
+        userObject.userName = userObject.userId;
+      }
+      let object = _.merge(userObject, {
+        "tenantId": tenantId,
+        "processingStatus": "AUTHORIZED"
+      });
+      var res = validate(object, schema);
+
+      debug("Validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        if (res.errors[0].name === 'required') {
+          reject(`${res.errors[0].argument} is Required`);
+        } else {
+          reject(res.errors[0].stack);
+        }
+      } else {
+        // Other validations here
+        object.userId = object.userId.toUpperCase();
+        let query = {
+          userId: object.userId
+        };
+        collection.findOne(query).then((userObject) => {
+          if (userObject) {
+            reject(`UserId ${object.userId} already exists`);
+          } else {
+            var filterEntity = {
+              entityId: object.entityId.toUpperCase()
+            };
+            var filterRole = {
+              roleName: object.role.roleName.toUpperCase()
+            };
+            Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
+              .then((result) => {
+                if (result[0].length != 0) {
+                  object.accessLevel = result[0][0].accessLevel;
+                  if (result[1].length != 0) {
+                    if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.role = result[1][0];
+                      object.applicationCode = result[1][0].applicationCode;
+                      bcrypt.genSalt(10, function(err, salt) {
+                        bcrypt.hash(object.userPassword, salt, function(err, hash) {
+                          // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
+                          object.userPassword = hash;
+                          object.saltString = salt;
+                          debug("calling dao save method and parameter is object ", object);
+                          collection.save(object).then((result) => {
+                            var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
+                            debug(`User saved successfully ${savedObject}`);
+                            resolve(savedObject);
+                          }).catch((e) => {
+                            var reference = shortid.generate();
+                            debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
+                            reject(e);
+                          });
+                        });
+                      });
+                    } else {
+                      debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
+                      reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                    }
+                  } else {
+                    debug(`User save failed due to the Role ${object.role.roleName} which is assigned to user not found`);
+                    reject(`Role ${object.role.roleName} not found`);
+                  }
+                } else {
+                  debug("User save failed due the selected Entity not found");
+                  reject(`User save failed due the selected Entity not found`);
+                }
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`entity.find promise failed due to ${e} and reference id ${reference}`);
+                reject(e);
+              });
+          }
+        }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`user.find promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
+        });
+      }
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, accessLevel, entityId) => {
+  debug(`index update method: tenantId:${tenantId},userId:${userId},object:${JSON.stringify(object)},accessLevel:${accessLevel},entityId:${entityId} are input paramaters`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (tenantId == null || userId == null) {
+        throw new Error("IllegalArgumentException:tenantId/userId is null or undefined");
+      }
+      audit.name = "USER_UPDATE INITIALIZED";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update user with  ${JSON.stringify(object)}`;
+      audit.details = `user update method`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
+      userId = userId.toUpperCase();
+      if (object.role != null) {
+        object.role = {
+          roleName: object.role
+        }
+      }
+      var filterUser = {
+        "userId": userId,
+        "tenantId": tenantId,
+        "accessLevel": {
+          $gte: accessLevel
+        }
+      };
+      var result;
+      var errors = [];
+      _.mapKeys(object, function(value, key) {
+        if (schema.properties[key] != null) {
+          result = validate(value, schema.properties[key]);
+          if (result.errors.length != 0) {
+            errors.push(result.errors);
+          }
+        }
+      });
+      debug("Validation status: ", JSON.stringify(result));
+      if (errors.length != 0) {
+        reject(errors[0][0].stack);
+      } else {
+        // Other validations here
+        collection.find(filterUser, {}, 0, 1).then((user) => {
+          if (user.length != 0) {
+            if (object.entityId == null) {
+              object.entityId = user[0].entityId;
+            }
+            if (object.role == null || object.role.roleName == null) {
+              object.role = user[0].role;
+            }
+            var filterEntity = {
+              entityId: object.entityId.toUpperCase()
+            };
+            var filterRole = {
+              roleName: object.role.roleName.toUpperCase()
+            };
+            Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
+              .then((result) => {
+                if (result[0].length != 0) {
+                  object.accessLevel = result[0][0].accessLevel;
+                  if (result[1].length != 0) {
+                    if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.contact = user[0].contact;
+                      if (object.emailId != null) {
+                        object.contact.emailId = object.emailId
+                      }
+                      collection.update(filterUser, object).then((result) => {
+                        debug(`User updated successfully ${JSON.stringify(result)}`);
+                        resolve(result);
+                      }).catch((e) => {
+                        var reference = shortid.generate();
+                        debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
+                        reject(e);
+                      });
+                    } else {
+                      debug(`User update failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
+                      reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                    }
+                  } else {
+                    debug(`User update failed due to the Role ${object.role.roleName} which is assigned to user not found`);
+                    reject(`Role ${object.role.roleName} not found`);
+                  }
+                } else {
+                  debug("User update failed due the selected Entity not found");
+                  reject(`User update failed due the selected Entity not found`);
+                }
+              }).catch((e) => {
+                var reference = shortid.generate();
+                debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
+                reject(e);
+              });
+          } else {
+            debug("No user found matching the userId " + userId);
+            reject("No user found matching the userId " + userId);
+          }
+        }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`user.find promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
+        });
+      }
+    } catch (e) {
+      var reference = shortid.generate();
+      audit.name = "USER_EXCEPTION_ON_UPDATE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = `update user with object ${JSON.stringify(object)}`;
+      audit.details = `caught Exception on user_update ${e.message}`;
+      audit.eventDateTime = Date.now();
+      audit.status = "FAILURE";
+      docketClient.postToDocket(audit);
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
+
+module.exports.activate = (userId, action) => {
+  return new Promise((resolve, reject) => {
+    try {
+      let flag = "false";
+      var filterUser = {
+        "userId": userId.toUpperCase()
+      };
+      if (action == "ACTIVE") {
+        flag = "true";
+      }
+      var updateUser = {
+        "activationStatus": action,
+        "enabledFlag": flag
+      };
+      collection.findOne(filterUser).then((user) => {
+        if (user) {
+          if (user.activationStatus == action) {
+            resolve(`User is already ${action}`);
+          } else {
+            collection.update(filterUser, updateUser).then((result) => {
+              if (result.nModified == 1) {
+                if (action == "ACTIVE") {
+                  resolve(`User ${userId} activated successfullly`);
+                } else {
+                  resolve(`User ${userId} deactivated successfullly`);
+                }
+              } else {
+                reject("Not able to modify User");
+              }
+            }).catch((e) => {
+              reject(e);
+            });
+          }
+        } else {
+          reject(`No User found matching the id ${userId}`);
+        }
+      }).catch((e) => {
+        reject(e);
+      });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
