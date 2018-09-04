@@ -756,7 +756,8 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
 module.exports.activate = (userId, action) => {
   return new Promise((resolve, reject) => {
     try {
-      if (action.toUpperCase() === "ACTIVE" || action.toUpperCase() === "INACTIVE") {
+      action = action.toUpperCase();
+      if (action === "ACTIVE" || action === "INACTIVE") {
         let flag = "false";
         var filterUser = {
           "userId": userId.toUpperCase()
@@ -765,7 +766,7 @@ module.exports.activate = (userId, action) => {
           flag = "true";
         }
         var updateUser = {
-          "activationStatus": action.toUpperCase(),
+          "activationStatus": action,
           "enabledFlag": flag
         };
         collection.findOne(filterUser).then((user) => {
