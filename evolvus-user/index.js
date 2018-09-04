@@ -9,11 +9,13 @@ const entity = require("@evolvus/evolvus-entity");
 const role = require("@evolvus/evolvus-role");
 const bcrypt = require("bcryptjs");
 const shortid = require("shortid");
+var date = require("date-and-time");
 
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("user", dbSchema);
 const sweClient = require("@evolvus/evolvus-swe-client");
 
+var format = "DDMMYYYYHHmmssSS";
 
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
@@ -549,9 +551,12 @@ module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObje
       if (userObject.userName == null) {
         userObject.userName = userObject.userId;
       }
+      let now = new Date();
+      let id = date.format(now, format);
       let object = _.merge(userObject, {
         "tenantId": tenantId,
-        "processingStatus": "AUTHORIZED"
+        "processingStatus": "AUTHORIZED",
+        "uniquereferenceid": id
       });
       var res = validate(object, schema);
 
@@ -702,8 +707,12 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
                       if (object.emailId != null) {
                         object.contact.emailId = object.emailId
                       }
+                      let now = new Date();
+                      let id = date.format(now, format);
+                      object.uniquereferenceid = id;
                       collection.update(filterUser, object).then((result) => {
                         debug(`User updated successfully ${JSON.stringify(result)}`);
+                        result.id = id;
                         resolve(result);
                       }).catch((e) => {
                         var reference = shortid.generate();
@@ -765,21 +774,32 @@ module.exports.activate = (userId, action) => {
         if (action == "ACTIVE") {
           flag = "true";
         }
+        let now = new Date();
+        let id = date.format(now, format);
         var updateUser = {
           "activationStatus": action,
-          "enabledFlag": flag
+          "enabledFlag": flag,
+          "uniquereferenceid": id
         };
         collection.findOne(filterUser).then((user) => {
           if (user) {
             if (user.activationStatus == action) {
-              resolve(`User is already ${action}`);
+              let result = {
+                data: `User is already ${action}`,
+                id: null
+              };
+              resolve(result);
             } else {
               collection.update(filterUser, updateUser).then((result) => {
                 if (result.nModified == 1) {
                   if (action == "ACTIVE") {
-                    resolve(`User ${userId} activated successfullly`);
+                    result.data = `User ${userId} activated successfullly`;
+                    result.id = id;
+                    resolve(result);
                   } else {
-                    resolve(`User ${userId} deactivated successfullly`);
+                    result.data = `User ${userId} deactivated successfullly`;
+                    result.id = id;
+                    resolve(result);
                   }
                 } else {
                   reject("Not able to modify User");
