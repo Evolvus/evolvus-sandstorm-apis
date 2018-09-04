@@ -756,42 +756,47 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
 module.exports.activate = (userId, action) => {
   return new Promise((resolve, reject) => {
     try {
-      let flag = "false";
-      var filterUser = {
-        "userId": userId.toUpperCase()
-      };
-      if (action == "ACTIVE") {
-        flag = "true";
-      }
-      var updateUser = {
-        "activationStatus": action,
-        "enabledFlag": flag
-      };
-      collection.findOne(filterUser).then((user) => {
-        if (user) {
-          if (user.activationStatus == action) {
-            resolve(`User is already ${action}`);
-          } else {
-            collection.update(filterUser, updateUser).then((result) => {
-              if (result.nModified == 1) {
-                if (action == "ACTIVE") {
-                  resolve(`User ${userId} activated successfullly`);
-                } else {
-                  resolve(`User ${userId} deactivated successfullly`);
-                }
-              } else {
-                reject("Not able to modify User");
-              }
-            }).catch((e) => {
-              reject(e);
-            });
-          }
-        } else {
-          reject(`No User found matching the id ${userId}`);
+      if (action.toUpperCase() === "ACTIVE" || action.toUpperCase() === "INACTIVE") {
+        let flag = "false";
+        var filterUser = {
+          "userId": userId.toUpperCase()
+        };
+        if (action == "ACTIVE") {
+          flag = "true";
         }
-      }).catch((e) => {
-        reject(e);
-      });
+        var updateUser = {
+          "activationStatus": action.toUpperCase(),
+          "enabledFlag": flag
+        };
+        collection.findOne(filterUser).then((user) => {
+          if (user) {
+            if (user.activationStatus == action) {
+              resolve(`User is already ${action}`);
+            } else {
+              collection.update(filterUser, updateUser).then((result) => {
+                if (result.nModified == 1) {
+                  if (action == "ACTIVE") {
+                    resolve(`User ${userId} activated successfullly`);
+                  } else {
+                    resolve(`User ${userId} deactivated successfullly`);
+                  }
+                } else {
+                  reject("Not able to modify User");
+                }
+              }).catch((e) => {
+                reject(e);
+              });
+            }
+          } else {
+            reject(`No User found matching the id ${userId}`);
+          }
+        }).catch((e) => {
+          reject(e);
+        });
+      } else {
+        reject("Action value must be ACTIVE or INACTIVE");
+      }
+
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
