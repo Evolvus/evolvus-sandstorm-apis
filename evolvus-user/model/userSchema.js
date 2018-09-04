@@ -25,6 +25,11 @@ var userSchema = {
     },
     "_id": {
       "filterable": true,
+      "sortable": false
+    },
+    "uniquereferenceid": {
+      "type": "string",
+      "filterable": true,
       "sortable": false,
     },
     "wfInstanceId": {
