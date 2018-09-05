@@ -640,8 +640,8 @@ module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObje
   });
 };
 
-module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, accessLevel, entityId) => {
-  debug(`index update method: tenantId:${tenantId},userId:${userId},object:${JSON.stringify(object)},accessLevel:${accessLevel},entityId:${entityId} are input paramaters`);
+module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, accessLevel) => {
+  debug(`index update method: tenantId:${tenantId},userId:${userId},object:${JSON.stringify(object)},accessLevel:${accessLevel} are input paramaters`);
   return new Promise((resolve, reject) => {
     try {
       if (tenantId == null || userId == null) {
@@ -674,13 +674,14 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
         if (schema.properties[key] != null) {
           result = validate(value, schema.properties[key]);
           if (result.errors.length != 0) {
+            result.errors[0].property=key;
             errors.push(result.errors);
           }
         }
       });
       debug("Validation status: ", JSON.stringify(result));
       if (errors.length != 0) {
-        reject(errors[0][0].stack);
+        reject(errors[0]);
       } else {
         // Other validations here
         collection.find(filterUser, {}, 0, 1).then((user) => {
@@ -688,7 +689,7 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
             if (object.entityId == null) {
               object.entityId = user[0].entityId;
             }
-            if (object.role == null || object.role.roleName == null) {
+            if (object.role == null) {
               object.role = user[0].role;
             }
             var filterEntity = {
@@ -703,6 +704,8 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED") {
+                      object.role = result[1][0];
+                      object.applicationCode = result[1][0].applicationCode;
                       object.contact = user[0].contact;
                       if (object.emailId != null) {
                         object.contact.emailId = object.emailId
