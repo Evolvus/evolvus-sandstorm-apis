@@ -365,11 +365,6 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      if (update.processingStatus === "AUTHORIZED") {
-        update.activationStatus = "ACTIVE";
-      } else {
-        update.activationStatus = "INACTIVE";
-      }
       debug(`calling db update method, filterEntity: ${JSON.stringify(filterEntity)},update: ${JSON.stringify(update)}`);
       collection.update(filterEntity, update).then((resp) => {
         debug("updated successfully", resp);

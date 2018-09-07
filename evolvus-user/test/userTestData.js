@@ -7,11 +7,11 @@ module.exports.validObject1 = {
     "country": "India"
   },
   "entityId": "H001B001",
-  "applicationCode": "CONSOLE",
+  "applicationCode": "SANDSTORM",
   "role": {
     "_id": ("5b4447e5e4280016d07dca8e"),
     "processingStatus": "PENDING_AUTHORIZATION",
-    "roleName": "ADMIN",
+    "roleName": "ADMINN",
     "applicationCode": "SANDSTORM",
     "description": "This is Role Admin",
     "activationStatus": "ACTIVE",
@@ -41,7 +41,7 @@ module.exports.validObject1 = {
           "selectedFlag": true
         }
       ],
-      "deletedFlag": "false",
+      "deletedFlag": 0,
       "_id": ("5b3dc5c9ceb4a22b122d313c"),
       "menuGroupCode": "Administration",
       "title": "ADMINISTRATION",
@@ -110,7 +110,7 @@ module.exports.validObject2 = {
           "menuItemOrder": 1,
           "selectedFlag": true
         }],
-        "deletedFlag": "false",
+        "deletedFlag": 0,
         "_id": ("5b3dc5c9ceb4a22b122d313c"),
         "menuGroupCode": "Administration",
         "title": "ADMINISTRATION",
@@ -131,7 +131,7 @@ module.exports.validObject2 = {
           "menuItemOrder": 2,
           "selectedFlag": true
         }],
-        "deletedFlag": "false",
+        "deletedFlag": 0,
         "_id": ("5b3dc5d3ceb4a22b122d313d"),
         "menuGroupCode": "maintenance",
         "title": "MAINTENANCE",
@@ -152,7 +152,7 @@ module.exports.validObject2 = {
           "menuItemOrder": 1,
           "selectedFlag": true
         }],
-        "deletedFlag": "false",
+        "deletedFlag": 0,
         "_id": ("5b3dc5dcceb4a22b122d313e"),
         "menuGroupCode": "configuration",
         "title": "CONFIGURATION",
@@ -198,7 +198,7 @@ module.exports.validObject3 = {
     "state": "karnataka",
     "country": "India"
   },
-  "entityId": "H001B001",
+  "entityId": "H001B0014FfPq",
   "applicationCode": "PLF",
   "role": {
     "_id": ("5b430f527b914b618083759e"),
@@ -264,7 +264,7 @@ module.exports.validObject4 = {
     "state": "karnataka",
     "country": "India"
   },
-  "entityId": "H001B001",
+  "entityId": "H001B0017ZeJr",
   "applicationCode": "CONSOLE",
   "role": {
     "_id": ("5b3f68b21c17bc7df12740fc"),
@@ -328,7 +328,7 @@ module.exports.validObject5 = {
     "state": "karnataka",
     "country": "India"
   },
-  "entityId": "H001B001",
+  "entityId": "H001B0017ZeJr",
   "applicationCode": "PLF",
   "role": {
     "_id": "5b3f67e71c17bc7df12740fa",

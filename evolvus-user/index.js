@@ -426,11 +426,6 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      if (update.processingStatus === "AUTHORIZED") {
-        update.activationStatus = "ACTIVE";
-      } else {
-        update.activationStatus = "INACTIVE";
-      }
       debug(`calling db update method, filterUser: ${JSON.stringify(filterUser)},update: ${JSON.stringify(update)}`);
       collection.update(filterUser, update).then((resp) => {
         debug("updated successfully", resp);
@@ -471,6 +466,7 @@ module.exports.authenticate = (credentials) => {
       let query = {
         "userId": credentials.userName,
         "enabledFlag": "true",
+        "activationStatus":"ACTIVE",
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
