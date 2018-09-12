@@ -110,7 +110,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
             throw new Error(`No ParentEntity found with ${entityObject.parent}`);
           }
           var randomId = randomString.generate(5);
-          if (result[0].enableFlag == "true") {
+          if (result[0].activationStatus == "ACTIVE") {
             var aces = parseInt(result[0].accessLevel) + 1;
             entityObject.accessLevel = JSON.stringify(aces);
             entityObject.entityId = result[0].entityId + randomId;
