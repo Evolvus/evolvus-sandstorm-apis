@@ -92,20 +92,16 @@ var contactSchema = new mongoose.Schema({
   city: {
     type: String,
     required: false,
-    minLength: 1,
     maxLength: 20
   },
   state: {
-
     type: String,
     required: false,
-    minLength: 1,
     maxLength: 20
   },
   country: {
     type: String,
     required: false,
-    minLength: 1,
     maxLength: 20
   },
   zipCode: {

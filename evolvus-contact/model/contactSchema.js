@@ -106,21 +106,18 @@ var contactSchema = {
       "type": "string",
       "filterable": false, //custom attributes
       "sortable": false, //custom attribute
-      "minLength": 5,
       "maxLength": 20
     },
     "state": {
       "type": "string",
       "filterable": false, //custom attributes
       "sortable": false, //custom attribute
-      "minLength": 5,
       "maxLength": 20
     },
     "country": {
       "type": "string",
       "filterable": false, //custom attributes
       "sortable": false, //custom attribute
-      "minLength": 5,
       "maxLength": 20
     },
     "zipCode": {
