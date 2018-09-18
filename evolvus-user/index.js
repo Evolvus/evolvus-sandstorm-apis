@@ -586,7 +586,7 @@ module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObje
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
-                    if (result[1][0].processingStatus === "AUTHORIZED") {
+                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE" ) {
                       object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       bcrypt.genSalt(10, function(err, salt) {
@@ -608,7 +608,7 @@ module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObje
                       });
                     } else {
                       debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
-                      reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                      reject(`Role ${object.role.roleName} must be ACTIVE and AUTHORIZED`);
                     }
                   } else {
                     debug(`User save failed due to the Role ${object.role.roleName} which is assigned to user not found`);
@@ -666,6 +666,10 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
           $gte: accessLevel
         }
       };
+      object.contact={};
+      if (object.emailId != null) {
+        object.contact.emailId = object.emailId
+      }
       var result;
       var errors = [];
       _.mapKeys(object, function(value, key) {
@@ -678,7 +682,9 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
         }
       });
       debug("Validation status: ", JSON.stringify(result));
-      if (errors.length != 0) {
+      if (errors.length != 0 && errors[0][0].name == "format") {
+        reject(errors[0][0].stack);
+      } else if (errors.length != 0) {
         reject(errors[0]);
       } else {
         // Other validations here
@@ -701,7 +707,7 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
                 if (result[0].length != 0) {
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
-                    if (result[1][0].processingStatus === "AUTHORIZED") {
+                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE" ) {
                       object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       object.contact = user[0].contact;
@@ -722,7 +728,7 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
                       });
                     } else {
                       debug(`User update failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
-                      reject(`Role ${object.role.roleName} must be AUTHORIZED`);
+                      reject(`Role ${object.role.roleName} must be ACTIVE and AUTHORIZED`);
                     }
                   } else {
                     debug(`User update failed due to the Role ${object.role.roleName} which is assigned to user not found`);
