@@ -832,3 +832,50 @@ module.exports.activate = (userId, action) => {
     }
   });
 };
+
+module.exports.authorize = (credentials) => {
+  debug(`index authorize method: Input parameters are ${JSON.stringify(credentials)}`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (credentials == null || typeof credentials === 'undefined') {
+        throw new Error("IllegalArgumentException:Input credentials is null or undefined");
+      }
+      if (credentials.userId != null) {
+        credentials.userId = credentials.userId.toUpperCase();
+      }
+      let query = {
+        "userId": credentials.userId,
+        "tenantId": credentials.corporateId,
+        "enabledFlag": "true",
+        "activationStatus": "ACTIVE",
+        "role.roleName": credentials.roleId.toUpperCase(),
+        "processingStatus": "AUTHORIZED"
+      };
+      collection.findOne(query)
+        .then((userObj) => {
+          if (userObj) {
+            debug(`user object found with input credentials:${JSON.stringify(credentials)} is ${JSON.stringify(userObj.userId)}`);
+            var userObject = _.omit(userObj.toJSON(), ["userPassword", "saltString", "token"]);
+            debug("Index authorize method:Authorization successful for user: ", userObject.userId);
+            resolve(userObject);
+          } else {
+            debug(`Index authorize method:Authorization failed due to Invalid credentials`);
+            reject("Index authorize method:Authorization failed due to Invalid credentials");
+          }
+        }, (err) => {
+          debug(`Failed to authorize due to ${err}`);
+          reject(`Failed to authorize due to ${err}`);
+        })
+        .catch((e) => {
+          console.log(e);
+          var reference = shortid.generate();
+          debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
+        });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
