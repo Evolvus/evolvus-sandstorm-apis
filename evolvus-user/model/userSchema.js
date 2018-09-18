@@ -197,7 +197,6 @@ var userSchema = {
     },
     "designation": {
       "type": "string",
-      "minLength":6,
       "maxLength": 35,
       "filterable": false,
       "sortable": false,
