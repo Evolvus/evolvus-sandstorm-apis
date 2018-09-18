@@ -468,7 +468,7 @@ module.exports.authenticate = (credentials) => {
       let query = {
         "userId": credentials.userName,
         "enabledFlag": "true",
-        "activationStatus":"ACTIVE",
+        "activationStatus": "ACTIVE",
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
@@ -584,9 +584,9 @@ module.exports.saveUser = (tenantId, ipAddress, createdBy, accessLevel, userObje
             Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
-                  object.accessLevel = result[0][0].accessLevel;
+                  object.accessLevel = "0";
                   if (result[1].length != 0) {
-                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE" ) {
+                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
                       object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       bcrypt.genSalt(10, function(err, salt) {
@@ -666,7 +666,7 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
           $gte: accessLevel
         }
       };
-      object.contact={};
+      object.contact = {};
       if (object.emailId != null) {
         object.contact.emailId = object.emailId
       }
@@ -676,7 +676,7 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
         if (schema.properties[key] != null) {
           result = validate(value, schema.properties[key]);
           if (result.errors.length != 0) {
-            result.errors[0].property=key;
+            result.errors[0].property = key;
             errors.push(result.errors);
           }
         }
@@ -705,9 +705,9 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
             Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
               .then((result) => {
                 if (result[0].length != 0) {
-                  object.accessLevel = result[0][0].accessLevel;
+                  object.accessLevel = "0";
                   if (result[1].length != 0) {
-                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE" ) {
+                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
                       object.role = result[1][0];
                       object.applicationCode = result[1][0].applicationCode;
                       object.contact = user[0].contact;
