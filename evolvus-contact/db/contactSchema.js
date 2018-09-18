@@ -35,7 +35,7 @@ var contactSchema = new mongoose.Schema({
   emailId: {
     type: String,
     minLength: 8,
-    maxLength: 50,
+    maxLength: 140,
     validate: {
       validator: validator.isEmail,
       message: '{VALUE} is not a valid email',
@@ -47,20 +47,20 @@ var contactSchema = new mongoose.Schema({
   },
   phoneNumber: {
     type: String,
-    maxLength: 15,
+    maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
   },
   mobileNumber: {
     type: String,
-    maxLength: 15,
+    maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }
@@ -73,7 +73,7 @@ var contactSchema = new mongoose.Schema({
     maxLength: 10,
     validate: {
       validator: function(v) {
-        return /^[0-9\-\+]+$/.test(v);
+        return /^(\s*|\d+)$/.test(v);
       },
       message: "{PATH} can contain only Numbers"
     }

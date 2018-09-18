@@ -55,7 +55,7 @@ var contactSchema = {
     "emailId": {
       "type": "string",
       "minLength": 8,
-      "maxLength": 50,
+      "maxLength": 140,
       "unique": false,
       "filterable": true, //custom attributes
       "sortable": true //custom attribute
@@ -65,16 +65,14 @@ var contactSchema = {
     },
     "phoneNumber": {
       "type": "string",
-      "minLength": 9,
-      "maxLength": 15,
+      "maxLength": 10,
       "unique": false,
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
     },
     "mobileNumber": {
       "type": "string",
-      "minLength": 9,
-      "maxLength": 15,
+      "maxLength": 10,
       "unique": false,
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
@@ -84,7 +82,6 @@ var contactSchema = {
     },
     "faxNumber": {
       "type": "string",
-      "minLength": 1,
       "maxLength": 10,
       "filterable": false, //custom attributes
       "sortable": false //custom attribute
