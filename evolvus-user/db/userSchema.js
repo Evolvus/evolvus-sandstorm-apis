@@ -119,6 +119,7 @@ var userSchema = new mongoose.Schema({
   },
   designation: {
     type: String,
+    min:6,
     max: 35,
     validate: {
       validator: function(v) {

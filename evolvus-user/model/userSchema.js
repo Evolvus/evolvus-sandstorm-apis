@@ -197,6 +197,7 @@ var userSchema = {
     },
     "designation": {
       "type": "string",
+      "minLength":6,
       "maxLength": 35,
       "filterable": false,
       "sortable": false,
@@ -566,8 +567,9 @@ var userSchema = {
         },
         "emailId": {
           "type": "string",
+          "format":"email",
           "minLength": 8,
-          "maxLength": 50,
+          "maxLength": 140,
           "unique": false,
           "filterable": true, //custom attributes
           "sortable": true //custom attribute
