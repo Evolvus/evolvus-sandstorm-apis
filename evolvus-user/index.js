@@ -714,12 +714,12 @@ module.exports.updateUser = (tenantId, createdBy, ipAddress, userId, object, acc
                       if (object.emailId != null) {
                         object.contact.emailId = object.emailId
                       }
-                      let now = new Date();
-                      let id = date.format(now, format);
-                      object.uniquereferenceid = id;
+                      // let now = new Date();
+                      // let id = date.format(now, format);
+                      // object.uniquereferenceid = id;
                       collection.update(filterUser, object).then((result) => {
                         debug(`User updated successfully ${JSON.stringify(result)}`);
-                        result.id = id;
+                        result.id = user[0].uniquereferenceid;
                         resolve(result);
                       }).catch((e) => {
                         var reference = shortid.generate();
@@ -781,12 +781,11 @@ module.exports.activate = (userId, action) => {
         if (action == "ACTIVE") {
           flag = "true";
         }
-        let now = new Date();
-        let id = date.format(now, format);
+        // let now = new Date();
+        // let id = date.format(now, format);
         var updateUser = {
           "activationStatus": action,
-          "enabledFlag": flag,
-          "uniquereferenceid": id
+          "enabledFlag": flag
         };
         collection.findOne(filterUser).then((user) => {
           if (user) {
@@ -801,11 +800,11 @@ module.exports.activate = (userId, action) => {
                 if (result.nModified == 1) {
                   if (action == "ACTIVE") {
                     result.data = `User ${userId} activated successfullly`;
-                    result.id = id;
+                    result.id = user.uniquereferenceid;
                     resolve(result);
                   } else {
                     result.data = `User ${userId} deactivated successfullly`;
-                    result.id = id;
+                    result.id = user.uniquereferenceid;
                     resolve(result);
                   }
                 } else {
