@@ -35,12 +35,7 @@ var contactSchema = new mongoose.Schema({
   emailId: {
     type: String,
     minLength: 8,
-    maxLength: 140,
-    validate: {
-      validator: validator.isEmail,
-      message: '{VALUE} is not a valid email',
-      isAsync: false
-    }
+    maxLength: 140
   },
   emailVerified: {
     type: Boolean
