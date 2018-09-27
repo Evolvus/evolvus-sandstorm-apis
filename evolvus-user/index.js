@@ -589,3 +589,35 @@ module.exports.authorize = (credentials) => {
     }
   });
 };
+
+module.exports.verify = (applicationCode, userId) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (applicationCode == null || userId == null) {
+        throw new Error(`IllegalArgumentException:userId/applicationCode is null or undefined`);
+      }
+      let filter = {
+        "applicationCode": applicationCode,
+        "userId":userId.toUpperCase()
+      };
+      collection.findOne(filter)
+        .then((userObj) => {
+          debug(`user object found with input credentials:${JSON.stringify(applicationCode)} and ${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
+          if (userObj) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+        .catch((e) => {
+          var reference = shortid.generate();
+          debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
+        });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
