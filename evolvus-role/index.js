@@ -106,15 +106,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
               "createdBy": createdBy,
               "query": result._id
             };
-            sweClient.initialize(sweEventObject).then((result) => {
+            sweClient.initialize(sweEventObject).then((sweResult) => {
               var filterRole = {
                 "tenantId": tenantId,
                 "roleName": object.roleName
               };
               collection.update(filterRole, {
-                "processingStatus": result.data.wfInstanceStatus,
-                "wfInstanceId": result.data.wfInstanceId
-              }).then((result) => {
+                "processingStatus": sweResult.data.wfInstanceStatus,
+                "wfInstanceId": sweResult.data.wfInstanceId
+              }).then((updateResult) => {
                 resolve(result);
               }).catch((e) => {
                 var reference = shortid.generate();

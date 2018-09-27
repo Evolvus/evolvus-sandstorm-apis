@@ -158,16 +158,16 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
                     "query": result._id
                   };
                   debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
-                  sweClient.initialize(sweEventObject).then((result) => {
+                  sweClient.initialize(sweEventObject).then((sweResult) => {
                     var filterEntity = {
                       "tenantId": tenantId,
                       "entityCode": entityObject.entityCode
                     };
                     debug(`calling db update  filterEntity :${JSON.stringify(filterEntity)} is a parameter`);
                     collection.update(filterEntity, {
-                      "processingStatus": result.data.wfInstanceStatus,
-                      "wfInstanceId": result.data.wfInstanceId
-                    }).then((result) => {
+                      "processingStatus": sweResult.data.wfInstanceStatus,
+                      "wfInstanceId": sweResult.data.wfInstanceId
+                    }).then((updateResult) => {
                       resolve(result);
                     }).catch((e) => {
                       var reference = shortid.generate();
