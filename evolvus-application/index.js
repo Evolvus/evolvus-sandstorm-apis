@@ -54,7 +54,14 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
         throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
-
+      audit.name = "APPLICATION_SAVE";
+      audit.ipAddress = ipAddress;
+      audit.createdBy = createdBy;
+      audit.keyDataAsJSON = JSON.stringify(applicationObject);
+      audit.details = `application creation initiated`;
+      audit.eventDateTime = Date.now();
+      audit.status = "SUCCESS";
+      docketClient.postToDocket(audit);
       let object = _.merge(applicationObject, {
         "tenantId": tenantId
       });
@@ -62,54 +69,42 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
         "tenantId": tenantId,
         "applicationCode": applicationObject.applicationCode
       });
-
       debug(`calling DB find method, filter :${applicationObject.applicationCode},orderby :${JSON.stringify({})} ,skipCount :${0} ,limit :${1} are parameters`);
       collection.find(query, {}, 0, 1)
         .then((result) => {
-
           if (!_.isEmpty(result[0])) {
             throw new Error(`application ${applicationObject.applicationCode}, already exists `);
           }
-
           var res = validate(object, schema);
           debug("validation status: ", JSON.stringify(res));
           if (!res.valid) {
             if (res.errors[0].name == "required") {
               reject(`${res.errors[0].argument} is required`);
             } else {
-              reject(res.errors[0].schema.message);
+              reject(res.errors[0].stack);
             }
           } else {
             // if the object is valid, save the object to the database
-            audit.name = "APPLICATION_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(applicationObject);
-            audit.details = `application creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
             debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
-            collection.save(object).then((result) => {
-              debug(`saved successfully ${result}`);
+            collection.save(object).then((savedObject) => {
+              debug(`saved successfully ${savedObject}`);
               var sweEventObject = {
                 "tenantId": tenantId,
                 "wfEntity": "APPLICATION",
                 "wfEntityAction": "CREATE",
                 "createdBy": createdBy,
-                "query": result._id
-
+                "query": savedObject._id
               };
-              sweClient.initialize(sweEventObject).then((result) => {
+              sweClient.initialize(sweEventObject).then((sweResult) => {
                 var filterApplication = {
                   "tenantId": tenantId,
-                  "applicationCode": applicationObject.applicationCode
+                  "applicationCode": savedObject.applicationCode
                 };
                 collection.update(filterApplication, {
-                  "processingStatus": result.data.wfInstanceStatus,
-                  "wfInstanceId": result.data.wfInstanceId
+                  "processingStatus": sweResult.data.wfInstanceStatus,
+                  "wfInstanceId": sweResult.data.wfInstanceId
                 }).then((result) => {
-                  resolve(result);
+                  resolve(savedObject);
                 }).catch((e) => {
                   var reference = shortid.generate();
                   debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
@@ -208,10 +203,10 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
-            throw new Error(`application ${update.applicationName},  already exists `);
+            throw new Error(`application ${code} doesn't exists.`);
           }
-          if ((!_.isEmpty(result[0])) && (result[0].applicationCode != code)) {
-            throw new Error(`application ${update.applicationName} already exists`);
+          if (update.applicationCode != null) {
+            throw new Error(`ApplicationCode can't be modified`);
           }
           audit.name = "APPLICATION_UPDATE";
           audit.ipAddress = ipAddress;

@@ -106,7 +106,7 @@ var applicationSchema = {
       "displayable": true
     }
   },
-  "required": ["tenantId", "applicationName", "createdBy", "createdDate"]
+  "required": ["tenantId", "applicationName", "applicationCode"]
 };
 
 module.exports.schema = applicationSchema;
