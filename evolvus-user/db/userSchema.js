@@ -151,6 +151,11 @@ var userSchema = new mongoose.Schema({
     type: String,
     enum: ["LOGGED_IN", "LOGGED_OUT"],
     default: "LOGGED_OUT"
+  },
+  firstLogin:{
+    type:String,
+    enum:["true","false"],
+    default:"true"
   }
 });
 

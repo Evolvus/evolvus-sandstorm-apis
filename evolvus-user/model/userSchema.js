@@ -27,6 +27,11 @@ var userSchema = {
       "filterable": true,
       "sortable": false
     },
+    "firstLogin":{
+      "type":"string",
+      "enum":["true","false"],
+      "default":"true"
+    },
     "uniquereferenceid": {
       "type": "string",
       "filterable": true,
