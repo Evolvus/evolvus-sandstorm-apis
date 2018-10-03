@@ -95,7 +95,8 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
         // Other validations here
         object.userId = object.userId.toUpperCase();
         let query = {
-          userId: object.userId
+          "tenantId": tenantId,
+          "userId": object.userId
         };
         collection.findOne(query).then((userObject) => {
           if (userObject) {
@@ -511,39 +512,6 @@ module.exports.authenticate = (credentials) => {
   });
 };
 
-module.exports.updateToken = (id, token) => {
-  return new Promise((resolve, reject) => {
-    try {
-      if (id == null || token == null) {
-        throw new Error(`IllegalArgumentException:id/token is null or undefined`);
-      }
-      let filter = {
-        "_id": id
-      };
-      var update = {
-        token: token
-      };
-      collection.update(filter, update).then((result) => {
-        if (result.nModified == 1) {
-          debug(`Index updatedToken method: Token updated successfully ${result}`);
-          resolve(result);
-        } else {
-          debug(`Index updatedToken method:Failed to update token.`);
-          reject("Index updatedToken method:Failed to update token.");
-        }
-      }).catch((e) => {
-        var reference = shortid.generate();
-        debug(`collection.update promise failed due to ${e} and reference id ${reference}`);
-        reject(e);
-      });
-    } catch (e) {
-      var reference = shortid.generate();
-      debug(`try catch failed due to ${e} and reference id ${reference}`);
-      reject(e);
-    }
-  });
-};
-
 module.exports.authorize = (credentials) => {
   debug(`index authorize method: Input parameters are ${JSON.stringify(credentials)}`);
   return new Promise((resolve, reject) => {
@@ -557,27 +525,39 @@ module.exports.authorize = (credentials) => {
       let query = {
         "userId": credentials.userId,
         "tenantId": credentials.corporateId,
-        "enabledFlag": "true",
-        "activationStatus": "ACTIVE",
-        "role.roleName": credentials.roleId.toUpperCase(),
-        "processingStatus": "AUTHORIZED"
+        "role.roleName": credentials.roleId.toUpperCase()
       };
       collection.findOne(query)
         .then((userObj) => {
-          if (userObj) {
-            debug(`user object found with input credentials:${JSON.stringify(credentials)} is ${JSON.stringify(userObj.userId)}`);
-            var userObject = _.omit(userObj.toJSON(), ["userPassword", "saltString", "token"]);
-            debug("Index authorize method:Authorization successful for user: ", userObject.userId);
-            resolve(userObject);
+          if (!userObj) {
+            reject("User not found");
+          } else if (userObj.firstLogin === "true") {
+            let updateObject = {
+              "processingStatus": "AUTHORIZED",
+              "activationStatus": "ACTIVE",
+              "enabledFlag": "true",
+              "firstLogin": "false"
+            };
+            collection.update({
+              "tenantId": credentials.corporateId,
+              "userId": credentials.userId
+            }, updateObject).then((updatedRes) => {
+              if (updatedRes.nModified != 0) {
+                var result = _.omit(userObj, ["userPassword", "saltString", "token"]);
+                resolve(result);
+              } else {
+                reject("Server Error.Please contact Administrator");
+              }
+            }).catch((e) => {
+              debug(`User update promise failed due to ${e}`);
+              reject(e);
+            });
+          } else if (userObj.processingStatus === "AUTHORIZED" && userObj.enabledFlag === "true", userObj.activationStatus === "ACTIVE") {
+            resolve(_.omit(userObj.toJSON(), ["userPassword", "saltString", "token"]));
           } else {
-            debug(`Index authorize method:Authorization failed due to Invalid credentials`);
-            reject("Index authorize method:Authorization failed due to Invalid credentials");
+            reject("User must be Active and Authorized");
           }
-        }, (err) => {
-          debug(`Failed to authorize due to ${err}`);
-          reject(`Failed to authorize due to ${err}`);
-        })
-        .catch((e) => {
+        }).catch((e) => {
           var reference = shortid.generate();
           debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
           reject(e);
@@ -598,17 +578,17 @@ module.exports.verify = (applicationCode, userId) => {
       }
       let filter = {
         "applicationCode": applicationCode,
-        "userId":userId.toUpperCase()
+        "userId": userId.toUpperCase()
       };
       collection.findOne(filter)
         .then((userObj) => {
           debug(`user object found with input credentials:${JSON.stringify(applicationCode)} and ${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
           if (userObj) {
-                resolve(true);
-              } else {
-                resolve(false);
-              }
-            })
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        })
         .catch((e) => {
           var reference = shortid.generate();
           debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
