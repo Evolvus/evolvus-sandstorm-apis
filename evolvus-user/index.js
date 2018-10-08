@@ -603,18 +603,22 @@ module.exports.verify = (applicationCode, userId) => {
 };
   //Verify UserName exists or not for Active Directory Integration.
 
-  module.exports.findUserName = (userId) => {
+  module.exports.findUserName = (userId,applicationCode) => {
     debug(`index findUserName method: Input parameters are ${userId}`);
     return new Promise((resolve, reject) => {
       try {
-        if (userId == null || typeof userId === 'undefined') {
-          throw new Error("IllegalArgumentException:Input userName is null or undefined");
+        if (userId == null || applicationCode ==  null) {
+          throw new Error("IllegalArgumentException:Input userName/applicationCode is null or undefined");
         }
         if (userId != null) {
           userId = userId.toUpperCase();
         }
         let query = {
-          "userId": userId        
+          "userId": userId,
+          "enabledFlag": "true",
+          "activationStatus": "ACTIVE",
+          "applicationCode": applicationCode,
+          "processingStatus": "AUTHORIZED"
         };
         collection.findOne(query)
           .then((userObj) => {
