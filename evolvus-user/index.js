@@ -600,7 +600,7 @@ module.exports.verify = (applicationCode, userId) => {
       reject(e);
     }
   });
-
+};
   //Verify UserName exists or not for Active Directory Integration.
 
   module.exports.findUserName = (userId) => {
@@ -641,4 +641,3 @@ module.exports.verify = (applicationCode, userId) => {
       }
     });
   };
-};
