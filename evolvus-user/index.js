@@ -600,4 +600,45 @@ module.exports.verify = (applicationCode, userId) => {
       reject(e);
     }
   });
+
+  //Verify UserName exists or not for Active Directory Integration.
+
+  module.exports.findUserName = (userId) => {
+    debug(`index findUserName method: Input parameters are ${userId}`);
+    return new Promise((resolve, reject) => {
+      try {
+        if (userId == null || typeof userId === 'undefined') {
+          throw new Error("IllegalArgumentException:Input userName is null or undefined");
+        }
+        if (userId != null) {
+          userId = userId.toUpperCase();
+        }
+        let query = {
+          "userId": userId        
+        };
+        collection.findOne(query)
+          .then((userObj) => {
+            debug(`user object found with input credentials:${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
+            if (userObj) {
+                 resolve(userObj);
+            } else {
+              debug(`UserName Doesn't Exists`);
+              reject("UserName Doesn't Exists");
+            }
+          }, (err) => {
+            debug(`Failed to verify userName due to ${err}`);
+            reject(`Failed to verify userName due to ${err}`);
+          })
+          .catch((e) => {
+            var reference = shortid.generate();
+            debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
+            reject(e);
+          });
+      } catch (e) {
+        var reference = shortid.generate();
+        debug(`try catch failed due to ${e} and reference id ${reference}`);
+        reject(e);
+      }
+    });
+  };
 };
