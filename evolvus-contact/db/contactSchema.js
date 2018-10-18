@@ -87,17 +87,35 @@ var contactSchema = new mongoose.Schema({
   city: {
     type: String,
     required: false,
-    maxLength: 20
+    maxLength: 20,
+    validate: {
+      validator: function(v) {
+        return /^[a-zA-Z ]+$/.test(v);
+      },
+      message: "{PATH} can contain only Alphabets and Spaces"
+    }
   },
   state: {
     type: String,
     required: false,
-    maxLength: 20
+    maxLength: 20,
+    validate: {
+      validator: function(v) {
+        return /^[a-zA-Z ]+$/.test(v);
+      },
+      message: "{PATH} can contain only Alphabets and Spaces"
+    }
   },
   country: {
     type: String,
     required: false,
-    maxLength: 20
+    maxLength: 20,
+    validate: {
+      validator: function(v) {
+        return /^[a-zA-Z ]+$/.test(v);
+      },
+      message: "{PATH} can contain only Alphabets and Spaces"
+    }
   },
   zipCode: {
     type: String

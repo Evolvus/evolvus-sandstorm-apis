@@ -28,15 +28,21 @@ module.exports = {
 module.exports.validate = (contactObject) => {
   debug(`index validate method.contactObject :${JSON.stringify(contactObject)} is a parameter`);
   return new Promise((resolve, reject) => {
-    if (typeof contactObject === "undefined") {
-      throw new Error("IllegalArgumentException:contactObject is undefined");
-    }
-    var res = validate(contactObject, schema);
-    debug("validation status: ", JSON.stringify(res));
-    if (res.valid) {
-      resolve(res.valid);
-    } else {
-      reject(res.errors);
+    try {
+      if (typeof contactObject === "undefined") {
+        throw new Error("IllegalArgumentException:contactObject is undefined");
+      }
+      var res = validate(contactObject, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (res.valid) {
+        resolve(res.valid);
+      } else {
+        reject(res.errors);
+      }
+    } catch (err) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to :${e} and referenceId :${reference}`);
+      reject(err);
     }
   });
 };
@@ -51,64 +57,64 @@ module.exports.save = (tenantId, createdBy, ipAddress, contactObject) => {
 
       let object = _.merge(contactObject, {
         "tenantId": tenantId
-      });          
-      
-          var res = validate(object, schema);
-          debug("validation status: ", JSON.stringify(res));
-          if (!res.valid) {
-            if (res.errors[0].name == "required") {
-              reject(`${res.errors[0].argument} is required`);
-            } else {
-              reject(res.errors[0].schema.message);
-            }
-          } else {
-            // if the object is valid, save the object to the database
-            audit.name = "CONTACT_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(contactObject);
-            audit.details = `contact creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
-            debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
-            collection.save(object).then((result) => {
-              debug(`saved successfully ${result}`);
-              var sweEventObject = {
-                "tenantId": tenantId,
-                "wfEntity": "CONTACT",
-                "wfEntityAction": "CREATE",
-                "createdBy": createdBy,
-                "query": result._id
+      });
 
-              };
-              sweClient.initialize(sweEventObject).then((result) => {
-                var filtercontact = {
-                  "tenantId": tenantId,
-                  "emailId": contactObject.emailId
-                };
-                collection.update(filtercontact, {
-                  "processingStatus": result.data.wfEvent,
-                  "wfInstanceId": result.data.wfInstanceId
-                }).then((result) => {
-                  resolve(result);
-                }).catch((e) => {
-                  var reference = shortid.generate();
-                  debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
-                  reject(e);
-                });
-              }).catch((e) => {
-                var reference = shortid.generate();
-                debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
-                reject(e);
-              });
+      var res = validate(object, schema);
+      debug("validation status: ", JSON.stringify(res));
+      if (!res.valid) {
+        if (res.errors[0].name == "required") {
+          reject(`${res.errors[0].argument} is required`);
+        } else {
+          reject(res.errors[0].schema.message);
+        }
+      } else {
+        // if the object is valid, save the object to the database
+        audit.name = "CONTACT_SAVE";
+        audit.ipAddress = ipAddress;
+        audit.createdBy = createdBy;
+        audit.keyDataAsJSON = JSON.stringify(contactObject);
+        audit.details = `contact creation initiated`;
+        audit.eventDateTime = Date.now();
+        audit.status = "SUCCESS";
+        docketClient.postToDocket(audit);
+        debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
+        collection.save(object).then((result) => {
+          debug(`saved successfully ${result}`);
+          var sweEventObject = {
+            "tenantId": tenantId,
+            "wfEntity": "CONTACT",
+            "wfEntityAction": "CREATE",
+            "createdBy": createdBy,
+            "query": result._id
+
+          };
+          sweClient.initialize(sweEventObject).then((result) => {
+            var filtercontact = {
+              "tenantId": tenantId,
+              "emailId": contactObject.emailId
+            };
+            collection.update(filtercontact, {
+              "processingStatus": result.data.wfEvent,
+              "wfInstanceId": result.data.wfInstanceId
+            }).then((result) => {
+              resolve(result);
             }).catch((e) => {
               var reference = shortid.generate();
-              debug(`failed to save with an error: ${e},and reference: ${reference}`);
+              debug(`Update promise  failed due to :${e} and referenceId :${reference}`);
               reject(e);
             });
-          }
-        
+          }).catch((e) => {
+            var reference = shortid.generate();
+            debug(`initialize promise failed due to :${e} and referenceId :${reference}`);
+            reject(e);
+          });
+        }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`failed to save with an error: ${e},and reference: ${reference}`);
+          reject(e);
+        });
+      }
+
       // Other validations here
     } catch (e) {
       var reference = shortid.generate();
