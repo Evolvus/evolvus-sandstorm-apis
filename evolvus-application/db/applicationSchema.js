@@ -75,6 +75,10 @@ var applicationSchema = new mongoose.Schema({
   },
   lastUpdatedDate: {
     type: Date
+  },
+  url: {
+    type: String,
+    default: ""
   }
 });
 
