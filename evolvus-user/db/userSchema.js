@@ -49,7 +49,10 @@ var userSchema = new mongoose.Schema({
     maxLength: 100,
     required: true
   },
-  role: role.dbSchema,
+  role: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'role'
+  },
   userName: {
     type: String,
     min: 6,

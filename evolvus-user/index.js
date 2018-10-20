@@ -114,10 +114,10 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                   object.accessLevel = result[0][0].accessLevel;
                   if (result[1].length != 0) {
                     if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
-                      object.role = result[1][0];
+                      object.role = result[1][0]._id;
                       object.applicationCode = result[1][0].applicationCode;
-                      bcrypt.genSalt(10, function(err, salt) {
-                        bcrypt.hash(object.userPassword, salt, function(err, hash) {
+                      bcrypt.genSalt(10, function (err, salt) {
+                        bcrypt.hash(object.userPassword, salt, function (err, hash) {
                           // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
                           object.userPassword = hash;
                           object.saltString = salt;
@@ -132,7 +132,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               "createdBy": createdBy,
                               "query": result._id
                             };
-
                             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                             sweClient.initialize(sweEventObject).then((sweResult) => {
                               var filterUser = {
@@ -238,17 +237,22 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
           $regex: entityId + ".*"
         }
       });
-      collection.find(query, orderby, skipCount, limit).then((docs) => {
-        let filteredArray = _.map(docs, function(object) {
-          return _.omit(object.toJSON(), "userPassword", "token", "saltString");
+      collection.objectModel.find(query)
+        .populate('role')
+        .sort(orderby)
+        .skip(skipCount) // skipCount should not be negative
+        .limit(limit)
+        .then((docs) => {
+          let filteredArray = _.map(docs, function (object) {
+            return _.omit(object.toJSON(), "userPassword", "token", "saltString");
+          });
+          debug(`Number of User(s) stored in the database are ${filteredArray.length}`);
+          resolve(filteredArray);
+        }).catch((e) => {
+          var reference = shortid.generate();
+          debug(`collection.find promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
         });
-        debug(`Number of User(s) stored in the database are ${filteredArray.length}`);
-        resolve(filteredArray);
-      }).catch((e) => {
-        var reference = shortid.generate();
-        debug(`collection.find promise failed due to ${e} and reference id ${reference}`);
-        reject(e);
-      });
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
@@ -295,7 +299,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
       };
       var result;
       var errors = [];
-      _.mapKeys(object, function(value, key) {
+      _.mapKeys(object, function (value, key) {
         if (schema.properties[key] != null) {
           result = validate(value, schema.properties[key]);
           if (result.errors.length != 0) {
@@ -309,94 +313,97 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
         reject(errors[0][0].stack);
       } else {
         // Other validations here
-        collection.find(filterUser, {}, 0, 1).then((user) => {
-          if (user.length != 0) {
-            if (object.entityId == null) {
-              object.entityId = user[0].entityId;
-            }
-            if (object.role == null || object.role.roleName == null) {
-              object.role = user[0].role;
-            }
-            var filterEntity = {
-              entityId: object.entityId.toUpperCase()
-            };
-            var filterRole = {
-              roleName: object.role.roleName.toUpperCase()
-            };
-            Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
-              .then((result) => {
-                if (result[0].length != 0) {
-                  object.accessLevel = result[0][0].accessLevel;
-                  if (result[1].length != 0) {
-                    if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
-                      object.role = result[1][0];
-                      object.applicationCode = result[1][0].applicationCode;
-                      collection.update(filterUser, object).then((result) => {
-                        debug(`User updated successfully ${JSON.stringify(result)}`);
-                        var sweEventObject = {
-                          "tenantId": tenantId,
-                          "wfEntity": "USER",
-                          "wfEntityAction": "UPDATE",
-                          "createdBy": createdBy,
-                          "query": user[0]._id,
-                          "object": user[0]
-                        };
-
-                        debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
-                        sweClient.initialize(sweEventObject).then((sweResult) => {
-                          var filterUser = {
+        collection.objectModel.find(filterUser)
+          .populate('role')
+          .limit(1)
+          .then((user) => {
+            if (user.length != 0) {
+              if (object.entityId == null) {
+                object.entityId = user[0].entityId;
+              }
+              if (object.role == null || object.role.roleName == null) {
+                object.role = user[0].role;
+              }
+              var filterEntity = {
+                entityId: object.entityId.toUpperCase()
+              };
+              var filterRole = {
+                roleName: object.role.roleName.toUpperCase()
+              };
+              Promise.all([entity.find(tenantId, createdBy, ipAddress, object.entityId, accessLevel, filterEntity, {}, 0, 1), role.find(tenantId, createdBy, ipAddress, filterRole, {}, 0, 1)])
+                .then((result) => {
+                  if (result[0].length != 0) {
+                    object.accessLevel = result[0][0].accessLevel;
+                    if (result[1].length != 0) {
+                      if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
+                        object.role = result[1][0];
+                        object.applicationCode = result[1][0].applicationCode;
+                        collection.update(filterUser, object).then((result) => {
+                          debug(`User updated successfully ${JSON.stringify(result)}`);
+                          var sweEventObject = {
                             "tenantId": tenantId,
-                            "userId": user[0].userId
+                            "wfEntity": "USER",
+                            "wfEntityAction": "UPDATE",
+                            "createdBy": createdBy,
+                            "query": user[0]._id,
+                            "object": user[0]
                           };
-                          debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
-                          collection.update(filterUser, {
-                            "processingStatus": sweResult.data.wfInstanceStatus,
-                            "wfInstanceId": sweResult.data.wfInstanceId
-                          }).then((userObject) => {
-                            userObject.uniquereferenceid = user[0].uniquereferenceid;
-                            debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
-                            resolve(userObject);
+
+                          debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+                          sweClient.initialize(sweEventObject).then((sweResult) => {
+                            var filterUser = {
+                              "tenantId": tenantId,
+                              "userId": user[0].userId
+                            };
+                            debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
+                            collection.update(filterUser, {
+                              "processingStatus": sweResult.data.wfInstanceStatus,
+                              "wfInstanceId": sweResult.data.wfInstanceId
+                            }).then((userObject) => {
+                              userObject.uniquereferenceid = user[0].uniquereferenceid;
+                              debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
+                              resolve(userObject);
+                            }).catch((e) => {
+                              var reference = shortid.generate();
+                              debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                              reject(e);
+                            });
                           }).catch((e) => {
                             var reference = shortid.generate();
-                            debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                            debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
                             reject(e);
                           });
                         }).catch((e) => {
                           var reference = shortid.generate();
-                          debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
+                          debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
                           reject(e);
                         });
-                      }).catch((e) => {
-                        var reference = shortid.generate();
-                        debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
-                        reject(e);
-                      });
+                      } else {
+                        debug(`User update failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
+                        reject(`Role ${object.role.roleName} must be ACTIVE and AUTHORIZED`);
+                      }
                     } else {
-                      debug(`User update failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
-                      reject(`Role ${object.role.roleName} must be ACTIVE and AUTHORIZED`);
+                      debug(`User update failed due to the Role ${object.role.roleName} which is assigned to user not found`);
+                      reject(`Role ${object.role.roleName} not found`);
                     }
                   } else {
-                    debug(`User update failed due to the Role ${object.role.roleName} which is assigned to user not found`);
-                    reject(`Role ${object.role.roleName} not found`);
+                    debug("User update failed due the selected Entity not found");
+                    reject(`User update failed due the selected Entity not found`);
                   }
-                } else {
-                  debug("User update failed due the selected Entity not found");
-                  reject(`User update failed due the selected Entity not found`);
-                }
-              }).catch((e) => {
-                var reference = shortid.generate();
-                debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
-                reject(e);
-              });
-          } else {
-            debug("No user found matching the userId " + userId);
-            reject("No user found matching the userId " + userId);
-          }
-        }).catch((e) => {
-          var reference = shortid.generate();
-          debug(`user.find promise failed due to ${e} and reference id ${reference}`);
-          reject(e);
-        });
+                }).catch((e) => {
+                  var reference = shortid.generate();
+                  debug(`Collection.update promise failed due to ${e} and reference id ${reference}`);
+                  reject(e);
+                });
+            } else {
+              debug("No user found matching the userId " + userId);
+              reject("No user found matching the userId " + userId);
+            }
+          }).catch((e) => {
+            var reference = shortid.generate();
+            debug(`user.find promise failed due to ${e} and reference id ${reference}`);
+            reject(e);
+          });
       }
     } catch (e) {
       var reference = shortid.generate();
@@ -577,7 +584,7 @@ module.exports.verify = (applicationCode, userId) => {
         throw new Error(`IllegalArgumentException:userId/applicationCode is null or undefined`);
       }
       let filter = {
-        "applicationCode": applicationCode,
+        // "applicationCode": applicationCode,
         "userId": userId.toUpperCase()
       };
       collection.findOne(filter)
@@ -601,47 +608,48 @@ module.exports.verify = (applicationCode, userId) => {
     }
   });
 };
-  //Verify UserName exists or not for Active Directory Integration.
+//Verify UserName exists or not for Active Directory Integration.
 
-  module.exports.findUserName = (userId,applicationCode) => {
-    debug(`index findUserName method: Input parameters are ${userId}`);
-    return new Promise((resolve, reject) => {
-      try {
-        if (userId == null || applicationCode ==  null) {
-          throw new Error("IllegalArgumentException:Input userName/applicationCode is null or undefined");
-        }
-        if (userId != null) {
-          userId = userId.toUpperCase();
-        }
-        let query = {
-          "userId": userId,
-          "enabledFlag": "true",
-          "activationStatus": "ACTIVE",
-          "applicationCode": applicationCode,
-          "processingStatus": "AUTHORIZED"
-        };
-        collection.findOne(query)
-          .then((userObj) => {
-            debug(`user object found with input credentials:${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
-            if (userObj) {
-                 resolve(userObj);
-            } else {
-              debug(`UserName Doesn't Exists`);
-              reject("UserName Doesn't Exists");
-            }
-          }, (err) => {
-            debug(`Failed to verify userName due to ${err}`);
-            reject(`Failed to verify userName due to ${err}`);
-          })
-          .catch((e) => {
-            var reference = shortid.generate();
-            debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
-            reject(e);
-          });
-      } catch (e) {
-        var reference = shortid.generate();
-        debug(`try catch failed due to ${e} and reference id ${reference}`);
-        reject(e);
+module.exports.findUserName = (userId, applicationCode) => {
+  debug(`index findUserName method: Input parameters are ${userId}`);
+  return new Promise((resolve, reject) => {
+    try {
+      if (userId == null || applicationCode == null) {
+        throw new Error("IllegalArgumentException:Input userName/applicationCode is null or undefined");
       }
-    });
-  };
+      if (userId != null) {
+        userId = userId.toUpperCase();
+      }
+      let query = {
+        "userId": userId,
+        "enabledFlag": "true",
+        "activationStatus": "ACTIVE",
+        // "applicationCode": applicationCode,
+        "processingStatus": "AUTHORIZED"
+      };
+      collection.objectModel.find(query)
+        .populate('role')
+        .then((userObj) => {
+          debug(`user object found with input credentials:${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
+          if (userObj) {
+            resolve(userObj);
+          } else {
+            debug(`UserName Doesn't Exists`);
+            reject("UserName Doesn't Exists");
+          }
+        }, (err) => {
+          debug(`Failed to verify userName due to ${err}`);
+          reject(`Failed to verify userName due to ${err}`);
+        })
+        .catch((e) => {
+          var reference = shortid.generate();
+          debug(`collection.findOne promise failed due to ${e} and reference id ${reference}`);
+          reject(e);
+        });
+    } catch (e) {
+      var reference = shortid.generate();
+      debug(`try catch failed due to ${e} and reference id ${reference}`);
+      reject(e);
+    }
+  });
+};
