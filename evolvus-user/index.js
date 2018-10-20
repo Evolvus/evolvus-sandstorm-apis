@@ -484,7 +484,8 @@ module.exports.authenticate = (credentials) => {
         "applicationCode": credentials.applicationCode,
         "processingStatus": "AUTHORIZED"
       };
-      collection.findOne(query)
+      collection.objectModel.findOne(query)
+        .populate('role')
         .then((userObj) => {
           debug(`user object found with input credentials:${JSON.stringify(credentials)} is ${JSON.stringify(userObj)}`);
           if (userObj) {
