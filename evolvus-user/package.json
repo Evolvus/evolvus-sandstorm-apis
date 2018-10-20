@@ -25,7 +25,7 @@
     "@evolvus/evolvus-docket-client": "^1.0.3",
     "@evolvus/evolvus-entity": "^1.0.26",
     "@evolvus/evolvus-mongo-dao": "^1.0.1",
-    "@evolvus/evolvus-role": "^1.0.20",
+    "@evolvus/evolvus-role": "^1.0.21",
     "@evolvus/evolvus-swe-client": "^1.0.2",
     "bcryptjs": "^2.4.3",
     "date-and-time": "^0.6.2",
