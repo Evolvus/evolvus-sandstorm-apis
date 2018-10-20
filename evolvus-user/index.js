@@ -627,7 +627,7 @@ module.exports.findUserName = (userId, applicationCode) => {
         // "applicationCode": applicationCode,
         "processingStatus": "AUTHORIZED"
       };
-      collection.objectModel.find(query)
+      collection.objectModel.findOne(query)
         .populate('role')
         .then((userObj) => {
           debug(`user object found with input credentials:${JSON.stringify(userId)} is ${JSON.stringify(userObj)}`);
