@@ -104,6 +104,13 @@ var applicationSchema = {
       "filterable": false,
       "sortable": false,
       "displayable": true
+    },
+    "url": {
+      "type": "string",
+      "default": "",
+      "filterable": false,
+      "sortable": false,
+      "displayable": false
     }
   },
   "required": ["tenantId", "applicationName", "applicationCode"]
