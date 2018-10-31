@@ -535,8 +535,9 @@ module.exports.authorize = (credentials) => {
         // "tenantId": credentials.corporateId,
         // "role.roleName": credentials.roleId.toUpperCase()
       };
-      collection.findOne(query)
-        .then((userObj) => {
+      collection.objectModel.findOne(query)
+      .populate('role')
+      .then((userObj) => {
           if (!userObj) {
             reject("User not found");
           } else if (userObj.firstLogin === "true") {
