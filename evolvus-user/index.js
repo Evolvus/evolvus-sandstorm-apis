@@ -532,8 +532,8 @@ module.exports.authorize = (credentials) => {
       }
       let query = {
         "userId": credentials.userId,
-        "tenantId": credentials.corporateId,
-        "role.roleName": credentials.roleId.toUpperCase()
+        // "tenantId": credentials.corporateId,
+        // "role.roleName": credentials.roleId.toUpperCase()
       };
       collection.findOne(query)
         .then((userObj) => {
@@ -547,7 +547,7 @@ module.exports.authorize = (credentials) => {
               "firstLogin": "false"
             };
             collection.update({
-              "tenantId": credentials.corporateId,
+              //"tenantId": credentials.corporateId,
               "userId": credentials.userId
             }, updateObject).then((updatedRes) => {
               if (updatedRes.nModified != 0) {
