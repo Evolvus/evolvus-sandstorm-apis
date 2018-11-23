@@ -130,7 +130,8 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               "wfEntity": "USER",
                               "wfEntityAction": "CREATE",
                               "createdBy": createdBy,
-                              "query": result._id
+                              "query": result._id,
+                              "object":savedObject
                             };
                             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                             sweClient.initialize(sweEventObject).then((sweResult) => {
