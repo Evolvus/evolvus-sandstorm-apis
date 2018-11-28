@@ -131,7 +131,8 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                               "wfEntityAction": "CREATE",
                               "createdBy": createdBy,
                               "query": result._id,
-                              "object":savedObject
+                              "object": savedObject,
+                              "flowCode": object.flowCode
                             };
                             debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
                             sweClient.initialize(sweEventObject).then((sweResult) => {
@@ -347,7 +348,8 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                             "wfEntityAction": "UPDATE",
                             "createdBy": createdBy,
                             "query": user[0]._id,
-                            "object": user[0]
+                            "object": user[0],
+                            "flowCode":object.flowCode
                           };
 
                           debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
@@ -537,8 +539,8 @@ module.exports.authorize = (credentials) => {
         // "role.roleName": credentials.roleId.toUpperCase()
       };
       collection.objectModel.findOne(query)
-      .populate('role')
-      .then((userObj) => {
+        .populate('role')
+        .then((userObj) => {
           if (!userObj) {
             reject("User not found");
           } else if (userObj.firstLogin === "true") {
@@ -656,3 +658,4 @@ module.exports.findUserName = (userId, applicationCode) => {
     }
   });
 };
+
