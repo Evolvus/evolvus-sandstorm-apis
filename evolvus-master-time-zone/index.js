@@ -4,7 +4,7 @@ const dbSchema = require("./db/masterTimeZoneSchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const masterTimeZoneAudit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require('shortid');
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
@@ -15,8 +15,8 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "MASTERTIMEZONE";
+masterTimeZoneAudit.application = "SANDSTORM_CONSOLE";
+masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
 
 module.exports = {
   model,
@@ -82,14 +82,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterTimeZoneObject) => 
             }
           } else {
             // if the object is valid, save the object to the database
-            audit.name = "MASTERTIMEZONE_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
-            audit.details = `masterTimeZone creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
+            masterTimeZoneAudit.name = "MASTERTIMEZONE_SAVE";
+            masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+            masterTimeZoneAudit.ipAddress = ipAddress;
+            masterTimeZoneAudit.createdBy = createdBy;
+            masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
+            masterTimeZoneAudit.details = `masterTimeZone creation initiated`;
+            masterTimeZoneAudit.eventDateTime = Date.now();
+            masterTimeZoneAudit.status = "SUCCESS";
+            docketClient.postToDocket(masterTimeZoneAudit);
             debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
             collection.save(object).then((result) => {
               debug(`saved successfully ${result}`);
@@ -136,14 +137,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterTimeZoneObject) => 
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
-      audit.name = "MASTERTIMEZONE_EXCEPTIONONSAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
-      audit.details = `caught Exception on masterTimeZone_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONSAVE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
+      masterTimeZoneAudit.details = `caught Exception on masterTimeZone_save ${e.message}`;
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "FAILURE";
+      docketClient.postToDocket(masterTimeZoneAudit);
       reject(e);
     }
   });
@@ -163,14 +165,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      audit.name = "MASTERTIMEZONE_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "masterTimeZone_find";
-      audit.details = `masterTimeZone find initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_FIND";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = "masterTimeZone_find";
+      masterTimeZoneAudit.details = `masterTimeZone find initiated`;
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "SUCCESS";
+      docketClient.postToDocket(masterTimeZoneAudit);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`masterTimeZone(s) stored in the database are ${docs}`);
@@ -182,14 +185,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "MASTERTIMEZONE_EXCEPTIONONFIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "masterTimeZone_find";
-      audit.details = `caught Exception on masterTimeZone_Find${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONFIND";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = "masterTimeZone_find";
+      masterTimeZoneAudit.details = `caught Exception on masterTimeZone_Find${e.message}`;
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "FAILURE";
+      docketClient.postToDocket(masterTimeZoneAudit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -219,14 +223,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].zoneCode != code)) {
             throw new Error(`masterTimeZone ${update.zoneName} already exists`);
           }
-          audit.name = "MASTERTIMEZONE_UPDATE";
-          audit.ipAddress = ipAddress;
-          audit.createdBy = createdBy;
-          audit.keyDataAsJSON = JSON.stringify(update);
-          audit.details = `masterTimeZone updation initiated`;
-          audit.eventDateTime = Date.now();
-          audit.status = "SUCCESS";
-          docketClient.postToDocket(audit);
+          masterTimeZoneAudit.name = "MASTERTIMEZONE_UPDATE";
+          masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+          masterTimeZoneAudit.ipAddress = ipAddress;
+          masterTimeZoneAudit.createdBy = createdBy;
+          masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
+          masterTimeZoneAudit.details = `masterTimeZone updation initiated`;
+          masterTimeZoneAudit.eventDateTime = Date.now();
+          masterTimeZoneAudit.status = "SUCCESS";
+          docketClient.postToDocket(masterTimeZoneAudit);
           debug(`calling DB update method, filter :${query},update :${JSON.stringify(update)} are parameters`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
@@ -267,14 +272,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on masterTimeZone_Update${e.message}`;
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "FAILURE";
+      masterTimeZoneAudit.details = `caught Exception on masterTimeZone_Update${e.message}`;
+      docketClient.postToDocket(masterTimeZoneAudit);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -293,14 +299,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      audit.name = "MASTERTIMEZONE_UPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.details = `masterTimeZone workflow updation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_UPDATEWORKFLOW";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
+      masterTimeZoneAudit.details = `masterTimeZone workflow updation initiated`;
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "SUCCESS";
+      docketClient.postToDocket(masterTimeZoneAudit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filtermasterTimeZone)},update: ${JSON.stringify(update)}`);
       collection.update(filtermasterTimeZone, update).then((resp) => {
         debug("updated successfully", resp);
@@ -311,14 +318,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         reject(error);
       });
     } catch (e) {
-      audit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on masterTimeZone_UpdateWorkflow${e.message}`;
-      docketClient.postToDocket(audit);
+      masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATEWORKFLOW";
+      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.ipAddress = ipAddress;
+      masterTimeZoneAudit.createdBy = createdBy;
+      masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
+      masterTimeZoneAudit.eventDateTime = Date.now();
+      masterTimeZoneAudit.status = "FAILURE";
+      masterTimeZoneAudit.details = `caught Exception on masterTimeZone_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(masterTimeZoneAudit);
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
