@@ -4,7 +4,7 @@ const dbSchema = require("./db/menuSchema");
 const _ = require("lodash");
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-
+const menuAudit = require("@evolvus/evolvus-docket-client").audit;
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("menu", dbSchema);
 
@@ -12,20 +12,9 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-var docketObject = {
-  // required fields
-  menu: "PLATFORM",
-  source: "menu",
-  name: "",
-  createdBy: "",
-  ipAddress: "",
-  status: "SUCCESS", //by default
-  eventDateTime: Date.now(),
-  keyDataAsJSON: "",
-  details: "",
-  //non required fields
-  level: ""
-};
+menuAudit.application = "SANDSTORM_CONSOLE";
+menuAudit.source = "MENU_SERVICE";
+
 module.exports = {
   model,
   dbSchema,
@@ -48,16 +37,21 @@ module.exports.validate = (menuObject) => {
   });
 };
 
-module.exports.save = (tenantId, menuObject) => {
+module.exports.save = (tenantId, menuObject,ipAddress,createdBy) => {
   return new Promise((resolve, reject) => {
     try {
       if (typeof menuObject === 'undefined' || menuObject == null) {
         throw new Error("IllegalArgumentException: menuObject is null or undefined");
       }
-      docketObject.name = "menu_save";
-      docketObject.keyDataAsJSON = JSON.stringify(menuObject);
-      docketObject.details = `menu creation initiated`;
-      docketClient.postToDocket(docketObject);
+      menuAudit.name = "MENU_SAVE";
+      menuAudit.source = "MENU_SERVICE";
+      menuAudit.ipAddress = ipAddress;
+      menuAudit.createdBy = createdBy;
+      menuAudit.keyDataAsJSON = JSON.stringify(menuObject);
+      menuAudit.details = `Menu creation initiated`;
+      menuAudit.eventDateTime = Date.now();
+      menuAudit.status = "SUCCESS";
+      docketClient.postToDocket(menuAudit);
       let object = _.merge(menuObject, {
         "tenantId": tenantId
       });
@@ -81,10 +75,15 @@ module.exports.save = (tenantId, menuObject) => {
       }
       // Other validations here
     } catch (e) {
-      docketObject.name = "menu_ExceptionOnSave";
-      docketObject.keyDataAsJSON = JSON.stringify(menuObject);
-      docketObject.details = `caught Exception on menu_save ${e.message}`;
-      docketClient.postToDocket(docketObject);
+      menuAudit.name = "MENU_EXCEPTIONONSAVE";
+      menuAudit.source = "MENU_SERVICE";
+      menuAudit.ipAddress = ipAddress;
+      menuAudit.createdBy = createdBy;
+      menuAudit.keyDataAsJSON = JSON.stringify(menuObject);
+      menuAudit.details = `Menu creation Failed`;
+      menuAudit.eventDateTime = Date.now();
+      menuAudit.status = "FAILURE";
+      docketClient.postToDocket(menuAudit);
       debug(`caught exception ${e}`);
       reject(e);
     }
@@ -103,12 +102,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       if (tenantId == null) {
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
-      docketObject.name = "menu_getAll";
-      docketObject.ipAddress = ipAddress;
-      docketObject.createdBy = createdBy;
-      docketObject.keyDataAsJSON = `getAll with limit ${limit}`;
-      docketObject.details = `menu getAll method`;
-      docketClient.postToDocket(docketObject);
+      menuAudit.name = "MENU_FIND";
+      menuAudit.source = "MENU_SERVICE";
+      menuAudit.ipAddress = ipAddress;
+      menuAudit.createdBy = createdBy;
+      menuAudit.keyDataAsJSON = JSON.stringify(filter);
+      menuAudit.details = `Menu find initiated`;
+      menuAudit.eventDateTime = Date.now();
+      menuAudit.status = "SUCCESS";
+      docketClient.postToDocket(menuAudit);
 
       collection.find(filter, orderby, skipCount, limit).then((docs) => {
         debug(`menu(s) stored in the database are ${docs}`);
@@ -118,6 +120,16 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         reject(e);
       });
     } catch (e) {
+      menuAudit.name = "MENU_EXCEPTIONONFIND";
+      menuAudit.source = "MENU_SERVICE";
+      menuAudit.ipAddress = ipAddress;
+      menuAudit.createdBy = createdBy;
+      menuAudit.keyDataAsJSON = JSON.stringify(filter);
+      menuAudit.details = `Menu find Failed`;
+      menuAudit.eventDateTime = Date.now();
+      menuAudit.status = "FAILURE";
+      docketClient.postToDocket(menuAudit);
+      debug(`caught exception ${e}`);
       reject(e);
     }
   });
