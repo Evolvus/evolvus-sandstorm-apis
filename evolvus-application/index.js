@@ -4,19 +4,18 @@ const dbSchema = require("./db/applicationSchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const applicationAudit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("application", dbSchema);
-
 
 var shortid = require('shortid');
 var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "APPLICATION";
+applicationAudit.application = "SANDSTORM_CONSOLE";
+applicationAudit.source = "APPLICATION_SERVICE";
 
 module.exports = {
   model,
@@ -54,14 +53,15 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       if (typeof applicationObject === 'undefined' || applicationObject == null) {
         throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
-      audit.name = "APPLICATION_SAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(applicationObject);
-      audit.details = `application creation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_SAVE";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = JSON.stringify(applicationObject);
+      applicationAudit.details = `application creation initiated`;
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "SUCCESS";
+      docketClient.postToDocket(applicationAudit);
       let object = _.merge(applicationObject, {
         "tenantId": tenantId
       });
@@ -130,14 +130,15 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
-      audit.name = "APPLICATION_EXCEPTIONONSAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(applicationObject);
-      audit.details = `caught Exception on application_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_EXCEPTIONONSAVE";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = JSON.stringify(applicationObject);
+      applicationAudit.details = `caught Exception on application_save ${e.message}`;
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "FAILURE";
+      docketClient.postToDocket(applicationAudit);
       reject(e);
     }
   });
@@ -152,14 +153,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      audit.name = "APPLICATION_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "application_find";
-      audit.details = `application find initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_FIND";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = "application_find";
+      applicationAudit.details = `application find initiated`;
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "SUCCESS";
+      docketClient.postToDocket(applicationAudit);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`);
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`application(s) stored in the database are ${docs}`);
@@ -171,14 +173,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "APPLICATION_EXCEPTIONONFIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "application_find";
-      audit.details = `caught Exception on application_Find${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_EXCEPTIONONFIND";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = "application_find";
+      applicationAudit.details = `caught Exception on application_Find${e.message}`;
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "FAILURE";
+      docketClient.postToDocket(applicationAudit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -208,14 +211,15 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
           if (update.applicationCode != null) {
             throw new Error(`ApplicationCode can't be modified`);
           }
-          audit.name = "APPLICATION_UPDATE";
-          audit.ipAddress = ipAddress;
-          audit.createdBy = createdBy;
-          audit.keyDataAsJSON = JSON.stringify(update);
-          audit.details = `application updation initiated`;
-          audit.eventDateTime = Date.now();
-          audit.status = "SUCCESS";
-          docketClient.postToDocket(audit);
+          applicationAudit.name = "APPLICATION_UPDATE";
+          applicationAudit.source = "APPLICATION_SERVICE";
+          applicationAudit.ipAddress = ipAddress;
+          applicationAudit.createdBy = createdBy;
+          applicationAudit.keyDataAsJSON = JSON.stringify(update);
+          applicationAudit.details = `application updation initiated`;
+          applicationAudit.eventDateTime = Date.now();
+          applicationAudit.status = "SUCCESS";
+          docketClient.postToDocket(applicationAudit);
           debug(`calling DB update method, filter :${code},update :${JSON.stringify(update)} are parameters`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
@@ -256,14 +260,15 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "APPLICATION_EXCEPTIONONUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on application_Update${e.message}`;
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_EXCEPTIONONUPDATE";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = JSON.stringify(update);
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "FAILURE";
+      applicationAudit.details = `caught Exception on application_Update${e.message}`;
+      docketClient.postToDocket(applicationAudit);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -282,14 +287,15 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      audit.name = "APPLICATION_UPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.details = `application workflow updation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_UPDATEWORKFLOW";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = JSON.stringify(update);
+      applicationAudit.details = `application workflow updation initiated`;
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "SUCCESS";
+      docketClient.postToDocket(applicationAudit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
       collection.update(filterRole, update).then((resp) => {
         debug("updated successfully", resp);
@@ -301,14 +307,15 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "APPLICATION_EXCEPTIONONUPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on application_UpdateWorkflow${e.message}`;
-      docketClient.postToDocket(audit);
+      applicationAudit.name = "APPLICATION_EXCEPTIONONUPDATEWORKFLOW";
+      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.ipAddress = ipAddress;
+      applicationAudit.createdBy = createdBy;
+      applicationAudit.keyDataAsJSON = JSON.stringify(update);
+      applicationAudit.eventDateTime = Date.now();
+      applicationAudit.status = "FAILURE";
+      applicationAudit.details = `caught Exception on application_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(applicationAudit);
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
