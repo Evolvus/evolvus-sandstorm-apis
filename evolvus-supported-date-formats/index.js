@@ -4,7 +4,7 @@ const dbSchema = require("./db/supportedDateFormatsSchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const dateFormatsAudit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require('shortid');
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
@@ -14,8 +14,8 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "SUPPORTEDDATEFORMATS";
+dateFormatsAudit.application = "SANDSTORM_CONSOLE";
+dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
 
 module.exports = {
   model,
@@ -80,14 +80,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, supportedDateFormatsObjec
             }
           } else {
             // if the object is valid, save the object to the database
-            audit.name = "SUPPORTEDDATEFORMATS_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
-            audit.details = `supportedDateFormats creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
+            dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_SAVE";
+            dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+            dateFormatsAudit.ipAddress = ipAddress;
+            dateFormatsAudit.createdBy = createdBy;
+            dateFormatsAudit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+            dateFormatsAudit.details = `supportedDateFormats creation initiated`;
+            dateFormatsAudit.eventDateTime = Date.now();
+            dateFormatsAudit.status = "SUCCESS";
+            docketClient.postToDocket(dateFormatsAudit);
             debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
             collection.save(object).then((result) => {
               debug(`saved successfully ${result}`);
@@ -134,14 +135,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, supportedDateFormatsObjec
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
-      audit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONSAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
-      audit.details = `caught Exception on supportedDateFormats_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONSAVE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
+      dateFormatsAudit.details = `caught Exception on supportedDateFormats_save ${e.message}`;
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "FAILURE";
+      docketClient.postToDocket(dateFormatsAudit);
       reject(e);
     }
   });
@@ -161,14 +163,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      audit.name = "SUPPORTEDDATEFORMATS_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "supportedDateFormats_find";
-      audit.details = `supportedDateFormats find initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_FIND";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = "supportedDateFormats_find";
+      dateFormatsAudit.details = `supportedDateFormats find initiated`;
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "SUCCESS";
+      docketClient.postToDocket(dateFormatsAudit);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`supportedDateFormats(s) stored in the database are ${docs}`);
@@ -180,14 +183,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONFIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "supportedDateFormats_find";
-      audit.details = `caught Exception on supportedDateFormats_Find${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONFIND";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = "supportedDateFormats_find";
+      dateFormatsAudit.details = `caught Exception on supportedDateFormats_Find${e.message}`;
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "FAILURE";
+      docketClient.postToDocket(dateFormatsAudit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -217,14 +221,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].formatCode != code)) {
             throw new Error(`supportedDateFormats ${update.formatCode} already exists`);
           }
-          audit.name = "SUPPORTEDDATEFORMATS_UPDATE";
-          audit.ipAddress = ipAddress;
-          audit.createdBy = createdBy;
-          audit.keyDataAsJSON = JSON.stringify(update);
-          audit.details = `supportedDateFormats  updation initiated`;
-          audit.eventDateTime = Date.now();
-          audit.status = "SUCCESS";
-          docketClient.postToDocket(audit);
+          dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_UPDATE";
+          dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+          dateFormatsAudit.ipAddress = ipAddress;
+          dateFormatsAudit.createdBy = createdBy;
+          dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
+          dateFormatsAudit.details = `supportedDateFormats  updation initiated`;
+          dateFormatsAudit.eventDateTime = Date.now();
+          dateFormatsAudit.status = "SUCCESS";
+          docketClient.postToDocket(dateFormatsAudit);
           debug(`calling DB update method, filter :${query},update :${JSON.stringify(update)} are parameters`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
@@ -265,14 +270,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on supportedDateFormats_Update${e.message}`;
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "FAILURE";
+      dateFormatsAudit.details = `caught Exception on supportedDateFormats_Update${e.message}`;
+      docketClient.postToDocket(dateFormatsAudit);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -291,14 +297,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      audit.name = "SUPPORTEDDATEFORMATS_UPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.details = `supportedDateFormats workflow updation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_UPDATEWORKFLOW";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
+      dateFormatsAudit.details = `supportedDateFormats workflow updation initiated`;
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "SUCCESS";
+      docketClient.postToDocket(dateFormatsAudit);
       debug(`calling db update method, filtersupportedDateFormats: ${JSON.stringify(filtersupportedDateFormats)},update: ${JSON.stringify(update)}`);
       collection.update(filtersupportedDateFormats, update).then((resp) => {
         debug("updated successfully", resp);
@@ -309,14 +316,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         reject(error);
       });
     } catch (e) {
-      audit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on supportedDateFormats_UpdateWorkflow${e.message}`;
-      docketClient.postToDocket(audit);
+      dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATEWORKFLOW";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.ipAddress = ipAddress;
+      dateFormatsAudit.createdBy = createdBy;
+      dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
+      dateFormatsAudit.eventDateTime = Date.now();
+      dateFormatsAudit.status = "FAILURE";
+      dateFormatsAudit.details = `caught Exception on supportedDateFormats_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(dateFormatsAudit);
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
