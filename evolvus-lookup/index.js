@@ -5,7 +5,7 @@ const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
 const shortid = require('shortid');
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const lookupAudit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("lookup", dbSchema);
@@ -14,8 +14,8 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "LOOKUP";
+lookupAudit.application = "SANDSTORM_CONSOLE";
+lookupAudit.source = "LOOKUP_SERVICE";
 
 module.exports = {
   dbSchema,
@@ -81,14 +81,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
         }
       } else {
         // if the object is valid, save the object to the database
-            audit.name = "LOOKUP_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(lookupObject);
-            audit.details = `lookup creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
+            lookupAudit.name = "LOOKUP_SAVE";
+            lookupAudit.source = "LOOKUP_SERVICE";
+            lookupAudit.ipAddress = ipAddress;
+            lookupAudit.createdBy = createdBy;
+            lookupAudit.keyDataAsJSON = JSON.stringify(lookupObject);
+            lookupAudit.details = `lookup creation initiated`;
+            lookupAudit.eventDateTime = Date.now();
+            lookupAudit.status = "SUCCESS";
+            docketClient.postToDocket(lookupAudit);
         debug("calling db save method and parameter is object ", object);
         collection.save(object).then((result) => {
           debug(`saved successfully ${result}`);
@@ -132,14 +133,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
 
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "LOOKUP_EXCEPTIONONSAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(lookupObject);
-      audit.details = `caught Exception on lookup_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_EXCEPTIONONSAVE";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = JSON.stringify(lookupObject);
+      lookupAudit.details = `caught Exception on lookup_save ${e.message}`;
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "FAILURE";
+      docketClient.postToDocket(lookupAudit);
       debug(`try catch failed due to ${e} and reference id ${reference}`);
       debug(`caught exception ${e}`);
       reject(e);
@@ -162,14 +164,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      audit.name = "LOOKUP_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "lookup_find";
-      audit.details = `lookup find initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_FIND";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = "lookup_find";
+      lookupAudit.details = `lookup find initiated`;
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "SUCCESS";
+      docketClient.postToDocket(lookupAudit);
       debug(`calling db find method.query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}, are parameters`);
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`lookup(s) stored in the database are ${docs}`);
@@ -181,14 +184,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "LOOKUP_EXCEPTIONONFIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "lookup_find";
-      audit.details = `caught Exception on lookup_Find${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_EXCEPTIONONFIND";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = "lookup_find";
+      lookupAudit.details = `caught Exception on lookup_Find${e.message}`;
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "FAILURE";
+      docketClient.postToDocket(lookupAudit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -213,14 +217,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           if (_.isEmpty(result[0])) {
             throw new Error(`Unable to Update lookup already exists `);
           }
-          audit.name = "LOOKUP_UPDATE";
-          audit.ipAddress = ipAddress;
-          audit.createdBy = createdBy;
-          audit.keyDataAsJSON = JSON.stringify(update);
-          audit.details = `lookup updation initiated`;
-          audit.eventDateTime = Date.now();
-          audit.status = "SUCCESS";
-          docketClient.postToDocket(audit);
+          lookupAudit.name = "LOOKUP_UPDATE";
+          lookupAudit.source = "LOOKUP_SERVICE";
+          lookupAudit.ipAddress = ipAddress;
+          lookupAudit.createdBy = createdBy;
+          lookupAudit.keyDataAsJSON = JSON.stringify(update);
+          lookupAudit.details = `lookup updation initiated`;
+          lookupAudit.eventDateTime = Date.now();
+          lookupAudit.status = "SUCCESS";
+          docketClient.postToDocket(lookupAudit);
           debug(`calling db update method,code :${code},update :${update} parameter`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
@@ -262,14 +267,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "LOOKUP_EXCEPTIONONUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on lookup_Update${e.message}`;
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_EXCEPTIONONUPDATE";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = JSON.stringify(update);
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "FAILURE";
+      lookupAudit.details = `caught Exception on lookup_Update${e.message}`;
+      docketClient.postToDocket(lookupAudit);
       debug(`try catch failed due to :${e},and reference id ${reference}`);
       debug(`caught exception ${e}`);
       reject(e);
@@ -288,14 +294,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      audit.name = "LOOKUP_UPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.details = `lookup workflow updation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_UPDATEWORKFLOW";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = JSON.stringify(update);
+      lookupAudit.details = `lookup workflow updation initiated`;
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "SUCCESS";
+      docketClient.postToDocket(lookupAudit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filterRole)},update: ${JSON.stringify(update)}`);
       collection.update(filterRole, update).then((resp) => {
         debug("updated successfully", resp);
@@ -307,14 +314,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "LOOKUP_EXCEPTIONONUPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on lookup_UpdateWorkflow${e.message}`;
-      docketClient.postToDocket(audit);
+      lookupAudit.name = "LOOKUP_EXCEPTIONONUPDATEWORKFLOW";
+      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.ipAddress = ipAddress;
+      lookupAudit.createdBy = createdBy;
+      lookupAudit.keyDataAsJSON = JSON.stringify(update);
+      lookupAudit.eventDateTime = Date.now();
+      lookupAudit.status = "FAILURE";
+      lookupAudit.details = `caught Exception on lookup_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(lookupAudit);
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
