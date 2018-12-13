@@ -4,7 +4,7 @@ const dbSchema = require("./db/userSchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const userAudit = require("@evolvus/evolvus-docket-client").audit;
 const entity = require("@evolvus/evolvus-entity");
 const role = require("@evolvus/evolvus-role");
 const bcrypt = require("bcryptjs");
@@ -21,8 +21,8 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "USER";
+userAudit.application = "SANDSTORM_CONSOLE";
+userAudit.source = "USER_SERVICE";
 
 module.exports = {
   model,
@@ -68,14 +68,15 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
       if (tenantId == null || userObject == null) {
         throw new Error("IllegalArgumentException: tenantId/userObject is null or undefined");
       }
-      audit.name = "USER_SAVE INITIALIZED";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(userObject);
-      audit.details = `user save is initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_SAVE INITIALIZED";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = JSON.stringify(userObject);
+      userAudit.details = `user save is initiated`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "SUCCESS";
+      docketClient.postToDocket(userAudit);
       let now = new Date();
       let id = date.format(now, format);
       let object = _.merge(userObject, {
@@ -191,14 +192,15 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
-      audit.name = "USER_EXCEPTION_ON_SAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(userObject);
-      audit.details = `caught Exception on user_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_EXCEPTION_ON_SAVE";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = JSON.stringify(userObject);
+      userAudit.details = `caught Exception on user_save ${e.message}`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "FAILURE";
+      docketClient.postToDocket(userAudit);
       reject(e);
     }
   });
@@ -222,14 +224,15 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       if (tenantId == null) {
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
-      audit.name = "USER_FIND INITIALIZED";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
-      audit.details = `user getAll method`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_FIND INITIALIZED";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
+      userAudit.details = `user getAll method`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "SUCCESS";
+      docketClient.postToDocket(userAudit);
       let query = _.merge(filter, {
         "tenantId": tenantId,
         "accessLevel": {
@@ -258,14 +261,15 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
     } catch (e) {
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
-      audit.name = "USER_EXCEPTION_ON_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
-      audit.details = `caught Exception on user_getAll ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_EXCEPTION_ON_FIND";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
+      userAudit.details = `caught Exception on user_getAll ${e.message}`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "FAILURE";
+      docketClient.postToDocket(userAudit);
       reject(e);
     }
   });
@@ -280,14 +284,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
       if (tenantId == null || userId == null) {
         throw new Error("IllegalArgumentException:tenantId/userId is null or undefined");
       }
-      audit.name = "USER_UPDATE INITIALIZED";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `update user with  ${JSON.stringify(object)}`;
-      audit.details = `user update method`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_UPDATE INITIALIZED";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `update user with  ${JSON.stringify(object)}`;
+      userAudit.details = `user update method`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "SUCCESS";
+      docketClient.postToDocket(userAudit);
       userId = userId.toUpperCase();
       var filterUser = {
         "userId": userId,
@@ -349,7 +354,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
                             "createdBy": createdBy,
                             "query": user[0]._id,
                             "object": user[0],
-                            "flowCode":object.flowCode
+                            "flowCode": object.flowCode
                           };
 
                           debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
@@ -410,14 +415,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
       }
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "USER_EXCEPTION_ON_UPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `update user with object ${JSON.stringify(object)}`;
-      audit.details = `caught Exception on user_update ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_EXCEPTION_ON_UPDATE";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `update user with object ${JSON.stringify(object)}`;
+      userAudit.details = `caught Exception on user_update ${e.message}`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "FAILURE";
+      docketClient.postToDocket(userAudit);
       debug(`try catch failed due to ${e} and reference id ${reference}`);
       reject(e);
     }
@@ -431,14 +437,15 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
       if (tenantId == null || id == null || update == null) {
         throw new Error("IllegalArgumentException:tenantId/id/update is null or undefined");
       }
-      audit.name = "USER_WORKFLOW_UPDATE INITIALIZED";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `update user with  ${JSON.stringify(update)}`;
-      audit.details = `user update method`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_WORKFLOW_UPDATE INITIALIZED";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `update user with  ${JSON.stringify(update)}`;
+      userAudit.details = `user update method`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "SUCCESS";
+      docketClient.postToDocket(userAudit);
       var filterUser = {
         "tenantId": tenantId,
         "_id": id
@@ -454,14 +461,15 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "USER_EXCEPTION_ON_WORKFLOWUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = `update user with object ${JSON.stringify(update)}`;
-      audit.details = `caught Exception on user_update ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      userAudit.name = "USER_EXCEPTION_ON_WORKFLOWUPDATE";
+      userAudit.source = "USER_SERVICE";
+      userAudit.ipAddress = ipAddress;
+      userAudit.createdBy = createdBy;
+      userAudit.keyDataAsJSON = `update user with object ${JSON.stringify(update)}`;
+      userAudit.details = `caught Exception on user_update ${e.message}`;
+      userAudit.eventDateTime = Date.now();
+      userAudit.status = "FAILURE";
+      docketClient.postToDocket(userAudit);
       debug(`try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
     }
