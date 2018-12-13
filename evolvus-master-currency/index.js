@@ -4,7 +4,7 @@ const dbSchema = require("./db/masterCurrencySchema");
 const _ = require('lodash');
 const validate = require("jsonschema").validate;
 const docketClient = require("@evolvus/evolvus-docket-client");
-const audit = require("@evolvus/evolvus-docket-client").audit;
+const masterCurrencyAudit = require("@evolvus/evolvus-docket-client").audit;
 const sweClient = require("@evolvus/evolvus-swe-client");
 const shortid = require('shortid');
 
@@ -14,8 +14,8 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
-audit.application = "SANDSTORM_CONSOLE";
-audit.source = "MASTERCURRENCY";
+masterCurrencyAudit.application = "SANDSTORM_CONSOLE";
+masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
 
 module.exports = {
   model,
@@ -80,14 +80,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterCurrencyObject) => 
             }
           } else {
             // if the object is valid, save the object to the database
-            audit.name = "MASTERCURRENCY_SAVE";
-            audit.ipAddress = ipAddress;
-            audit.createdBy = createdBy;
-            audit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
-            audit.details = `masterCurrency creation initiated`;
-            audit.eventDateTime = Date.now();
-            audit.status = "SUCCESS";
-            docketClient.postToDocket(audit);
+            masterCurrencyAudit.name = "MASTERCURRENCY_SAVE";
+            masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+            masterCurrencyAudit.ipAddress = ipAddress;
+            masterCurrencyAudit.createdBy = createdBy;
+            masterCurrencyAudit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
+            masterCurrencyAudit.details = `masterCurrency creation initiated`;
+            masterCurrencyAudit.eventDateTime = Date.now();
+            masterCurrencyAudit.status = "SUCCESS";
+            docketClient.postToDocket(masterCurrencyAudit);
             debug(`calling db save method object :${JSON.stringify(object)} is a parameter`);
             collection.save(object).then((result) => {
               debug(`saved successfully ${result}`);
@@ -135,14 +136,15 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterCurrencyObject) => 
     } catch (e) {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
-      audit.name = "MASTERCURRENCY_EXCEPTIONONSAVE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
-      audit.details = `caught Exception on masterCurrency_save ${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONSAVE";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
+      masterCurrencyAudit.details = `caught Exception on masterCurrency_save ${e.message}`;
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "FAILURE";
+      docketClient.postToDocket(masterCurrencyAudit);
       reject(e);
     }
   });
@@ -162,14 +164,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       let query = _.merge(filter, {
         "tenantId": tenantId
       });
-      audit.name = "MASTERCURRENCY_FIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "masterCurrency_find";
-      audit.details = `masterCurrency find initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_FIND";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = "masterCurrency_find";
+      masterCurrencyAudit.details = `masterCurrency find initiated`;
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "SUCCESS";
+      docketClient.postToDocket(masterCurrencyAudit);
       debug(`calling db find method. query :${JSON.stringify(query)}, orderby :${JSON.stringify(orderby)}, skipCount :${skipCount}, limit :${limit}`)
       collection.find(query, orderby, skipCount, limit).then((docs) => {
         debug(`masterCurrency(s) stored in the database are ${docs}`);
@@ -181,14 +184,15 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "MASTERCURRENCY_EXCEPTIONONFIND";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = "masterCurrency_find";
-      audit.details = `caught Exception on masterCurrency_Find${e.message}`;
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONFIND";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = "masterCurrency_find";
+      masterCurrencyAudit.details = `caught Exception on masterCurrency_Find${e.message}`;
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "FAILURE";
+      docketClient.postToDocket(masterCurrencyAudit);
       debug(`index find method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -218,14 +222,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
           if ((!_.isEmpty(result[0])) && (result[0].currencyCode != code)) {
             throw new Error(`masterCurrency ${update.currencyName} already exists`);
           }
-          audit.name = "MASTERCURRENCY_UPDATE";
-          audit.ipAddress = ipAddress;
-          audit.createdBy = createdBy;
-          audit.keyDataAsJSON = JSON.stringify(update);
-          audit.details = `mastercurrency updation initiated`;
-          audit.eventDateTime = Date.now();
-          audit.status = "SUCCESS";
-          docketClient.postToDocket(audit);
+          masterCurrencyAudit.name = "MASTERCURRENCY_UPDATE";
+          masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+          masterCurrencyAudit.ipAddress = ipAddress;
+          masterCurrencyAudit.createdBy = createdBy;
+          masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
+          masterCurrencyAudit.details = `mastercurrency updation initiated`;
+          masterCurrencyAudit.eventDateTime = Date.now();
+          masterCurrencyAudit.status = "SUCCESS";
+          docketClient.postToDocket(masterCurrencyAudit);
           debug(`calling DB update method, filter :${code},update :${JSON.stringify(update)} are parameters`);
           collection.update(query, update).then((resp) => {
             debug("updated successfully", resp);
@@ -266,14 +271,15 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         });
     } catch (e) {
       var reference = shortid.generate();
-      audit.name = "MASTERCURRENCY_EXCEPTIONONUPDATE";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on masterCurrency_Update${e.message}`;
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONUPDATE";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "FAILURE";
+      masterCurrencyAudit.details = `caught Exception on masterCurrency_Update${e.message}`;
+      docketClient.postToDocket(masterCurrencyAudit);
       debug(`index Update method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       reject(e);
     }
@@ -292,14 +298,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "tenantId": tenantId,
         "_id": id
       };
-      audit.name = "MASTERCURRENCY_UPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.details = `masterCurrency workflow updation initiated`;
-      audit.eventDateTime = Date.now();
-      audit.status = "SUCCESS";
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_UPDATEWORKFLOW";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
+      masterCurrencyAudit.details = `masterCurrency workflow updation initiated`;
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "SUCCESS";
+      docketClient.postToDocket(masterCurrencyAudit);
       debug(`calling db update method, filterRole: ${JSON.stringify(filtermasterCurrency)},update: ${JSON.stringify(update)}`);
       collection.update(filtermasterCurrency, update).then((resp) => {
         debug("updated successfully", resp);
@@ -310,14 +317,15 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         reject(error);
       });
     } catch (e) {
-      audit.name = "MASTERCURRENCY_EXCEPTIONONUPDATEWORKFLOW";
-      audit.ipAddress = ipAddress;
-      audit.createdBy = createdBy;
-      audit.keyDataAsJSON = JSON.stringify(update);
-      audit.eventDateTime = Date.now();
-      audit.status = "FAILURE";
-      audit.details = `caught Exception on masterCurrency_UpdateWorkflow${e.message}`;
-      docketClient.postToDocket(audit);
+      masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONUPDATEWORKFLOW";
+      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.ipAddress = ipAddress;
+      masterCurrencyAudit.createdBy = createdBy;
+      masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
+      masterCurrencyAudit.eventDateTime = Date.now();
+      masterCurrencyAudit.status = "FAILURE";
+      masterCurrencyAudit.details = `caught Exception on masterCurrency_UpdateWorkflow${e.message}`;
+      docketClient.postToDocket(masterCurrencyAudit);
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       reject(e);
