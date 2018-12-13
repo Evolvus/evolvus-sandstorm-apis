@@ -22,7 +22,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 userAudit.application = "SANDSTORM_CONSOLE";
-userAudit.source = "USER_SERVICE";
+userAudit.source = "USERSERVICE";
 
 module.exports = {
   model,
@@ -69,7 +69,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
         throw new Error("IllegalArgumentException: tenantId/userObject is null or undefined");
       }
       userAudit.name = "USER_SAVE INITIALIZED";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = JSON.stringify(userObject);
@@ -193,7 +193,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
       userAudit.name = "USER_EXCEPTION_ON_SAVE";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = JSON.stringify(userObject);
@@ -225,7 +225,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
       userAudit.name = "USER_FIND INITIALIZED";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
@@ -262,7 +262,7 @@ module.exports.find = (tenantId, entityId, accessLevel, createdBy, ipAddress, fi
       var reference = shortid.generate();
       debug(`try catch failed due to ${e} and reference id ${reference}`);
       userAudit.name = "USER_EXCEPTION_ON_FIND";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
@@ -285,7 +285,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
         throw new Error("IllegalArgumentException:tenantId/userId is null or undefined");
       }
       userAudit.name = "USER_UPDATE INITIALIZED";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `update user with  ${JSON.stringify(object)}`;
@@ -416,7 +416,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, userId, object, accessL
     } catch (e) {
       var reference = shortid.generate();
       userAudit.name = "USER_EXCEPTION_ON_UPDATE";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `update user with object ${JSON.stringify(object)}`;
@@ -438,7 +438,7 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
         throw new Error("IllegalArgumentException:tenantId/id/update is null or undefined");
       }
       userAudit.name = "USER_WORKFLOW_UPDATE INITIALIZED";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `update user with  ${JSON.stringify(update)}`;
@@ -462,7 +462,7 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
     } catch (e) {
       var reference = shortid.generate();
       userAudit.name = "USER_EXCEPTION_ON_WORKFLOWUPDATE";
-      userAudit.source = "USER_SERVICE";
+      userAudit.source = "USERSERVICE";
       userAudit.ipAddress = ipAddress;
       userAudit.createdBy = createdBy;
       userAudit.keyDataAsJSON = `update user with object ${JSON.stringify(update)}`;

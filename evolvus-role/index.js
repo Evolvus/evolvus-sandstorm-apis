@@ -16,7 +16,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 roleAudit.application = "SANDSTORM_CONSOLE";
-roleAudit.source = "ROLE_SERVICE";
+roleAudit.source = "ROLESERVICE";
 
 module.exports = {
   model,
@@ -75,7 +75,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
           throw new Error(`RoleName ${roleObject.roleName} already exists`);
         }
         roleAudit.name = "ROLE_SAVE";
-        roleAudit.source = "ROLE_SERVICE";
+        roleAudit.source = "ROLESERVICE";
         roleAudit.ipAddress = ipAddress;
         roleAudit.createdBy = createdBy;
         roleAudit.keyDataAsJSON = JSON.stringify(roleObject);
@@ -143,7 +143,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, accessLevel, entityId, ro
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} and referenceId :${reference}`);
       roleAudit.name = "ROLE_EXCEPTIONONSAVE";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = JSON.stringify(roleObject);
@@ -174,7 +174,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       roleAudit.name = "ROLE_GETALL";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = `getAll with limit ${limit}`;
@@ -195,7 +195,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       var reference = shortid.generate();
       debug(`index find method, try_catch failure due to :${e} and referenceId :${reference}`);
       roleAudit.name = "ROLE_EXCEPTIONONGETALL";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = `getAll with limit ${limit}`;
@@ -232,7 +232,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
             throw new Error(`Role ${update.roleName.toUpperCase()} already exists`);
           }
           roleAudit.name = "ROLE_UPDATE";
-          roleAudit.source = "ROLE_SERVICE";
+          roleAudit.source = "ROLESERVICE";
           roleAudit.ipAddress = ipAddress;
           roleAudit.createdBy = createdBy;
           roleAudit.keyDataAsJSON = JSON.stringify(update);
@@ -281,7 +281,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       roleAudit.name = "ROLE_EXCEPTIONONUPDATE";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = JSON.stringify(update);
@@ -307,7 +307,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "_id": id
       };
       roleAudit.name = "ROLE_UPDATEWORKFLOW";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = JSON.stringify(update);
@@ -327,7 +327,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
     } catch (e) {
       var reference = shortid.generate();
       roleAudit.name = "ROLE_EXCEPTIONON_UPDATEWORKFLOW";
-      roleAudit.source = "ROLE_SERVICE";
+      roleAudit.source = "ROLESERVICE";
       roleAudit.ipAddress = ipAddress;
       roleAudit.createdBy = createdBy;
       roleAudit.keyDataAsJSON = JSON.stringify(update);
