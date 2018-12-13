@@ -15,7 +15,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 dateFormatsAudit.application = "SANDSTORM_CONSOLE";
-dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
 
 module.exports = {
   model,
@@ -81,7 +81,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, supportedDateFormatsObjec
           } else {
             // if the object is valid, save the object to the database
             dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_SAVE";
-            dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+            dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
             dateFormatsAudit.ipAddress = ipAddress;
             dateFormatsAudit.createdBy = createdBy;
             dateFormatsAudit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
@@ -136,7 +136,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, supportedDateFormatsObjec
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONSAVE";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = JSON.stringify(supportedDateFormatsObject);
@@ -164,7 +164,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_FIND";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = "supportedDateFormats_find";
@@ -184,7 +184,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONFIND";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = "supportedDateFormats_find";
@@ -222,7 +222,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
             throw new Error(`supportedDateFormats ${update.formatCode} already exists`);
           }
           dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_UPDATE";
-          dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+          dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
           dateFormatsAudit.ipAddress = ipAddress;
           dateFormatsAudit.createdBy = createdBy;
           dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
@@ -271,7 +271,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATE";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
@@ -298,7 +298,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "_id": id
       };
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_UPDATEWORKFLOW";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);
@@ -317,7 +317,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       });
     } catch (e) {
       dateFormatsAudit.name = "SUPPORTEDDATEFORMATS_EXCEPTIONONUPDATEWORKFLOW";
-      dateFormatsAudit.source = "SUPPORTEDDATEFORMATS_SERVICE";
+      dateFormatsAudit.source = "SUPPORTEDDATEFORMATSSERVICE";
       dateFormatsAudit.ipAddress = ipAddress;
       dateFormatsAudit.createdBy = createdBy;
       dateFormatsAudit.keyDataAsJSON = JSON.stringify(update);

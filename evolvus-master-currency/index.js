@@ -15,7 +15,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 masterCurrencyAudit.application = "SANDSTORM_CONSOLE";
-masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
 
 module.exports = {
   model,
@@ -81,7 +81,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterCurrencyObject) => 
           } else {
             // if the object is valid, save the object to the database
             masterCurrencyAudit.name = "MASTERCURRENCY_SAVE";
-            masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+            masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
             masterCurrencyAudit.ipAddress = ipAddress;
             masterCurrencyAudit.createdBy = createdBy;
             masterCurrencyAudit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
@@ -137,7 +137,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterCurrencyObject) => 
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONSAVE";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = JSON.stringify(masterCurrencyObject);
@@ -165,7 +165,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       masterCurrencyAudit.name = "MASTERCURRENCY_FIND";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = "masterCurrency_find";
@@ -185,7 +185,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONFIND";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = "masterCurrency_find";
@@ -223,7 +223,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
             throw new Error(`masterCurrency ${update.currencyName} already exists`);
           }
           masterCurrencyAudit.name = "MASTERCURRENCY_UPDATE";
-          masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+          masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
           masterCurrencyAudit.ipAddress = ipAddress;
           masterCurrencyAudit.createdBy = createdBy;
           masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
@@ -272,7 +272,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONUPDATE";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
@@ -299,7 +299,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "_id": id
       };
       masterCurrencyAudit.name = "MASTERCURRENCY_UPDATEWORKFLOW";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);
@@ -318,7 +318,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       });
     } catch (e) {
       masterCurrencyAudit.name = "MASTERCURRENCY_EXCEPTIONONUPDATEWORKFLOW";
-      masterCurrencyAudit.source = "MASTERCURRENCY_SERVICE";
+      masterCurrencyAudit.source = "MASTERCURRENCYSERVICE";
       masterCurrencyAudit.ipAddress = ipAddress;
       masterCurrencyAudit.createdBy = createdBy;
       masterCurrencyAudit.keyDataAsJSON = JSON.stringify(update);

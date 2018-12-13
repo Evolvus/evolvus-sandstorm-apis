@@ -13,7 +13,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 menuAudit.application = "SANDSTORM_CONSOLE";
-menuAudit.source = "MENU_SERVICE";
+menuAudit.source = "MENUSERVICE";
 
 module.exports = {
   model,
@@ -44,7 +44,7 @@ module.exports.save = (tenantId, menuObject,ipAddress,createdBy) => {
         throw new Error("IllegalArgumentException: menuObject is null or undefined");
       }
       menuAudit.name = "MENU_SAVE";
-      menuAudit.source = "MENU_SERVICE";
+      menuAudit.source = "MENUSERVICE";
       menuAudit.ipAddress = ipAddress;
       menuAudit.createdBy = createdBy;
       menuAudit.keyDataAsJSON = JSON.stringify(menuObject);
@@ -76,7 +76,7 @@ module.exports.save = (tenantId, menuObject,ipAddress,createdBy) => {
       // Other validations here
     } catch (e) {
       menuAudit.name = "MENU_EXCEPTIONONSAVE";
-      menuAudit.source = "MENU_SERVICE";
+      menuAudit.source = "MENUSERVICE";
       menuAudit.ipAddress = ipAddress;
       menuAudit.createdBy = createdBy;
       menuAudit.keyDataAsJSON = JSON.stringify(menuObject);
@@ -103,7 +103,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
       menuAudit.name = "MENU_FIND";
-      menuAudit.source = "MENU_SERVICE";
+      menuAudit.source = "MENUSERVICE";
       menuAudit.ipAddress = ipAddress;
       menuAudit.createdBy = createdBy;
       menuAudit.keyDataAsJSON = JSON.stringify(filter);
@@ -121,7 +121,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
       });
     } catch (e) {
       menuAudit.name = "MENU_EXCEPTIONONFIND";
-      menuAudit.source = "MENU_SERVICE";
+      menuAudit.source = "MENUSERVICE";
       menuAudit.ipAddress = ipAddress;
       menuAudit.createdBy = createdBy;
       menuAudit.keyDataAsJSON = JSON.stringify(filter);

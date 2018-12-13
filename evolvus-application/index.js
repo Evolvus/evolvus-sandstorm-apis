@@ -15,7 +15,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 applicationAudit.application = "SANDSTORM_CONSOLE";
-applicationAudit.source = "APPLICATION_SERVICE";
+applicationAudit.source = "APPLICATIONSERVICE";
 
 module.exports = {
   model,
@@ -54,7 +54,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
         throw new Error("IllegalArgumentException: applicationObject is null or undefined");
       }
       applicationAudit.name = "APPLICATION_SAVE";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = JSON.stringify(applicationObject);
@@ -131,7 +131,7 @@ module.exports.save = (tenantId, ipAddress, createdBy, applicationObject) => {
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       applicationAudit.name = "APPLICATION_EXCEPTIONONSAVE";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = JSON.stringify(applicationObject);
@@ -154,7 +154,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       applicationAudit.name = "APPLICATION_FIND";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = "application_find";
@@ -174,7 +174,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       applicationAudit.name = "APPLICATION_EXCEPTIONONFIND";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = "application_find";
@@ -212,7 +212,7 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
             throw new Error(`ApplicationCode can't be modified`);
           }
           applicationAudit.name = "APPLICATION_UPDATE";
-          applicationAudit.source = "APPLICATION_SERVICE";
+          applicationAudit.source = "APPLICATIONSERVICE";
           applicationAudit.ipAddress = ipAddress;
           applicationAudit.createdBy = createdBy;
           applicationAudit.keyDataAsJSON = JSON.stringify(update);
@@ -261,7 +261,7 @@ module.exports.update = (tenantId, ipAddress, createdBy, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       applicationAudit.name = "APPLICATION_EXCEPTIONONUPDATE";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = JSON.stringify(update);
@@ -288,7 +288,7 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
         "_id": id
       };
       applicationAudit.name = "APPLICATION_UPDATEWORKFLOW";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = JSON.stringify(update);
@@ -308,7 +308,7 @@ module.exports.updateWorkflow = (tenantId, ipAddress, createdBy, id, update) => 
     } catch (e) {
       var reference = shortid.generate();
       applicationAudit.name = "APPLICATION_EXCEPTIONONUPDATEWORKFLOW";
-      applicationAudit.source = "APPLICATION_SERVICE";
+      applicationAudit.source = "APPLICATIONSERVICE";
       applicationAudit.ipAddress = ipAddress;
       applicationAudit.createdBy = createdBy;
       applicationAudit.keyDataAsJSON = JSON.stringify(update);

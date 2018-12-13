@@ -16,7 +16,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 masterTimeZoneAudit.application = "SANDSTORM_CONSOLE";
-masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
 
 module.exports = {
   model,
@@ -83,7 +83,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterTimeZoneObject) => 
           } else {
             // if the object is valid, save the object to the database
             masterTimeZoneAudit.name = "MASTERTIMEZONE_SAVE";
-            masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+            masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
             masterTimeZoneAudit.ipAddress = ipAddress;
             masterTimeZoneAudit.createdBy = createdBy;
             masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
@@ -138,7 +138,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, masterTimeZoneObject) => 
       var reference = shortid.generate();
       debug(`index save method, try_catch failure due to :${e} ,and referenceId :${reference}`);
       masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONSAVE";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(masterTimeZoneObject);
@@ -166,7 +166,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       masterTimeZoneAudit.name = "MASTERTIMEZONE_FIND";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = "masterTimeZone_find";
@@ -186,7 +186,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONFIND";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = "masterTimeZone_find";
@@ -224,7 +224,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
             throw new Error(`masterTimeZone ${update.zoneName} already exists`);
           }
           masterTimeZoneAudit.name = "MASTERTIMEZONE_UPDATE";
-          masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+          masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
           masterTimeZoneAudit.ipAddress = ipAddress;
           masterTimeZoneAudit.createdBy = createdBy;
           masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
@@ -273,7 +273,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATE";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
@@ -300,7 +300,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "_id": id
       };
       masterTimeZoneAudit.name = "MASTERTIMEZONE_UPDATEWORKFLOW";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);
@@ -319,7 +319,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       });
     } catch (e) {
       masterTimeZoneAudit.name = "MASTERTIMEZONE_EXCEPTIONONUPDATEWORKFLOW";
-      masterTimeZoneAudit.source = "MASTERTIMEZONE_SERVICE";
+      masterTimeZoneAudit.source = "MASTERTIMEZONESERVICE";
       masterTimeZoneAudit.ipAddress = ipAddress;
       masterTimeZoneAudit.createdBy = createdBy;
       masterTimeZoneAudit.keyDataAsJSON = JSON.stringify(update);

@@ -15,7 +15,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortAttributes;
 
 lookupAudit.application = "SANDSTORM_CONSOLE";
-lookupAudit.source = "LOOKUP_SERVICE";
+lookupAudit.source = "LOOKUPSERVICE";
 
 module.exports = {
   dbSchema,
@@ -82,7 +82,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
       } else {
         // if the object is valid, save the object to the database
             lookupAudit.name = "LOOKUP_SAVE";
-            lookupAudit.source = "LOOKUP_SERVICE";
+            lookupAudit.source = "LOOKUPSERVICE";
             lookupAudit.ipAddress = ipAddress;
             lookupAudit.createdBy = createdBy;
             lookupAudit.keyDataAsJSON = JSON.stringify(lookupObject);
@@ -134,7 +134,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, lookupObject) => {
     } catch (e) {
       var reference = shortid.generate();
       lookupAudit.name = "LOOKUP_EXCEPTIONONSAVE";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = JSON.stringify(lookupObject);
@@ -165,7 +165,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
         "tenantId": tenantId
       });
       lookupAudit.name = "LOOKUP_FIND";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = "lookup_find";
@@ -185,7 +185,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, filter, orderby, skipCoun
     } catch (e) {
       var reference = shortid.generate();
       lookupAudit.name = "LOOKUP_EXCEPTIONONFIND";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = "lookup_find";
@@ -218,7 +218,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
             throw new Error(`Unable to Update lookup already exists `);
           }
           lookupAudit.name = "LOOKUP_UPDATE";
-          lookupAudit.source = "LOOKUP_SERVICE";
+          lookupAudit.source = "LOOKUPSERVICE";
           lookupAudit.ipAddress = ipAddress;
           lookupAudit.createdBy = createdBy;
           lookupAudit.keyDataAsJSON = JSON.stringify(update);
@@ -268,7 +268,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
     } catch (e) {
       var reference = shortid.generate();
       lookupAudit.name = "LOOKUP_EXCEPTIONONUPDATE";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = JSON.stringify(update);
@@ -295,7 +295,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         "_id": id
       };
       lookupAudit.name = "LOOKUP_UPDATEWORKFLOW";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = JSON.stringify(update);
@@ -315,7 +315,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
     } catch (e) {
       var reference = shortid.generate();
       lookupAudit.name = "LOOKUP_EXCEPTIONONUPDATEWORKFLOW";
-      lookupAudit.source = "LOOKUP_SERVICE";
+      lookupAudit.source = "LOOKUPSERVICE";
       lookupAudit.ipAddress = ipAddress;
       lookupAudit.createdBy = createdBy;
       lookupAudit.keyDataAsJSON = JSON.stringify(update);

@@ -16,7 +16,7 @@ var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
 entityAudit.application = "SANDSTORM_CONSOLE";
-entityAudit.source = "ENTITY_SERVICE";
+entityAudit.source = "ENTITYSERVICE";
 
 module.exports = {
   model,
@@ -66,7 +66,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
         throw new Error("IllegalArgumentException: object is null or undefined");
       }
       entityAudit.name = "ENTITY_SAVE INITIALIZED";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = JSON.stringify(object);
@@ -203,7 +203,7 @@ module.exports.save = (tenantId, createdBy, ipAddress, entityId, accessLevel, ob
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
       entityAudit.name = "ENTITY_EXCEPTION_ON_SAVE";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = JSON.stringify(object);
@@ -228,7 +228,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
         throw new Error("IllegalArgumentException: tenantId is null or undefined");
       }
       entityAudit.name = "ENTITY_FIND INITIALIZED";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
@@ -257,7 +257,7 @@ module.exports.find = (tenantId, createdBy, ipAddress, entityId, accessLevel, fi
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
       entityAudit.name = "ENTITY_EXCEPTION_ON_FIND";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `getAll with filter ${JSON.stringify(filter)}`;
@@ -279,7 +279,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
       entityAudit.name = "ENTITY_UPDATE INITIALIZED";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `update entity with  ${JSON.stringify(update)}`;
@@ -339,7 +339,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
       var reference = shortid.generate();
       debug(`try catch failed due to :${e} and referenceId :${reference}`);
       entityAudit.name = "ENTITY_EXCEPTION_ON_UPDATE";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `update entity with object ${JSON.stringify(update)}`;
@@ -360,7 +360,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
         throw new Error("IllegalArgumentException:tenantId/code/update is null or undefined");
       }
       entityAudit.name = "ENTITY_WORKFLOW_UPDATE INITIALIZED";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `update entity with  ${JSON.stringify(update)}`;
@@ -385,7 +385,7 @@ module.exports.updateWorkflow = (tenantId, createdBy, ipAddress, id, update) => 
       var reference = shortid.generate();
       debug(`index Update method, try_catch failure due to :${e} and referenceId :${reference}`);
       entityAudit.name = "ENTITY_EXCEPTION_ON_WORKFLOWUPDATE";
-      entityAudit.source = "ENTITY_SERVICE";
+      entityAudit.source = "ENTITYSERVICE";
       entityAudit.ipAddress = ipAddress;
       entityAudit.createdBy = createdBy;
       entityAudit.keyDataAsJSON = `update entity with object ${JSON.stringify(update)}`;
