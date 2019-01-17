@@ -179,7 +179,7 @@ module.exports.update = (tenantId, createdBy, ipAddress, code, update) => {
       collection.find(query, {}, 0, 1)
         .then((result) => {
           if (_.isEmpty(result[0])) {
-            throw new Error(`Unable to Update fileUpload already exists `);
+            throw new Error(`Unable to Update, fileUpload does not  exists `);
           }
           docketObject.name = "fileUpload_update";
           docketObject.keyDataAsJSON = JSON.stringify(update);
