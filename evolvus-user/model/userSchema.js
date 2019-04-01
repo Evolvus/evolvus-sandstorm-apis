@@ -32,6 +32,10 @@ var userSchema = {
       "enum":["true","false"],
       "default":"true"
     },
+    "bankUser":{
+      "type":"string",
+      "default":"false"
+    },
     "uniquereferenceid": {
       "type": "string",
       "filterable": true,

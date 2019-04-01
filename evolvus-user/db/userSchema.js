@@ -159,6 +159,10 @@ var userSchema = new mongoose.Schema({
     type:String,
     enum:["true","false"],
     default:"true"
+  },
+  bankUser:{
+    type:String,
+    default:"false"
   }
 });
 
