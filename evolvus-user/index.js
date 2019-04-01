@@ -10,6 +10,7 @@ const role = require("@evolvus/evolvus-role");
 const bcrypt = require("bcryptjs");
 const shortid = require("shortid");
 var date = require("date-and-time");
+var lookup = require("@evolvus/evolvus-lookup");
 
 const Dao = require("@evolvus/evolvus-mongo-dao").Dao;
 const collection = new Dao("user", dbSchema);
@@ -21,6 +22,7 @@ var schema = model.schema;
 var filterAttributes = model.filterAttributes;
 var sortAttributes = model.sortableAttributes;
 
+var bankLookupCode = process.env.BANK_LOOKUP || "BANK_TENANT";
 userAudit.application = "SANDSTORM_CONSOLE";
 userAudit.source = "USERSERVICE";
 
@@ -96,7 +98,6 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
         // Other validations here
         object.userId = object.userId.toUpperCase();
         let query = {
-          "tenantId": tenantId,
           "userId": object.userId
         };
         collection.findOne(query).then((userObject) => {
@@ -117,53 +118,65 @@ module.exports.save = (tenantId, ipAddress, createdBy, accessLevel, userObject) 
                     if (result[1][0].processingStatus === "AUTHORIZED" && result[1][0].activationStatus === "ACTIVE") {
                       object.role = result[1][0]._id;
                       object.applicationCode = result[1][0].applicationCode;
-                      bcrypt.genSalt(10, function (err, salt) {
-                        bcrypt.hash(object.userPassword, salt, function (err, hash) {
-                          // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
-                          object.userPassword = hash;
-                          object.saltString = salt;
-                          debug("calling dao save method and parameter is object ", object);
-                          collection.save(object).then((result) => {
-                            var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
-                            debug(`User saved successfully ${savedObject}`);
-                            var sweEventObject = {
-                              "tenantId": tenantId,
-                              "wfEntity": "USER",
-                              "wfEntityAction": "CREATE",
-                              "createdBy": createdBy,
-                              "query": result._id,
-                              "object": savedObject,
-                              "flowCode": object.flowCode
-                            };
-                            debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
-                            sweClient.initialize(sweEventObject).then((sweResult) => {
-                              var filterUser = {
+                      lookup.find(tenantId, createdBy, ipAddress, { lookupCode: bankLookupCode }, {
+                        lastUpdatedDate: -1
+                      }, 0, 1).then((lookup) => {
+                        if (!_.isEmpty(lookup) && lookup[0].value === tenantId) {
+                          object.bankUser = "true";
+                        } else {
+                          object.bankUser = "false";
+                        }
+                        bcrypt.genSalt(10, function (err, salt) {
+                          bcrypt.hash(object.userPassword, salt, function (err, hash) {
+                            // Assign hashedPassword to your userPassword and salt to saltString ,store it in DB.
+                            object.userPassword = hash;
+                            object.saltString = salt;
+                            debug("calling dao save method and parameter is object ", object);
+                            collection.save(object).then((result) => {
+                              var savedObject = _.omit(result.toJSON(), 'userPassword', 'token', 'saltString');
+                              debug(`User saved successfully ${savedObject}`);
+                              var sweEventObject = {
                                 "tenantId": tenantId,
-                                "userId": result.userId
+                                "wfEntity": "USER",
+                                "wfEntityAction": "CREATE",
+                                "createdBy": createdBy,
+                                "query": result._id,
+                                "object": savedObject,
+                                "flowCode": object.flowCode
                               };
-                              debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
-                              collection.update(filterUser, {
-                                "processingStatus": sweResult.data.wfInstanceStatus,
-                                "wfInstanceId": sweResult.data.wfInstanceId
-                              }).then((userObject) => {
-                                debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
-                                resolve(savedObject);
+                              debug(`calling sweClient initialize .sweEventObject :${JSON.stringify(sweEventObject)} is a parameter`);
+                              sweClient.initialize(sweEventObject).then((sweResult) => {
+                                var filterUser = {
+                                  "tenantId": tenantId,
+                                  "userId": result.userId
+                                };
+                                debug(`calling db update filterUser :${JSON.stringify(filterUser)} is a parameter`);
+                                collection.update(filterUser, {
+                                  "processingStatus": sweResult.data.wfInstanceStatus,
+                                  "wfInstanceId": sweResult.data.wfInstanceId
+                                }).then((userObject) => {
+                                  debug(`collection.update:user updated with workflow status and id:${JSON.stringify(userObject)}`);
+                                  resolve(savedObject);
+                                }).catch((e) => {
+                                  var reference = shortid.generate();
+                                  debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                                  reject(e);
+                                });
                               }).catch((e) => {
                                 var reference = shortid.generate();
-                                debug(`collection.update promise failed due to :${e} and referenceId :${reference}`);
+                                debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
                                 reject(e);
                               });
                             }).catch((e) => {
                               var reference = shortid.generate();
-                              debug(`sweClient.initialize promise failed due to :${e} and referenceId :${reference}`);
+                              debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
                               reject(e);
                             });
-                          }).catch((e) => {
-                            var reference = shortid.generate();
-                            debug(`collection.save promise failed due to ${e} and reference id ${reference}`);
-                            reject(e);
                           });
                         });
+                      }).catch((e) => {
+                        debug('failed to find the Bank Tenant', e);
+                        reject(`Failed to find the Bank Tenant due to ${e}`);
                       });
                     } else {
                       debug(`User save failed due to selected Role ${object.role.roleName} not AUTHORIZED`);
