@@ -31,7 +31,7 @@
     "mongoose": "^5.2.2",
     "moongoose": "0.0.5",
     "shortid": "^2.2.12",
-    "validator": "^9.4.1"
+    "validator": "^13.7.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
